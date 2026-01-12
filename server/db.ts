@@ -1,11 +1,18 @@
-import { eq } from "drizzle-orm";
+import { eq, and, like, desc, asc, sql, or } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
-import { InsertUser, users } from "../drizzle/schema";
+import { 
+  InsertUser, users, 
+  categories, InsertCategory, Category,
+  documents, InsertDocument, Document,
+  documentNotes, InsertDocumentNote,
+  members, InsertMember,
+  documentPermissions, InsertDocumentPermission,
+  activityLogs, InsertActivityLog
+} from "../drizzle/schema";
 import { ENV } from './_core/env';
 
 let _db: ReturnType<typeof drizzle> | null = null;
 
-// Lazily create the drizzle instance so local tooling can run without a DB.
 export async function getDb() {
   if (!_db && process.env.DATABASE_URL) {
     try {
@@ -18,6 +25,7 @@ export async function getDb() {
   return _db;
 }
 
+// ============ USER FUNCTIONS ============
 export async function upsertUser(user: InsertUser): Promise<void> {
   if (!user.openId) {
     throw new Error("User openId is required for upsert");
@@ -85,8 +93,245 @@ export async function getUserByOpenId(openId: string) {
   }
 
   const result = await db.select().from(users).where(eq(users.openId, openId)).limit(1);
-
   return result.length > 0 ? result[0] : undefined;
 }
 
-// TODO: add feature queries here as your schema grows.
+// ============ CATEGORY FUNCTIONS ============
+export async function getAllCategories() {
+  const db = await getDb();
+  if (!db) return [];
+  return db.select().from(categories).orderBy(asc(categories.sortOrder));
+}
+
+export async function getCategoryById(id: number) {
+  const db = await getDb();
+  if (!db) return undefined;
+  const result = await db.select().from(categories).where(eq(categories.id, id)).limit(1);
+  return result[0];
+}
+
+export async function createCategory(data: InsertCategory) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  const result = await db.insert(categories).values(data);
+  return { id: result[0].insertId, ...data };
+}
+
+export async function seedDefaultCategories() {
+  const db = await getDb();
+  if (!db) return;
+  
+  const existing = await db.select().from(categories).limit(1);
+  if (existing.length > 0) return;
+
+  const defaultCategories: InsertCategory[] = [
+    { name: "Documents Juridiques", slug: "juridique", description: "Statuts, règlements, autorisations", color: "#e76f51", icon: "scale", sortOrder: 1 },
+    { name: "Gouvernance et Pilotage", slug: "gouvernance", description: "Feuille de route, organigramme, PV", color: "#2d7a4f", icon: "users", sortOrder: 2 },
+    { name: "Documents Opérationnels", slug: "operationnel", description: "Projets, rapports, planning", color: "#f4a261", icon: "clipboard", sortOrder: 3 },
+    { name: "Documents Financiers", slug: "financier", description: "Budget, comptabilité, audits", color: "#264653", icon: "wallet", sortOrder: 4 },
+    { name: "Ressources Humaines", slug: "rh", description: "Membres, bénévoles, contrats", color: "#9c89b8", icon: "user-check", sortOrder: 5 },
+    { name: "Communication", slug: "communication", description: "Logo, brochures, réseaux sociaux", color: "#00b4d8", icon: "megaphone", sortOrder: 6 },
+    { name: "Financement", slug: "financement", description: "Demandes, partenariats, subventions", color: "#e9c46a", icon: "hand-coins", sortOrder: 7 },
+  ];
+
+  await db.insert(categories).values(defaultCategories);
+}
+
+// ============ DOCUMENT FUNCTIONS ============
+export async function getAllDocuments(filters?: {
+  categoryId?: number;
+  status?: string;
+  priority?: string;
+  search?: string;
+  isArchived?: boolean;
+}) {
+  const db = await getDb();
+  if (!db) return [];
+
+  let query = db.select().from(documents);
+  const conditions = [];
+
+  if (filters?.categoryId) {
+    conditions.push(eq(documents.categoryId, filters.categoryId));
+  }
+  if (filters?.status) {
+    conditions.push(eq(documents.status, filters.status as "pending" | "in-progress" | "completed"));
+  }
+  if (filters?.priority) {
+    conditions.push(eq(documents.priority, filters.priority as "low" | "medium" | "high" | "urgent"));
+  }
+  if (filters?.search) {
+    conditions.push(
+      or(
+        like(documents.title, `%${filters.search}%`),
+        like(documents.description, `%${filters.search}%`)
+      )
+    );
+  }
+  if (filters?.isArchived !== undefined) {
+    conditions.push(eq(documents.isArchived, filters.isArchived));
+  } else {
+    conditions.push(eq(documents.isArchived, false));
+  }
+
+  if (conditions.length > 0) {
+    return db.select().from(documents).where(and(...conditions)).orderBy(desc(documents.updatedAt));
+  }
+  
+  return db.select().from(documents).where(eq(documents.isArchived, false)).orderBy(desc(documents.updatedAt));
+}
+
+export async function getDocumentById(id: number) {
+  const db = await getDb();
+  if (!db) return undefined;
+  const result = await db.select().from(documents).where(eq(documents.id, id)).limit(1);
+  return result[0];
+}
+
+export async function createDocument(data: InsertDocument) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  const result = await db.insert(documents).values(data);
+  return { id: result[0].insertId, ...data };
+}
+
+export async function updateDocument(id: number, data: Partial<InsertDocument>) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db.update(documents).set(data).where(eq(documents.id, id));
+  return getDocumentById(id);
+}
+
+export async function deleteDocument(id: number) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db.delete(documents).where(eq(documents.id, id));
+}
+
+export async function getDocumentStats() {
+  const db = await getDb();
+  if (!db) return { total: 0, completed: 0, inProgress: 0, pending: 0, urgent: 0 };
+
+  const allDocs = await db.select().from(documents).where(eq(documents.isArchived, false));
+  
+  return {
+    total: allDocs.length,
+    completed: allDocs.filter(d => d.status === "completed").length,
+    inProgress: allDocs.filter(d => d.status === "in-progress").length,
+    pending: allDocs.filter(d => d.status === "pending").length,
+    urgent: allDocs.filter(d => d.priority === "urgent").length,
+  };
+}
+
+export async function seedDefaultDocuments() {
+  const db = await getDb();
+  if (!db) return;
+  
+  const existing = await db.select().from(documents).limit(1);
+  if (existing.length > 0) return;
+
+  const cats = await getAllCategories();
+  if (cats.length === 0) return;
+
+  const catMap = Object.fromEntries(cats.map(c => [c.slug, c.id]));
+
+  const defaultDocs: InsertDocument[] = [
+    // Juridique
+    { title: "Statuts de l'association", description: "Version validée et conforme", categoryId: catMap["juridique"], priority: "urgent", status: "pending" },
+    { title: "Règlement intérieur", description: "Règles de fonctionnement interne", categoryId: catMap["juridique"], priority: "urgent", status: "pending" },
+    { title: "Autorisation de fonctionner", description: "Ministère de l'Intérieur", categoryId: catMap["juridique"], priority: "urgent", status: "pending" },
+    { title: "PV de l'AG constitutive", description: "Procès-verbal de création", categoryId: catMap["juridique"], priority: "high", status: "pending" },
+    { title: "Liste du Bureau Exécutif", description: "Noms, fonctions et contacts", categoryId: catMap["juridique"], priority: "high", status: "pending" },
+    // Gouvernance
+    { title: "Feuille de route stratégique", description: "Vision 1-3 ans", categoryId: catMap["gouvernance"], priority: "urgent", status: "pending" },
+    { title: "Plan d'actions annuel", description: "Actions de l'année", categoryId: catMap["gouvernance"], priority: "urgent", status: "pending" },
+    { title: "Organigramme", description: "Structure organisationnelle", categoryId: catMap["gouvernance"], priority: "urgent", status: "pending" },
+    { title: "Fiches de fonctions", description: "Rôles et responsabilités", categoryId: catMap["gouvernance"], priority: "high", status: "pending" },
+    // Opérationnel
+    { title: "Note institutionnelle", description: "Présentation 2-3 pages", categoryId: catMap["operationnel"], priority: "urgent", status: "pending" },
+    { title: "Portfolio des projets", description: "Projets réalisés", categoryId: catMap["operationnel"], priority: "urgent", status: "pending" },
+    { title: "Fiches projets", description: "Contexte et objectifs", categoryId: catMap["operationnel"], priority: "urgent", status: "pending" },
+    // Financier
+    { title: "Budget annuel", description: "Budget de fonctionnement", categoryId: catMap["financier"], priority: "urgent", status: "pending" },
+    { title: "Plan de financement", description: "Sources de revenus", categoryId: catMap["financier"], priority: "high", status: "pending" },
+    { title: "Livre de caisse", description: "Suivi des entrées/sorties", categoryId: catMap["financier"], priority: "high", status: "pending" },
+    // RH
+    { title: "Registre des membres", description: "Liste complète des membres", categoryId: catMap["rh"], priority: "high", status: "pending" },
+    { title: "Fiches d'adhésion", description: "Formulaires d'inscription", categoryId: catMap["rh"], priority: "medium", status: "pending" },
+    // Communication
+    { title: "Logo officiel", description: "Identité visuelle", categoryId: catMap["communication"], priority: "high", status: "pending" },
+    { title: "Brochure de présentation", description: "Document de communication", categoryId: catMap["communication"], priority: "medium", status: "pending" },
+    // Financement
+    { title: "Dossier de demande de financement", description: "Template pour bailleurs", categoryId: catMap["financement"], priority: "urgent", status: "pending" },
+    { title: "Lettre de demande de partenariat", description: "Modèle de lettre", categoryId: catMap["financement"], priority: "high", status: "pending" },
+  ];
+
+  await db.insert(documents).values(defaultDocs);
+}
+
+// ============ NOTES FUNCTIONS ============
+export async function getNotesByDocumentId(documentId: number) {
+  const db = await getDb();
+  if (!db) return [];
+  return db.select().from(documentNotes).where(eq(documentNotes.documentId, documentId)).orderBy(desc(documentNotes.createdAt));
+}
+
+export async function createNote(data: InsertDocumentNote) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  const result = await db.insert(documentNotes).values(data);
+  return { id: result[0].insertId, ...data };
+}
+
+export async function deleteNote(id: number) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db.delete(documentNotes).where(eq(documentNotes.id, id));
+}
+
+// ============ MEMBERS FUNCTIONS ============
+export async function getAllMembers() {
+  const db = await getDb();
+  if (!db) return [];
+  return db.select().from(members).orderBy(asc(members.lastName));
+}
+
+export async function getMemberById(id: number) {
+  const db = await getDb();
+  if (!db) return undefined;
+  const result = await db.select().from(members).where(eq(members.id, id)).limit(1);
+  return result[0];
+}
+
+export async function createMember(data: InsertMember) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  const result = await db.insert(members).values(data);
+  return { id: result[0].insertId, ...data };
+}
+
+export async function updateMember(id: number, data: Partial<InsertMember>) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db.update(members).set(data).where(eq(members.id, id));
+  return getMemberById(id);
+}
+
+export async function deleteMember(id: number) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db.delete(members).where(eq(members.id, id));
+}
+
+// ============ ACTIVITY LOG FUNCTIONS ============
+export async function logActivity(data: InsertActivityLog) {
+  const db = await getDb();
+  if (!db) return;
+  await db.insert(activityLogs).values(data);
+}
+
+export async function getRecentActivity(limit: number = 20) {
+  const db = await getDb();
+  if (!db) return [];
+  return db.select().from(activityLogs).orderBy(desc(activityLogs.createdAt)).limit(limit);
+}
