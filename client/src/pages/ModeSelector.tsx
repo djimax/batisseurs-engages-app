@@ -13,9 +13,7 @@ export default function ModeSelector({ onSelectMode }: ModeSelectorProps) {
         {/* Header */}
         <div className="text-center mb-12">
           <div className="flex justify-center mb-4">
-            <div className="w-16 h-16 rounded-2xl bg-primary flex items-center justify-center">
-              <Building2 className="w-10 h-10 text-primary-foreground" />
-            </div>
+            <img src="/logo.png" alt="Les Batisseurs Engages" className="w-24 h-24 object-contain" />
           </div>
           <h1 className="text-4xl font-bold mb-2">Les Bâtisseurs Engagés</h1>
           <p className="text-lg text-muted-foreground">

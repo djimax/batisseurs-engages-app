@@ -64,9 +64,7 @@ export default function Offline() {
         <Card className="w-full max-w-md shadow-lg">
           <CardHeader className="space-y-2">
             <div className="flex justify-center mb-4">
-              <div className="w-14 h-14 rounded-xl bg-primary flex items-center justify-center">
-                <Building2 className="w-8 h-8 text-primary-foreground" />
-              </div>
+              <img src="/logo.png" alt="Les Batisseurs Engages" className="w-16 h-16 object-contain" />
             </div>
             <CardTitle className="text-2xl text-center">Les Bâtisseurs Engagés</CardTitle>
             <CardDescription className="text-center">

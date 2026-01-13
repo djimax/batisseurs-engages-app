@@ -149,3 +149,14 @@
 - [x] Tests unitaires pour usePreferences
 - [x] Tests unitaires pour useSyncHistory
 - [x] Tous les tests passent (21/21)
+
+
+## Phase 6 - Intégration du Logo Officiel
+
+### Logo
+- [x] Copier le logo dans le dossier public
+- [x] Intégrer le logo dans ModeSelector
+- [x] Intégrer le logo dans DashboardLayout (sidebar et login)
+- [x] Intégrer le logo dans Offline
+- [x] Logo affiche correctement sur tous les modes
+- [x] Tester l'affichage du logo sur tous les appareils

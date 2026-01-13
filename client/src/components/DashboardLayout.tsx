@@ -78,9 +78,7 @@ export default function DashboardLayout({
         <div className="flex flex-col items-center gap-8 p-8 max-w-md w-full">
           <div className="flex flex-col items-center gap-4">
             <div className="flex items-center gap-3 mb-4">
-              <div className="w-14 h-14 rounded-xl bg-primary flex items-center justify-center">
-                <Building2 className="w-8 h-8 text-primary-foreground" />
-              </div>
+              <img src="/logo.png" alt="Les Batisseurs Engages" className="w-16 h-16 object-contain" />
             </div>
             <h1 className="text-2xl font-bold tracking-tight text-center">
               Les Bâtisseurs Engagés
@@ -191,9 +189,7 @@ function DashboardLayoutContent({
               </button>
               {!isCollapsed ? (
                 <div className="flex items-center gap-2 min-w-0">
-                  <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center shrink-0">
-                    <Building2 className="w-4 h-4 text-primary-foreground" />
-                  </div>
+                  <img src="/logo.png" alt="Logo" className="w-8 h-8 object-contain shrink-0" />
                   <span className="font-semibold tracking-tight truncate text-sm">
                     Bâtisseurs Engagés
                   </span>
