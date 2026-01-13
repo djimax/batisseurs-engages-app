@@ -12,21 +12,10 @@ import Members from "./pages/Members";
 import Activity from "./pages/Activity";
 import Archives from "./pages/Archives";
 import Offline from "./pages/Offline";
+import ModeSelector from "./pages/ModeSelector";
 import { useState, useEffect } from "react";
 
-function Router() {
-  const [isOfflineMode] = useState(() => {
-    return localStorage.getItem('offlineMode') === 'true';
-  });
-
-  if (isOfflineMode) {
-    return (
-      <Switch>
-        <Route path="*" component={() => <Offline />} />
-      </Switch>
-    );
-  }
-
+function OnlineRouter() {
   return (
     <DashboardLayout>
       <Switch>
@@ -43,18 +32,51 @@ function Router() {
   );
 }
 
+function OfflineRouter() {
+  return (
+    <Switch>
+      <Route path="*" component={() => <Offline />} />
+    </Switch>
+  );
+}
+
+function Router({ mode, onChangeMode }: { mode: 'online' | 'offline' | null; onChangeMode: (mode: 'online' | 'offline') => void }) {
+  if (mode === null) {
+    return (
+      <ModeSelector
+        onSelectMode={(selectedMode) => {
+          localStorage.setItem('appMode', selectedMode);
+          onChangeMode(selectedMode);
+        }}
+      />
+    );
+  }
+
+  if (mode === 'offline') {
+    return <OfflineRouter />;
+  }
+
+  return <OnlineRouter />;
+}
+
 function App() {
+  const [mode, setMode] = useState<'online' | 'offline' | null>(null);
+
   useEffect(() => {
-    // Enable offline mode by default for local usage
-    localStorage.setItem('offlineMode', 'true');
+    const savedMode = localStorage.getItem('appMode') as 'online' | 'offline' | null;
+    setMode(savedMode);
   }, []);
+
+  const handleChangeMode = (newMode: 'online' | 'offline') => {
+    setMode(newMode);
+  };
 
   return (
     <ErrorBoundary>
       <ThemeProvider defaultTheme="light">
         <TooltipProvider>
           <Toaster />
-          <Router />
+          <Router mode={mode} onChangeMode={handleChangeMode} />
         </TooltipProvider>
       </ThemeProvider>
     </ErrorBoundary>

@@ -98,3 +98,13 @@
 - [x] Tableau de bord avec statistiques locales
 - [x] Navigation entre les pages
 - [x] Tester l'application hors ligne
+
+
+## Phase 4 - Mode Hybride (En ligne + Hors Ligne)
+
+### Fonctionnalités Mode Hybride
+- [x] Créer une page de sélection de mode au démarrage
+- [x] Modifier App.tsx pour supporter les deux modes
+- [x] Tester le mode en ligne avec Manus
+- [x] Tester le mode hors ligne avec localStorage
+- [x] Permettre le changement de mode
