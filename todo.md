@@ -82,3 +82,19 @@
 - [ ] Intégration avec Google Drive ou OneDrive
 - [ ] Signature électronique des documents
 - [ ] Audit trail complet des modifications
+
+
+## Phase 3 - Mode Hors Ligne (Sans Internet)
+
+### Modifications pour Mode Hors Ligne
+- [x] Retirer l'authentification Manus
+- [x] Implémenter le stockage local IndexedDB pour les données
+- [x] Implémenter le stockage local des fichiers
+- [x] Créer une interface sans authentification
+- [x] Créer une application complète hors ligne (OfflineApp)
+- [x] Page de connexion simple sans Internet
+- [x] Gestion des documents avec stockage localStorage
+- [x] Gestion des membres avec stockage localStorage
+- [x] Tableau de bord avec statistiques locales
+- [x] Navigation entre les pages
+- [x] Tester l'application hors ligne

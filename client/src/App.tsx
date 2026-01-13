@@ -11,8 +11,22 @@ import Categories from "./pages/Categories";
 import Members from "./pages/Members";
 import Activity from "./pages/Activity";
 import Archives from "./pages/Archives";
+import Offline from "./pages/Offline";
+import { useState, useEffect } from "react";
 
 function Router() {
+  const [isOfflineMode] = useState(() => {
+    return localStorage.getItem('offlineMode') === 'true';
+  });
+
+  if (isOfflineMode) {
+    return (
+      <Switch>
+        <Route path="*" component={() => <Offline />} />
+      </Switch>
+    );
+  }
+
   return (
     <DashboardLayout>
       <Switch>
@@ -30,6 +44,11 @@ function Router() {
 }
 
 function App() {
+  useEffect(() => {
+    // Enable offline mode by default for local usage
+    localStorage.setItem('offlineMode', 'true');
+  }, []);
+
   return (
     <ErrorBoundary>
       <ThemeProvider defaultTheme="light">
