@@ -49,8 +49,16 @@ import {
   Mail,
   Phone,
   UserCircle,
-  Loader2
+  Loader2,
+  Shield,
+  Lock
 } from "lucide-react";
+
+const MEMBER_ROLES = [
+  { value: "admin", label: "Admin", description: "Accès complet à tous les documents" },
+  { value: "secretary", label: "Secrétaire", description: "Peut créer et modifier les documents" },
+  { value: "member", label: "Membre", description: "Accès en lecture seule" },
+];
 
 export default function Members() {
   const utils = trpc.useUtils();
@@ -67,6 +75,7 @@ export default function Members() {
     role: "Membre",
     function: "",
     status: "active" as "active" | "inactive" | "pending",
+    memberRole: "member" as "admin" | "secretary" | "member",
   });
 
   const { data: members, isLoading } = trpc.members.list.useQuery();
@@ -116,6 +125,7 @@ export default function Members() {
       role: "Membre",
       function: "",
       status: "active",
+      memberRole: "member",
     });
   };
 
@@ -145,6 +155,7 @@ export default function Members() {
       role: member.role || "Membre",
       function: member.function || "",
       status: member.status,
+      memberRole: member.memberRole || "member",
     });
     setIsEditDialogOpen(true);
   };

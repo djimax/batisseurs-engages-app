@@ -31,7 +31,8 @@ import {
   FolderOpen,
   Settings,
   Activity,
-  Building2
+  Building2,
+  Archive
 } from "lucide-react";
 import { CSSProperties, useEffect, useRef, useState } from "react";
 import { useLocation } from "wouter";
@@ -44,6 +45,7 @@ const menuItems = [
   { icon: FolderOpen, label: "Catégories", path: "/categories" },
   { icon: Users, label: "Membres", path: "/members" },
   { icon: Activity, label: "Activité", path: "/activity" },
+  { icon: Archive, label: "Archives", path: "/archives" },
 ];
 
 const SIDEBAR_WIDTH_KEY = "sidebar-width";

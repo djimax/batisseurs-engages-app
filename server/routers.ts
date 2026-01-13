@@ -250,6 +250,59 @@ export const appRouter = router({
           generatedAt: new Date(),
         };
       }),
+    
+    // List archived documents
+    archived: publicProcedure
+      .input(z.object({
+        categoryId: z.number().optional(),
+        search: z.string().optional(),
+      }).optional())
+      .query(async ({ input }) => {
+        return getAllDocuments({
+          ...input,
+          isArchived: true,
+        });
+      }),
+    
+    // Archive a document
+    archive: protectedProcedure
+      .input(z.object({ id: z.number() }))
+      .mutation(async ({ input, ctx }) => {
+        const result = await updateDocument(input.id, {
+          isArchived: true,
+          updatedBy: ctx.user.id,
+        });
+        await logActivity({
+          userId: ctx.user.id,
+          action: "archive",
+          entityType: "document",
+          entityId: input.id,
+          details: "Document archivé",
+        });
+        await notifyOwner({
+          title: "Document archivé",
+          content: `Le document a été archivé par ${ctx.user.name || "un utilisateur"}.`,
+        });
+        return result;
+      }),
+    
+    // Restore an archived document
+    restore: protectedProcedure
+      .input(z.object({ id: z.number() }))
+      .mutation(async ({ input, ctx }) => {
+        const result = await updateDocument(input.id, {
+          isArchived: false,
+          updatedBy: ctx.user.id,
+        });
+        await logActivity({
+          userId: ctx.user.id,
+          action: "restore",
+          entityType: "document",
+          entityId: input.id,
+          details: "Document restauré",
+        });
+        return result;
+      }),
   }),
 
   // ============ NOTES ============

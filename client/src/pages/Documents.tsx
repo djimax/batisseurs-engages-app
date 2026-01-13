@@ -52,7 +52,8 @@ import {
   File,
   FileSpreadsheet,
   FileImage,
-  Loader2
+  Loader2,
+  Archive
 } from "lucide-react";
 
 export default function Documents() {
@@ -154,6 +155,20 @@ export default function Documents() {
     onSuccess: () => {
       refetchNotes();
       toast.success("Note supprimée");
+    },
+  });
+
+  const archiveDocument = trpc.documents.archive.useMutation({
+    onSuccess: () => {
+      utils.documents.list.invalidate();
+      utils.documents.stats.invalidate();
+      utils.documents.archived.invalidate();
+      setIsDetailDialogOpen(false);
+      setSelectedDocument(null);
+      toast.success("Document archivé");
+    },
+    onError: (error: any) => {
+      toast.error("Erreur: " + error.message);
     },
   });
 
@@ -792,6 +807,16 @@ export default function Documents() {
           <DialogFooter className="border-t pt-4">
             <Button variant="outline" onClick={() => setIsDetailDialogOpen(false)}>
               Fermer
+            </Button>
+            <Button
+              variant="outline"
+              onClick={() => {
+                archiveDocument.mutate({ id: selectedDocument.id });
+              }}
+              disabled={archiveDocument.isPending}
+            >
+              <Archive className="mr-2 h-4 w-4" />
+              Archiver
             </Button>
             <Button
               variant="destructive"

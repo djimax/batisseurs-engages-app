@@ -31,3 +31,54 @@
 
 - [x] Tests unitaires backend (16 tests passés)
 - [x] Validation fonctionnelle
+
+
+## Améliorations Phase 2
+
+### Archivage et Restauration
+- [x] Page Archives pour gérer les documents archivés
+- [x] Route d'archivage des documents (documents.archive)
+- [x] Route de restauration des documents archivés (documents.restore)
+- [x] Route pour lister les documents archivés (documents.archived)
+- [x] Lien Archives dans le menu de navigation
+- [x] Filtrage des documents archivés par catégorie
+- [x] Recherche dans les documents archivés
+- [x] Bouton d'archivage dans le menu des documents
+- [x] Bouton de restauration dans la page archives
+
+### Système de Permissions par Rôle
+- [x] Ajout du champ memberRole au schéma des membres
+- [x] Trois niveaux de rôle : Admin, Secrétaire, Membre
+- [x] Admin : Accès complet à tous les documents
+- [x] Secrétaire : Peut créer et modifier les documents
+- [x] Membre : Accès en lecture seule
+- [x] Interface de gestion des rôles dans la page Membres
+- [x] Affichage des rôles avec icônes et descriptions
+
+### Tests
+- [x] Tests unitaires pour archivage (5 tests)
+- [x] Tests d'archivage de documents
+- [x] Tests de restauration de documents
+- [x] Tests de listage des documents archivés
+- [x] Tests de filtrage par catégorie
+- [x] Tests de recherche dans les archives
+- [x] Tous les 21 tests passent avec succès
+
+### Corrections et Améliorations
+- [x] Correction des erreurs TypeScript
+- [x] Ajout des imports manquants (Archive icon)
+- [x] Intégration des nouvelles routes au frontend
+- [x] Synchronisation des mutations avec les routes backend
+- [x] Invalidation des caches après archivage/restauration
+
+## Fonctionnalités Futures (Non Implémentées)
+- [ ] Système de dates d'échéance avec rappels automatiques
+- [ ] Notifications par email pour les documents urgents
+- [ ] Intégration calendrier pour les échéances
+- [ ] Système d'approbation de documents
+- [ ] Historique des versions de documents
+- [ ] Partage de documents avec permissions granulaires
+- [ ] Commentaires collaboratifs sur les documents
+- [ ] Intégration avec Google Drive ou OneDrive
+- [ ] Signature électronique des documents
+- [ ] Audit trail complet des modifications

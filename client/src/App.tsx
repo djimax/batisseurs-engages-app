@@ -10,6 +10,7 @@ import Documents from "./pages/Documents";
 import Categories from "./pages/Categories";
 import Members from "./pages/Members";
 import Activity from "./pages/Activity";
+import Archives from "./pages/Archives";
 
 function Router() {
   return (
@@ -20,6 +21,7 @@ function Router() {
         <Route path="/categories" component={Categories} />
         <Route path="/members" component={Members} />
         <Route path="/activity" component={Activity} />
+        <Route path="/archives" component={Archives} />
         <Route path="/404" component={NotFound} />
         <Route component={NotFound} />
       </Switch>
