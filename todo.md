@@ -108,3 +108,10 @@
 - [x] Tester le mode en ligne avec Manus
 - [x] Tester le mode hors ligne avec localStorage
 - [x] Permettre le changement de mode
+
+
+## Corrections et Bugs
+
+- [x] Créer la page Settings (correction erreur 404)
+- [x] Ajouter la route /settings à App.tsx
+- [x] Le bouton Settings est déjà dans le menu de navigation (dropdown profil)

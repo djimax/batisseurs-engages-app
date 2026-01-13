@@ -11,6 +11,7 @@ import Categories from "./pages/Categories";
 import Members from "./pages/Members";
 import Activity from "./pages/Activity";
 import Archives from "./pages/Archives";
+import Settings from "./pages/Settings";
 import Offline from "./pages/Offline";
 import ModeSelector from "./pages/ModeSelector";
 import { useState, useEffect } from "react";
@@ -25,6 +26,7 @@ function OnlineRouter() {
         <Route path="/members" component={Members} />
         <Route path="/activity" component={Activity} />
         <Route path="/archives" component={Archives} />
+        <Route path="/settings" component={Settings} />
         <Route path="/404" component={NotFound} />
         <Route component={NotFound} />
       </Switch>
