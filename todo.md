@@ -115,3 +115,37 @@
 - [x] Créer la page Settings (correction erreur 404)
 - [x] Ajouter la route /settings à App.tsx
 - [x] Le bouton Settings est déjà dans le menu de navigation (dropdown profil)
+
+
+## Phase 5 - Améliorations Avancées
+
+### Backup et Export
+- [x] Fonction d'export des donnees en JSON
+- [x] Fonction d'import des donnees depuis JSON
+- [x] Bouton de backup automatique dans Settings
+- [x] Telechargement du fichier de backup
+- [x] Hook useBackup avec exportData et importData
+- [x] Affichage de la taille du backup
+
+### Historique de Synchronisation
+- [x] Tracker la derniere synchronisation
+- [x] Afficher le statut de synchronisation dans Settings
+- [x] Afficher le nombre de documents synchronises
+- [x] Afficher l'historique des changements
+- [x] Hook useSyncHistory avec statistiques
+- [x] Affichage des evenements totaux, d'aujourd'hui, reussis et erreurs
+
+### Preferences Utilisateur
+- [x] Langue (FR/EN)
+- [x] Format de date (DD/MM/YYYY, MM/DD/YYYY)
+- [x] Notifications par email
+- [x] Sauvegarde des preferences
+- [x] Hook usePreferences avec traductions
+- [x] Formatage des dates selon les preferences
+- [x] Interface Settings complete avec toutes les options
+
+### Tests Phase 5
+- [x] Tests unitaires pour useBackup
+- [x] Tests unitaires pour usePreferences
+- [x] Tests unitaires pour useSyncHistory
+- [x] Tous les tests passent (21/21)

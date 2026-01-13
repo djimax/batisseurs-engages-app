@@ -2,15 +2,25 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
-import { SettingsIcon, LogOut, Moon, Sun, Globe, Wifi } from "lucide-react";
-import { useState, useEffect } from "react";
+import { SettingsIcon, LogOut, Moon, Sun, Globe, Wifi, Download, Upload, Save } from "lucide-react";
+import { useState, useEffect, useRef } from "react";
 import { useLocation } from "wouter";
 import { toast } from "sonner";
+import { useBackup } from "@/hooks/useBackup";
+import { usePreferences } from "@/hooks/usePreferences";
+import { useSyncHistory } from "@/hooks/useSyncHistory";
 
 export default function Settings() {
   const [, setLocation] = useLocation();
   const [darkMode, setDarkMode] = useState(false);
   const [currentMode, setCurrentMode] = useState<'online' | 'offline'>('offline');
+  const [language, setLanguage] = useState<'fr' | 'en'>('fr');
+  const [dateFormat, setDateFormat] = useState('DD/MM/YYYY');
+  const [emailNotifications, setEmailNotifications] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const { exportData, importData, getBackupSize } = useBackup();
+  const { preferences, updatePreference } = usePreferences();
+  const { getLastSync, getStats: getSyncStats } = useSyncHistory();
 
   useEffect(() => {
     const savedMode = localStorage.getItem('appMode') as 'online' | 'offline' | null;
@@ -23,7 +33,6 @@ export default function Settings() {
     const newMode = currentMode === 'online' ? 'offline' : 'online';
     localStorage.setItem('appMode', newMode);
     toast.success(`Mode changé en: ${newMode === 'online' ? 'En Ligne' : 'Hors Ligne'}`);
-    // Recharger la page pour appliquer le changement
     setTimeout(() => {
       window.location.reload();
     }, 500);
@@ -47,6 +56,47 @@ export default function Settings() {
     }
     toast.success(`Thème ${!darkMode ? 'sombre' : 'clair'} activé`);
   };
+
+  const handleExportBackup = async () => {
+    try {
+      exportData();
+    } catch (error) {
+      console.error('Erreur lors de l\'export:', error);
+    }
+  };
+
+  const handleImportBackup = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const success = await importData(file);
+      if (success) {
+        setTimeout(() => {
+          window.location.reload();
+        }, 1000);
+      }
+    }
+  };
+
+  const handleLanguageChange = (lang: 'fr' | 'en') => {
+    setLanguage(lang);
+    updatePreference('language', lang);
+    toast.success(`Langue changée en: ${lang === 'fr' ? 'Français' : 'English'}`);
+  };
+
+  const handleDateFormatChange = (format: string) => {
+    setDateFormat(format);
+    updatePreference('dateFormat', format as any);
+    toast.success('Format de date mis à jour');
+  };
+
+  const handleEmailNotificationsChange = (value: boolean) => {
+    setEmailNotifications(value);
+    updatePreference('emailNotifications', value);
+    toast.success(`Notifications par email ${value ? 'activées' : 'désactivées'}`);
+  };
+
+  const syncStats = getSyncStats();
+  const lastSync = getLastSync();
 
   return (
     <div className="space-y-6">
@@ -100,6 +150,154 @@ export default function Settings() {
               </>
             )}
           </Button>
+        </CardContent>
+      </Card>
+
+      {/* Backup & Restore */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Download className="w-5 h-5" />
+            Sauvegarde et Restauration
+          </CardTitle>
+          <CardDescription>
+            Exportez et importez vos données
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="bg-amber-50 dark:bg-amber-950 border border-amber-200 dark:border-amber-800 rounded-lg p-4">
+            <p className="text-sm text-amber-900 dark:text-amber-100">
+              Taille de la sauvegarde: <strong>{getBackupSize()} KB</strong>
+            </p>
+          </div>
+          <div className="grid grid-cols-2 gap-3">
+            <Button
+              onClick={handleExportBackup}
+              variant="outline"
+              size="sm"
+              className="w-full"
+            >
+              <Download className="w-4 h-4 mr-2" />
+              Exporter
+            </Button>
+            <Button
+              onClick={() => fileInputRef.current?.click()}
+              variant="outline"
+              size="sm"
+              className="w-full"
+            >
+              <Upload className="w-4 h-4 mr-2" />
+              Importer
+            </Button>
+          </div>
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept=".json"
+            onChange={handleImportBackup}
+            className="hidden"
+          />
+          <p className="text-xs text-muted-foreground">
+            Les fichiers de sauvegarde contiennent tous vos documents, membres et catégories.
+          </p>
+        </CardContent>
+      </Card>
+
+      {/* Sync History */}
+      <Card>
+        <CardHeader>
+          <CardTitle>Historique de Synchronisation</CardTitle>
+          <CardDescription>
+            Suivi des activités et synchronisations
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <p className="text-sm text-muted-foreground">Événements totaux</p>
+              <p className="text-2xl font-bold">{syncStats.totalEvents}</p>
+            </div>
+            <div>
+              <p className="text-sm text-muted-foreground">Aujourd'hui</p>
+              <p className="text-2xl font-bold">{syncStats.todayEvents}</p>
+            </div>
+            <div>
+              <p className="text-sm text-muted-foreground">Réussis</p>
+              <p className="text-2xl font-bold text-green-600">{syncStats.successCount}</p>
+            </div>
+            <div>
+              <p className="text-sm text-muted-foreground">Erreurs</p>
+              <p className="text-2xl font-bold text-red-600">{syncStats.errorCount}</p>
+            </div>
+          </div>
+          {lastSync && (
+            <div className="bg-green-50 dark:bg-green-950 border border-green-200 dark:border-green-800 rounded-lg p-4">
+              <p className="text-sm text-green-900 dark:text-green-100">
+                ✅ Dernière synchronisation: {new Date(lastSync.timestamp).toLocaleString('fr-FR')}
+              </p>
+            </div>
+          )}
+        </CardContent>
+      </Card>
+
+      {/* Preferences */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Save className="w-5 h-5" />
+            Préférences
+          </CardTitle>
+          <CardDescription>
+            Personnalisez votre expérience
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-6">
+          {/* Language */}
+          <div className="space-y-3">
+            <label className="text-sm font-medium">Langue</label>
+            <div className="flex gap-2">
+              <Button
+                onClick={() => handleLanguageChange('fr')}
+                variant={language === 'fr' ? 'default' : 'outline'}
+                size="sm"
+              >
+                Français
+              </Button>
+              <Button
+                onClick={() => handleLanguageChange('en')}
+                variant={language === 'en' ? 'default' : 'outline'}
+                size="sm"
+              >
+                English
+              </Button>
+            </div>
+          </div>
+
+          {/* Date Format */}
+          <div className="space-y-3">
+            <label className="text-sm font-medium">Format de Date</label>
+            <select
+              value={dateFormat}
+              onChange={(e) => handleDateFormatChange(e.target.value)}
+              className="w-full px-3 py-2 border border-input rounded-md bg-background text-foreground"
+            >
+              <option value="DD/MM/YYYY">DD/MM/YYYY</option>
+              <option value="MM/DD/YYYY">MM/DD/YYYY</option>
+              <option value="YYYY-MM-DD">YYYY-MM-DD</option>
+            </select>
+          </div>
+
+          {/* Email Notifications */}
+          <div className="flex items-center justify-between">
+            <div>
+              <label className="text-sm font-medium">Notifications par Email</label>
+              <p className="text-xs text-muted-foreground">Recevoir des alertes par email</p>
+            </div>
+            <Switch
+              checked={emailNotifications}
+              onCheckedChange={handleEmailNotificationsChange}
+            />
+          </div>
         </CardContent>
       </Card>
 
