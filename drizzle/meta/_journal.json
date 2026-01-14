@@ -15,6 +15,13 @@
       "when": 1768234236510,
       "tag": "0001_rich_nighthawk",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1768383195466,
+      "tag": "0002_cheerful_genesis",
+      "breakpoints": true
     }
   ]
 }

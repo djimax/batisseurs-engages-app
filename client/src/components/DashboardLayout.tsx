@@ -32,7 +32,8 @@ import {
   Settings,
   Activity,
   Building2,
-  Archive
+  Archive,
+  DollarSign
 } from "lucide-react";
 import { CSSProperties, useEffect, useRef, useState } from "react";
 import { useLocation } from "wouter";
@@ -44,6 +45,7 @@ const menuItems = [
   { icon: FileText, label: "Documents", path: "/documents" },
   { icon: FolderOpen, label: "Catégories", path: "/categories" },
   { icon: Users, label: "Membres", path: "/members" },
+  { icon: DollarSign, label: "Finance", path: "/finance" },
   { icon: Activity, label: "Activité", path: "/activity" },
   { icon: Archive, label: "Archives", path: "/archives" },
 ];

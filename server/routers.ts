@@ -8,7 +8,12 @@ import {
   getAllDocuments, getDocumentById, createDocument, updateDocument, deleteDocument, getDocumentStats, seedDefaultDocuments,
   getNotesByDocumentId, createNote, deleteNote,
   getAllMembers, getMemberById, createMember, updateMember, deleteMember,
-  logActivity, getRecentActivity
+  logActivity, getRecentActivity,
+  createCotisation, getCotisations, getCotisationsByMember, updateCotisation,
+  createDon, getDons,
+  createDepense, getDepenses,
+  createTransaction, getTransactions,
+  getFinancialStats
 } from "./db";
 import { storagePut } from "./storage";
 import { notifyOwner } from "./_core/notification";
@@ -444,6 +449,11 @@ export const appRouter = router({
     recent: protectedProcedure
       .input(z.object({ limit: z.number().optional() }).optional())
       .query(async ({ input }) => getRecentActivity(input?.limit || 20)),
+  }),
+
+  // ============ FINANCES ============
+  finances: router({
+    stats: protectedProcedure.query(async () => getFinancialStats()),
   }),
 });
 

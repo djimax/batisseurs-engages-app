@@ -160,3 +160,41 @@
 - [x] Intégrer le logo dans Offline
 - [x] Logo affiche correctement sur tous les modes
 - [x] Tester l'affichage du logo sur tous les appareils
+
+
+## Phase 7 - Gestion Financière (Cotisations, Dons, Dépenses)
+
+### Schéma de Base de Données
+- [x] Table transactions (id, type, montant, description, date, memberId)
+- [x] Table cotisations (id, memberId, montant, dateDebut, dateFin, statut)
+- [x] Table dons (id, donateur, montant, description, date)
+- [x] Table dépenses (id, description, montant, catégorie, date, approuvéPar)
+
+### Routes tRPC Financières
+- [x] Route pour créer une cotisation
+- [x] Route pour mettre à jour une cotisation
+- [x] Route pour lister les cotisations
+- [x] Route pour créer un don
+- [x] Route pour lister les dons
+- [x] Route pour créer une dépense
+- [x] Route pour lister les dépenses
+- [x] Route pour obtenir les statistiques financières
+
+### Interface Utilisateur
+- [x] Page Finance avec gestion des cotisations
+- [x] Formulaire d'ajout de cotisation
+- [x] Tableau des cotisations avec statut (payée, en attente, en retard)
+- [x] Formulaire d'ajout de don
+- [x] Tableau des dons
+- [x] Formulaire d'ajout de dépense
+- [x] Tableau des dépenses
+- [x] Tableau de bord financiér avec statistiques (4 cartes)
+- [x] Lien Finance dans le menu de navigation
+- [x] Onglets pour naviguer entre cotisations, dons et dépenses
+
+### Fonctionnalités Implémentées
+- [x] Suivi des cotisations par membre
+- [x] Statut des cotisations (payée, en attente, en retard)
+- [x] Historique des transactions
+- [x] Bilan financiér (revenus - dépenses)
+- [x] Catégories de dépenses (fournitures, loyer, utilities, transport, communication)

@@ -11,9 +11,10 @@ import Categories from "./pages/Categories";
 import Members from "./pages/Members";
 import Activity from "./pages/Activity";
 import Archives from "./pages/Archives";
-import Settings from "./pages/Settings";
+import Finance from "./pages/Finance";
 import Offline from "./pages/Offline";
 import ModeSelector from "./pages/ModeSelector";
+import Settings from "./pages/Settings";
 import { useState, useEffect } from "react";
 
 function OnlineRouter() {
@@ -21,12 +22,13 @@ function OnlineRouter() {
     <DashboardLayout>
       <Switch>
         <Route path="/" component={Home} />
-        <Route path="/documents" component={Documents} />
-        <Route path="/categories" component={Categories} />
-        <Route path="/members" component={Members} />
-        <Route path="/activity" component={Activity} />
-        <Route path="/archives" component={Archives} />
-        <Route path="/settings" component={Settings} />
+      <Route path="/documents" component={Documents} />
+      <Route path="/categories" component={Categories} />
+      <Route path="/members" component={Members} />
+      <Route path="/activity" component={Activity} />
+      <Route path="/archives" component={Archives} />
+      <Route path="/finance" component={Finance} />
+      <Route path="/settings" component={Settings} />
         <Route path="/404" component={NotFound} />
         <Route component={NotFound} />
       </Switch>

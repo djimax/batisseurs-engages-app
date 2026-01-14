@@ -1,4 +1,4 @@
-import { int, mysqlEnum, mysqlTable, text, timestamp, varchar, boolean } from "drizzle-orm/mysql-core";
+import { int, mysqlEnum, mysqlTable, text, timestamp, varchar, boolean, decimal } from "drizzle-orm/mysql-core";
 
 /**
  * Core user table backing auth flow.
@@ -132,3 +132,76 @@ export const activityLogs = mysqlTable("activity_logs", {
 
 export type ActivityLog = typeof activityLogs.$inferSelect;
 export type InsertActivityLog = typeof activityLogs.$inferInsert;
+
+
+/**
+ * Cotisations table - membership fees
+ */
+export const cotisations = mysqlTable("cotisations", {
+  id: int("id").autoincrement().primaryKey(),
+  memberId: int("memberId").notNull(),
+  montant: varchar("montant", { length: 20 }).notNull(),
+  dateDebut: timestamp("dateDebut").notNull(),
+  dateFin: timestamp("dateFin").notNull(),
+  statut: mysqlEnum("statut", ["payée", "en attente", "en retard"]).default("en attente").notNull(),
+  datePayment: timestamp("datePayment"),
+  notes: text("notes"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type Cotisation = typeof cotisations.$inferSelect;
+export type InsertCotisation = typeof cotisations.$inferInsert;
+
+/**
+ * Dons table - donations received
+ */
+export const dons = mysqlTable("dons", {
+  id: int("id").autoincrement().primaryKey(),
+  donateur: varchar("donateur", { length: 255 }).notNull(),
+  montant: varchar("montant", { length: 20 }).notNull(),
+  description: text("description"),
+  email: varchar("email", { length: 320 }),
+  telephone: varchar("telephone", { length: 20 }),
+  date: timestamp("date").defaultNow().notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type Don = typeof dons.$inferSelect;
+export type InsertDon = typeof dons.$inferInsert;
+
+/**
+ * Dépenses table - expenses
+ */
+export const depenses = mysqlTable("depenses", {
+  id: int("id").autoincrement().primaryKey(),
+  description: varchar("description", { length: 255 }).notNull(),
+  montant: varchar("montant", { length: 20 }).notNull(),
+  categorie: varchar("categorie", { length: 100 }).notNull(),
+  date: timestamp("date").defaultNow().notNull(),
+  approuvePar: int("approuvePar"),
+  notes: text("notes"),
+  pieceJointe: text("pieceJointe"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type Depense = typeof depenses.$inferSelect;
+export type InsertDepense = typeof depenses.$inferInsert;
+
+/**
+ * Transactions table - all financial transactions
+ */
+export const transactions = mysqlTable("transactions", {
+  id: int("id").autoincrement().primaryKey(),
+  type: mysqlEnum("type", ["cotisation", "don", "depense", "autre"]).notNull(),
+  montant: varchar("montant", { length: 20 }).notNull(),
+  description: varchar("description", { length: 255 }).notNull(),
+  date: timestamp("date").defaultNow().notNull(),
+  memberId: int("memberId"),
+  referenceId: int("referenceId"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type Transaction = typeof transactions.$inferSelect;
+export type InsertTransaction = typeof transactions.$inferInsert;

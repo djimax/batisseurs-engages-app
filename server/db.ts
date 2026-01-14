@@ -7,7 +7,11 @@ import {
   documentNotes, InsertDocumentNote,
   members, InsertMember,
   documentPermissions, InsertDocumentPermission,
-  activityLogs, InsertActivityLog
+  activityLogs, InsertActivityLog,
+  cotisations, InsertCotisation,
+  dons, InsertDon,
+  depenses, InsertDepense,
+  transactions, InsertTransaction
 } from "../drizzle/schema";
 import { ENV } from './_core/env';
 
@@ -334,4 +338,115 @@ export async function getRecentActivity(limit: number = 20) {
   const db = await getDb();
   if (!db) return [];
   return db.select().from(activityLogs).orderBy(desc(activityLogs.createdAt)).limit(limit);
+}
+
+
+// ============ COTISATIONS ============
+
+export async function createCotisation(data: InsertCotisation) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  
+  const result = await db.insert(cotisations).values(data);
+  return result;
+}
+
+export async function getCotisations() {
+  const db = await getDb();
+  if (!db) return [];
+  
+  return await db.select().from(cotisations);
+}
+
+export async function getCotisationsByMember(memberId: number) {
+  const db = await getDb();
+  if (!db) return [];
+  
+  return await db.select().from(cotisations).where(eq(cotisations.memberId, memberId));
+}
+
+export async function updateCotisation(id: number, data: Partial<InsertCotisation>) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  
+  return await db.update(cotisations).set(data).where(eq(cotisations.id, id));
+}
+
+// ============ DONS ============
+
+export async function createDon(data: InsertDon) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  
+  return await db.insert(dons).values(data);
+}
+
+export async function getDons() {
+  const db = await getDb();
+  if (!db) return [];
+  
+  return await db.select().from(dons);
+}
+
+// ============ DÉPENSES ============
+
+export async function createDepense(data: InsertDepense) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  
+  return await db.insert(depenses).values(data);
+}
+
+export async function getDepenses() {
+  const db = await getDb();
+  if (!db) return [];
+  
+  return await db.select().from(depenses);
+}
+
+// ============ TRANSACTIONS ============
+
+export async function createTransaction(data: InsertTransaction) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  
+  return await db.insert(transactions).values(data);
+}
+
+export async function getTransactions() {
+  const db = await getDb();
+  if (!db) return [];
+  
+  return await db.select().from(transactions);
+}
+
+// ============ STATISTIQUES FINANCIÈRES ============
+
+export async function getFinancialStats() {
+  const db = await getDb();
+  if (!db) return null;
+  
+  const allCotisations = await db.select().from(cotisations);
+  const allDons = await db.select().from(dons);
+  const allDepenses = await db.select().from(depenses);
+  
+  const totalCotisations = allCotisations.reduce((sum, c) => sum + parseFloat(c.montant), 0);
+  const totalDons = allDons.reduce((sum, d) => sum + parseFloat(d.montant), 0);
+  const totalDepenses = allDepenses.reduce((sum, d) => sum + parseFloat(d.montant), 0);
+  
+  const cotisationsPayees = allCotisations.filter(c => c.statut === "payée").length;
+  const cotisationsEnAttente = allCotisations.filter(c => c.statut === "en attente").length;
+  const cotisationsEnRetard = allCotisations.filter(c => c.statut === "en retard").length;
+  
+  return {
+    totalCotisations,
+    totalDons,
+    totalDepenses,
+    solde: totalCotisations + totalDons - totalDepenses,
+    cotisationsPayees,
+    cotisationsEnAttente,
+    cotisationsEnRetard,
+    nombreDons: allDons.length,
+    nombreDepenses: allDepenses.length,
+  };
 }
