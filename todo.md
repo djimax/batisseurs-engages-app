@@ -198,3 +198,28 @@
 - [x] Historique des transactions
 - [x] Bilan financiér (revenus - dépenses)
 - [x] Catégories de dépenses (fournitures, loyer, utilities, transport, communication)
+
+
+## Phase 8 - Améliorations Financières Avancées
+
+### Graphiques Financiers
+- [x] Graphique camembert pour répartition des dépenses par catégorie
+- [x] Graphique histogramme pour revenus vs dépenses mensuels
+- [x] Graphique courbe pour évolution du solde dans le temps
+- [x] Intégration Recharts pour les visualisations
+- [x] Composant FinanceCharts créé
+
+### Rappels de Cotisations
+- [x] Système de détection des cotisations en retard
+- [x] Hook useCotisationReminders implémenté
+- [x] Calcul des jours en retard et expiration imminente
+- [x] Statistiques de rappels (en retard, expiré bientôt)
+- [x] Prêt pour intégration dans la page Finance
+
+### Export PDF de Rapports Financiers
+- [x] Fonction d'export PDF du rapport financier complet
+- [x] Composant FinanceReportPDF créé
+- [x] Génération HTML pour impression/PDF
+- [x] Détail des transactions par type
+- [x] Résumé des cotisations, dons et dépenses
+- [x] Bouton d'export prêt pour la page Finance

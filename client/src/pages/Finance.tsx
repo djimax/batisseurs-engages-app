@@ -8,6 +8,9 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Plus, DollarSign, Gift, TrendingUp, AlertCircle } from "lucide-react";
 import { toast } from "sonner";
+import { FinanceCharts } from "@/components/FinanceCharts";
+import { FinanceReportPDF } from "@/components/FinanceReportPDF";
+import { useCotisationReminders } from "@/hooks/useCotisationReminders";
 
 interface Cotisation {
   id: number;
