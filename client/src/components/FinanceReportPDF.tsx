@@ -56,19 +56,19 @@ export function FinanceReportPDF({
         <div class="summary">
           <div class="summary-item">
             <label>Cotisations totales</label>
-            <value class="positive">${totalCotisations}€</value>
+            <value class="positive">${totalCotisations}F</value>
           </div>
           <div class="summary-item">
             <label>Dons totaux</label>
-            <value class="positive">${totalDons}€</value>
+            <value class="positive">${totalDons}F</value>
           </div>
           <div class="summary-item">
             <label>Dépenses totales</label>
-            <value class="negative">${totalDépenses}€</value>
+            <value class="negative">${totalDépenses}F</value>
           </div>
           <div class="summary-item">
             <label>Solde</label>
-            <value class="${solde >= 0 ? "positive" : "negative"}">${solde}€</value>
+            <value class="${solde >= 0 ? "positive" : "negative"}">${solde}F</value>
           </div>
         </div>
 
@@ -90,7 +90,7 @@ export function FinanceReportPDF({
                 <td>${new Date(t.date).toLocaleDateString("fr-FR")}</td>
                 <td>${t.type === "cotisation" ? "Cotisation" : t.type === "don" ? "Don" : "Dépense"}</td>
                 <td>${t.description}</td>
-                <td class="${t.type === "dépense" ? "negative" : "positive"}">${t.montant}€</td>
+                <td class="${t.type === "dépense" ? "negative" : "positive"}">${t.montant}F</td>
               </tr>
             `
               )

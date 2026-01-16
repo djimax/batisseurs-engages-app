@@ -223,3 +223,28 @@
 - [x] Détail des transactions par type
 - [x] Résumé des cotisations, dons et dépenses
 - [x] Bouton d'export prêt pour la page Finance
+
+
+## Phase 9 - Intégration Graphiques et Ajustements
+
+### Intégration Graphiques Financiers
+- [x] Intégrer FinanceCharts dans la page Finance
+- [x] Afficher les graphiques avec données réelles
+- [x] Ajouter onglet "Graphiques" dans la page Finance
+- [x] Composant FinanceCharts créé avec Recharts (camembert, histogramme, courbe)
+
+### Remplacement Euro par Franc
+- [x] Remplacer € par F dans Finance.tsx
+- [x] Remplacer € par F dans FinanceCharts.tsx
+- [x] Remplacer € par F dans FinanceReportPDF.tsx
+- [x] Remplacer € par F dans tous les montants affichés
+- [x] Tous les symboles monnétaires affichent maintenant en F (Franc)
+
+### Nouveaux Rôles de Membres
+- [x] Ajouter "Président" au schéma et interface
+- [x] Ajouter "Secrétaire Général" au schéma et interface
+- [x] Ajouter "Secrétaire Général Adjoint" au schéma et interface
+- [x] Ajouter "Trésorier Général" au schéma et interface
+- [x] Ajouter "Trésorier Général Adjoint" au schéma et interface
+- [x] Mettre à jour la page Members avec tous les nouveaux rôles
+- [x] Formulaires d'ajout et modification de membre mis à jour

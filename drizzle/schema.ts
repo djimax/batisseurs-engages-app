@@ -90,7 +90,7 @@ export const members = mysqlTable("members", {
   lastName: varchar("lastName", { length: 100 }).notNull(),
   email: varchar("email", { length: 320 }),
   phone: varchar("phone", { length: 20 }),
-  role: varchar("role", { length: 100 }).default("Membre"),
+  role: varchar("role", { length: 100 }).default("Membre"), // Peut être: Président, Secrétaire Général, Secrétaire Général Adjoint, Trésorier Général, Trésorier Général Adjoint, Membre
   function: varchar("function", { length: 100 }),
   status: mysqlEnum("status", ["active", "inactive", "pending"]).default("active").notNull(),
   joinedAt: timestamp("joinedAt").defaultNow().notNull(),

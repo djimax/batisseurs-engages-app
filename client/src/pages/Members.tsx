@@ -56,6 +56,11 @@ import {
 
 const MEMBER_ROLES = [
   { value: "admin", label: "Admin", description: "Accès complet à tous les documents" },
+  { value: "president", label: "Président", description: "Président de l'association" },
+  { value: "secretary_general", label: "Secrétaire Général", description: "Secrétaire général" },
+  { value: "secretary_general_adjoint", label: "Secrétaire Général Adjoint", description: "Secrétaire général adjoint" },
+  { value: "treasurer_general", label: "Trésorier Général", description: "Trésorier général" },
+  { value: "treasurer_general_adjoint", label: "Trésorier Général Adjoint", description: "Trésorier général adjoint" },
   { value: "secretary", label: "Secrétaire", description: "Peut créer et modifier les documents" },
   { value: "member", label: "Membre", description: "Accès en lecture seule" },
 ];

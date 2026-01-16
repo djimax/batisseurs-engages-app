@@ -169,7 +169,7 @@ export default function Finance() {
             <DollarSign className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{totalCotisations.toFixed(2)} €</div>
+            <div className="text-2xl font-bold">{totalCotisations.toFixed(2)} F</div>
             <p className="text-xs text-muted-foreground">{cotisations.length} cotisations</p>
           </CardContent>
         </Card>
@@ -180,7 +180,7 @@ export default function Finance() {
             <Gift className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{totalDons.toFixed(2)} €</div>
+            <div className="text-2xl font-bold">{totalDons.toFixed(2)} F</div>
             <p className="text-xs text-muted-foreground">{dons.length} dons reçus</p>
           </CardContent>
         </Card>
@@ -191,7 +191,7 @@ export default function Finance() {
             <TrendingUp className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{totalDepenses.toFixed(2)} €</div>
+            <div className="text-2xl font-bold">{totalDepenses.toFixed(2)} F</div>
             <p className="text-xs text-muted-foreground">{depenses.length} dépenses</p>
           </CardContent>
         </Card>
@@ -203,7 +203,7 @@ export default function Finance() {
           </CardHeader>
           <CardContent>
             <div className={`text-2xl font-bold ${solde >= 0 ? "text-green-600" : "text-red-600"}`}>
-              {solde.toFixed(2)} €
+              {solde.toFixed(2)} F
             </div>
             <p className="text-xs text-muted-foreground">Bilan financier</p>
           </CardContent>
@@ -212,10 +212,11 @@ export default function Finance() {
 
       {/* Tabs */}
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-        <TabsList className="grid w-full grid-cols-3">
+        <TabsList className="grid w-full grid-cols-4">
           <TabsTrigger value="cotisations">Cotisations</TabsTrigger>
           <TabsTrigger value="dons">Dons</TabsTrigger>
           <TabsTrigger value="depenses">Dépenses</TabsTrigger>
+          <TabsTrigger value="graphiques">Graphiques</TabsTrigger>
         </TabsList>
 
         {/* Cotisations Tab */}
@@ -248,7 +249,7 @@ export default function Finance() {
                     />
                   </div>
                   <div>
-                    <Label htmlFor="montant">Montant (€)</Label>
+                    <Label htmlFor="montant">Montant (F)</Label>
                     <Input
                       id="montant"
                       type="number"
@@ -306,7 +307,7 @@ export default function Finance() {
                         <p className="text-sm text-muted-foreground">{cot.notes}</p>
                       </div>
                       <div className="text-right">
-                        <p className="font-semibold">{cot.montant} €</p>
+                        <p className="font-semibold">{cot.montant} F</p>
                         <span className={`text-xs px-2 py-1 rounded ${getStatutColor(cot.statut)}`}>
                           {cot.statut}
                         </span>
@@ -348,7 +349,7 @@ export default function Finance() {
                     />
                   </div>
                   <div>
-                    <Label htmlFor="montantDon">Montant (€)</Label>
+                    <Label htmlFor="montantDon">Montant (F)</Label>
                     <Input
                       id="montantDon"
                       type="number"
@@ -406,7 +407,7 @@ export default function Finance() {
                         <p className="font-medium">{don.donateur}</p>
                         <p className="text-sm text-muted-foreground">{don.description}</p>
                       </div>
-                      <p className="font-semibold text-green-600">{don.montant} €</p>
+                      <p className="font-semibold text-green-600">{don.montant} F</p>
                     </div>
                   ))}
                 </div>
@@ -444,7 +445,7 @@ export default function Finance() {
                     />
                   </div>
                   <div>
-                    <Label htmlFor="montantDepense">Montant (€)</Label>
+                    <Label htmlFor="montantDepense">Montant (F)</Label>
                     <Input
                       id="montantDepense"
                       type="number"
@@ -499,13 +500,39 @@ export default function Finance() {
                         <p className="font-medium">{dep.description}</p>
                         <p className="text-sm text-muted-foreground">{dep.categorie}</p>
                       </div>
-                      <p className="font-semibold text-red-600">{dep.montant} €</p>
+                      <p className="font-semibold text-red-600">{dep.montant} F</p>
                     </div>
                   ))}
                 </div>
               )}
             </CardContent>
           </Card>
+        </TabsContent>
+
+        {/* Graphiques Tab */}
+        <TabsContent value="graphiques" className="space-y-4">
+          <div>
+            <h2 className="text-xl font-semibold mb-4">Visualisation Financière</h2>
+            <FinanceCharts
+              expensesByCategory={depenses.map((d) => ({
+                category: d.categorie,
+                amount: parseFloat(d.montant || "0"),
+              }))}
+              monthlyData={[
+                {
+                  month: "Janvier",
+                  revenues: totalCotisations + totalDons,
+                  expenses: totalDepenses,
+                },
+              ]}
+              balanceHistory={[
+                {
+                  month: "Janvier",
+                  balance: solde,
+                },
+              ]}
+            />
+          </div>
         </TabsContent>
       </Tabs>
     </div>

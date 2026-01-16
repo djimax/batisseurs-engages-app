@@ -59,7 +59,7 @@ export function FinanceCharts({
                 cx="50%"
                 cy="50%"
                 labelLine={false}
-                label={({ category, amount }) => `${category}: ${amount}€`}
+                label={({ category, amount }) => `${category}: ${amount}F`}
                 outerRadius={80}
                 fill="#8884d8"
                 dataKey="amount"
@@ -68,7 +68,7 @@ export function FinanceCharts({
                   <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                 ))}
               </Pie>
-              <Tooltip formatter={(value) => `${value}€`} />
+              <Tooltip formatter={(value) => `${value}F`} />
             </PieChart>
           </ResponsiveContainer>
         </CardContent>
@@ -85,7 +85,7 @@ export function FinanceCharts({
               <CartesianGrid strokeDasharray="3 3" />
               <XAxis dataKey="month" />
               <YAxis />
-              <Tooltip formatter={(value) => `${value}€`} />
+              <Tooltip formatter={(value) => `${value}F`} />
               <Legend />
               <Bar dataKey="revenues" fill="#10b981" name="Revenus" />
               <Bar dataKey="expenses" fill="#ef4444" name="Dépenses" />
@@ -105,7 +105,7 @@ export function FinanceCharts({
               <CartesianGrid strokeDasharray="3 3" />
               <XAxis dataKey="month" />
               <YAxis />
-              <Tooltip formatter={(value) => `${value}€`} />
+              <Tooltip formatter={(value) => `${value}F`} />
               <Legend />
               <Line
                 type="monotone"
