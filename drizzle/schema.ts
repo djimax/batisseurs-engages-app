@@ -205,3 +205,81 @@ export const transactions = mysqlTable("transactions", {
 
 export type Transaction = typeof transactions.$inferSelect;
 export type InsertTransaction = typeof transactions.$inferInsert;
+
+/**
+ * Campaigns table - fundraising campaigns
+ */
+export const campaigns = mysqlTable("campaigns", {
+  id: int("id").autoincrement().primaryKey(),
+  title: varchar("title", { length: 255 }).notNull(),
+  description: text("description"),
+  objectif: varchar("objectif", { length: 20 }).notNull(),
+  montantCollecte: varchar("montantCollecte", { length: 20 }).default("0").notNull(),
+  dateDebut: timestamp("dateDebut").notNull(),
+  dateFin: timestamp("dateFin").notNull(),
+  status: mysqlEnum("status", ["draft", "active", "completed", "cancelled"]).default("draft").notNull(),
+  image: text("image"),
+  createdBy: int("createdBy").notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type Campaign = typeof campaigns.$inferSelect;
+export type InsertCampaign = typeof campaigns.$inferInsert;
+
+/**
+ * Adhésions table - membership registrations
+ */
+export const adhesions = mysqlTable("adhesions", {
+  id: int("id").autoincrement().primaryKey(),
+  memberId: int("memberId").notNull(),
+  annee: int("annee").notNull(),
+  montant: varchar("montant", { length: 20 }).notNull(),
+  dateAdhesion: timestamp("dateAdhesion").notNull(),
+  dateExpiration: timestamp("dateExpiration").notNull(),
+  status: mysqlEnum("status", ["active", "expired", "pending"]).default("pending").notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type Adhesion = typeof adhesions.$inferSelect;
+export type InsertAdhesion = typeof adhesions.$inferInsert;
+
+/**
+ * Notifications table - system notifications
+ */
+export const notifications = mysqlTable("notifications", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull(),
+  title: varchar("title", { length: 255 }).notNull(),
+  message: text("message").notNull(),
+  type: mysqlEnum("type", ["info", "warning", "error", "success"]).default("info").notNull(),
+  isRead: boolean("isRead").default(false),
+  actionUrl: text("actionUrl"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type Notification = typeof notifications.$inferSelect;
+export type InsertNotification = typeof notifications.$inferInsert;
+
+/**
+ * Association info table - organization details
+ */
+export const associationInfo = mysqlTable("association_info", {
+  id: int("id").autoincrement().primaryKey(),
+  name: varchar("name", { length: 255 }).notNull(),
+  description: text("description"),
+  logo: text("logo"),
+  email: varchar("email", { length: 320 }),
+  phone: varchar("phone", { length: 20 }),
+  address: text("address"),
+  siret: varchar("siret", { length: 20 }),
+  rib: varchar("rib", { length: 50 }),
+  website: varchar("website", { length: 255 }),
+  foundedAt: timestamp("foundedAt"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type AssociationInfo = typeof associationInfo.$inferSelect;
+export type InsertAssociationInfo = typeof associationInfo.$inferInsert;

@@ -15,6 +15,8 @@ import Finance from "./pages/Finance";
 import Offline from "./pages/Offline";
 import ModeSelector from "./pages/ModeSelector";
 import Settings from "./pages/Settings";
+import Campaigns from "./pages/Campaigns";
+import Adhesions from "./pages/Adhesions";
 import { useState, useEffect } from "react";
 
 function OnlineRouter() {
@@ -28,6 +30,8 @@ function OnlineRouter() {
       <Route path="/activity" component={Activity} />
       <Route path="/archives" component={Archives} />
       <Route path="/finance" component={Finance} />
+      <Route path="/campaigns" component={Campaigns} />
+      <Route path="/adhesions" component={Adhesions} />
       <Route path="/settings" component={Settings} />
         <Route path="/404" component={NotFound} />
         <Route component={NotFound} />

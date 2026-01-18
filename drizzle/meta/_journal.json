@@ -22,6 +22,13 @@
       "when": 1768383195466,
       "tag": "0002_cheerful_genesis",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "5",
+      "when": 1768739475484,
+      "tag": "0003_closed_reaper",
+      "breakpoints": true
     }
   ]
 }

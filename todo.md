@@ -248,3 +248,108 @@
 - [x] Ajouter "Trésorier Général Adjoint" au schéma et interface
 - [x] Mettre à jour la page Members avec tous les nouveaux rôles
 - [x] Formulaires d'ajout et modification de membre mis à jour
+
+
+## Phase 10 - Améliorations Inspirées de HelloAsso
+
+### Dashboard d'Accueil Amélioré
+- [ ] Créer un nouveau dashboard avec onboarding pour nouveaux utilisateurs
+- [ ] Afficher les étapes de configuration (3 étapes comme HelloAsso)
+- [ ] Barre de progression pour l'onboarding
+- [ ] Afficher les informations de l'association (nom, RIB, etc.)
+- [ ] Section "Ressources utiles" avec liens vers guides et formations
+- [ ] Afficher le solde total collecté en évidence
+- [ ] Afficher les paiements des 7 derniers jours
+- [ ] Afficher les campagnes en cours
+
+### Système de Campagnes de Collecte
+- [ ] Créer une table "campaigns" pour les campagnes de collecte
+- [ ] Page Campagnes avec liste et création
+- [ ] Formulaire de création de campagne (titre, description, objectif, date fin)
+- [ ] Afficher le montant collecté vs objectif
+- [ ] Barre de progression pour chaque campagne
+- [ ] Lien direct pour partager la campagne
+- [ ] Historique des contributions par campagne
+
+### Système de Paiements en Ligne
+- [ ] Intégration HelloAsso API (si possible) ou Stripe
+- [ ] Générer des liens de paiement pour les cotisations
+- [ ] Générer des liens de paiement pour les dons
+- [ ] Suivi des paiements en attente
+- [ ] Notifications automatiques quand un paiement est reçu
+- [ ] Historique des tentatives de paiement
+
+### Rapports Financiers Avancés
+- [ ] Rapport mensuel détaillé
+- [ ] Rapport annuel avec comparaison année précédente
+- [ ] Prévisions budgétaires
+- [ ] Analyse des tendances de collecte
+- [ ] Export en Excel avec mise en forme
+- [ ] Graphiques comparatifs (cotisations vs dons vs dépenses)
+- [ ] Rapport par source de revenus
+
+### Système de Notifications et Alertes
+- [ ] Notifications pour les cotisations en retard
+- [ ] Alertes pour les paiements reçus
+- [ ] Rappels automatiques pour les cotisations à venir
+- [ ] Notifications pour les campagnes proches de l'objectif
+- [ ] Notifications pour les dépenses approuvées
+- [ ] Centre de notifications avec historique
+- [ ] Configuration des préférences de notification par utilisateur
+
+### Gestion des Adhésions
+- [ ] Page Adhésions pour gérer les adhésions annuelles
+- [ ] Formulaire d'adhésion en ligne
+- [ ] Suivi des adhésions par année
+- [ ] Renouvellement automatique des adhésions
+- [ ] Rappels de renouvellement d'adhésion
+
+### Amélioration de l'Interface
+- [ ] Design inspiré de HelloAsso (couleurs, layout)
+- [ ] Navigation améliorée avec icônes
+- [ ] Cartes de statistiques plus visuelles
+- [ ] Utilisation de graphiques dans le dashboard
+- [ ] Responsive design optimisé
+- [ ] Mode sombre/clair amélioré
+
+### Sécurité et Conformité
+- [ ] Chiffrement des données sensibles
+- [ ] Audit trail complet des modifications
+- [ ] Conformité RGPD (export de données, suppression)
+- [ ] Sauvegarde automatique des données
+- [ ] Historique des accès utilisateurs
+
+
+## Phase 10 - Améliorations Inspirées de HelloAsso (EN COURS)
+
+### Schéma de Base de Données
+- [x] Table campaigns pour les campagnes de collecte
+- [x] Table adhesions pour les adhésions annuelles
+- [x] Table notifications pour les notifications système
+- [x] Table associationInfo pour les informations de l'association
+- [x] Migration de base de données appliquée
+
+### Pages Créées
+- [x] Page Campaigns.tsx avec gestion des campagnes
+- [x] Page Adhesions.tsx avec gestion des adhésions
+- [x] Routes /campaigns et /adhesions ajoutées à App.tsx
+- [x] Menu de navigation mis à jour avec les nouvelles pages
+- [x] Icônes Megaphone et UserCheck ajoutées au menu
+
+### Fonctionnalités Campagnes
+- [x] Affichage des campagnes actives
+- [x] Formulaire de création de campagne
+- [x] Barre de progression pour chaque campagne
+- [x] Affichage du montant collecté vs objectif
+- [x] Statuts de campagne (draft, active, completed, cancelled)
+- [x] Édition et suppression de campagnes
+- [x] Statistiques de collecte (campagnes actives, total collecté, objectif total)
+
+### Fonctionnalités Adhésions
+- [x] Affichage des adhésions par année
+- [x] Formulaire de création d'adhésion
+- [x] Suivi des adhésions actives et expirées
+- [x] Affichage des jours restants avant expiration
+- [x] Filtrage par année
+- [x] Statistiques d'adhésions (total, actives, expirées, total collecté)
+- [x] Statuts d'adhésion (active, expired, pending)

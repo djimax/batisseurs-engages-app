@@ -33,7 +33,9 @@ import {
   Activity,
   Building2,
   Archive,
-  DollarSign
+  DollarSign,
+  Megaphone,
+  UserCheck
 } from "lucide-react";
 import { CSSProperties, useEffect, useRef, useState } from "react";
 import { useLocation } from "wouter";
@@ -46,6 +48,8 @@ const menuItems = [
   { icon: FolderOpen, label: "Catégories", path: "/categories" },
   { icon: Users, label: "Membres", path: "/members" },
   { icon: DollarSign, label: "Finance", path: "/finance" },
+  { icon: Megaphone, label: "Campagnes", path: "/campaigns" },
+  { icon: UserCheck, label: "Adhésions", path: "/adhesions" },
   { icon: Activity, label: "Activité", path: "/activity" },
   { icon: Archive, label: "Archives", path: "/archives" },
 ];
