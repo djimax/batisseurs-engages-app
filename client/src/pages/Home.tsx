@@ -85,9 +85,9 @@ export default function Home() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight">Tableau de bord</h1>
+          <h1 className="text-2xl font-bold tracking-tight">Tableau de bord - Gestion d'Association</h1>
           <p className="text-muted-foreground">
-            Vue d'ensemble de votre gestion documentaire
+            Plateforme complète de gestion documentaire, financière et administrative pour votre association
           </p>
         </div>
         <Button onClick={() => setLocation("/documents")} className="gap-2">
@@ -97,6 +97,7 @@ export default function Home() {
       </div>
 
       {/* Stats Grid */}
+      <h2 className="text-xl font-semibold tracking-tight mt-8">Statistiques de Gestion</h2>
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         {statsLoading ? (
           Array.from({ length: 4 }).map((_, i) => (
@@ -169,6 +170,7 @@ export default function Home() {
         </Card>
       )}
 
+      <h2 className="text-xl font-semibold tracking-tight mt-8">Vue d'Ensemble</h2>
       <div className="grid gap-6 lg:grid-cols-2">
         {/* Recent Documents */}
         <Card>
@@ -292,6 +294,7 @@ export default function Home() {
       </div>
 
       {/* Quick Actions */}
+      <h2 className="text-xl font-semibold tracking-tight mt-8">Accés Rapide</h2>
       <Card>
         <CardHeader>
           <CardTitle>Actions rapides</CardTitle>

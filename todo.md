@@ -353,3 +353,14 @@
 - [x] Filtrage par année
 - [x] Statistiques d'adhésions (total, actives, expirées, total collecté)
 - [x] Statuts d'adhésion (active, expired, pending)
+
+
+## Phase 11 - Optimisation SEO
+
+### Page d'Accueil (/)
+- [x] Ajouter une description meta (120 caractères)
+- [x] Ajouter des mots-clés meta
+- [x] Ajouter des titres H2 (3 sections)
+- [x] Améliorer le H1 avec mots-clés
+- [x] Améliorer la description du H1
+- [x] Ajouter des mots-clés pertinents : "gestion association", "gestion documentaire", "gestion financière", "gestion membres", "plateforme association", "collecte de fonds"
