@@ -17,22 +17,28 @@ import ModeSelector from "./pages/ModeSelector";
 import Settings from "./pages/Settings";
 import Campaigns from "./pages/Campaigns";
 import Adhesions from "./pages/Adhesions";
+import Login from "./pages/Login";
+import { usePasswordAuth } from "./hooks/usePasswordAuth";
 import { useState, useEffect } from "react";
 
-function OnlineRouter() {
+function OnlineRouter({ isAuthenticated, error, onLogin, onLogout }: any) {
+  if (!isAuthenticated) {
+    return <Login onLogin={onLogin} error={error} />;
+  }
+
   return (
-    <DashboardLayout>
+    <DashboardLayout onLogout={onLogout}>
       <Switch>
         <Route path="/" component={Home} />
-      <Route path="/documents" component={Documents} />
-      <Route path="/categories" component={Categories} />
-      <Route path="/members" component={Members} />
-      <Route path="/activity" component={Activity} />
-      <Route path="/archives" component={Archives} />
-      <Route path="/finance" component={Finance} />
-      <Route path="/campaigns" component={Campaigns} />
-      <Route path="/adhesions" component={Adhesions} />
-      <Route path="/settings" component={Settings} />
+        <Route path="/documents" component={Documents} />
+        <Route path="/categories" component={Categories} />
+        <Route path="/members" component={Members} />
+        <Route path="/activity" component={Activity} />
+        <Route path="/archives" component={Archives} />
+        <Route path="/finance" component={Finance} />
+        <Route path="/campaigns" component={Campaigns} />
+        <Route path="/adhesions" component={Adhesions} />
+        <Route path="/settings" component={Settings} />
         <Route path="/404" component={NotFound} />
         <Route component={NotFound} />
       </Switch>
@@ -48,7 +54,7 @@ function OfflineRouter() {
   );
 }
 
-function Router({ mode, onChangeMode }: { mode: 'online' | 'offline' | null; onChangeMode: (mode: 'online' | 'offline') => void }) {
+function Router({ mode, onChangeMode, isAuthenticated, error, onLogin, onLogout }: any) {
   if (mode === null) {
     return (
       <ModeSelector
@@ -64,11 +70,12 @@ function Router({ mode, onChangeMode }: { mode: 'online' | 'offline' | null; onC
     return <OfflineRouter />;
   }
 
-  return <OnlineRouter />;
+  return <OnlineRouter isAuthenticated={isAuthenticated} error={error} onLogin={onLogin} onLogout={onLogout} />;
 }
 
 function App() {
   const [mode, setMode] = useState<'online' | 'offline' | null>(null);
+  const { isAuthenticated, error, login, logout } = usePasswordAuth();
 
   useEffect(() => {
     const savedMode = localStorage.getItem('appMode') as 'online' | 'offline' | null;
@@ -79,12 +86,23 @@ function App() {
     setMode(newMode);
   };
 
+  const handleLogin = (password: string) => {
+    login(password);
+  };
+
   return (
     <ErrorBoundary>
       <ThemeProvider defaultTheme="light">
         <TooltipProvider>
           <Toaster />
-          <Router mode={mode} onChangeMode={handleChangeMode} />
+          <Router 
+            mode={mode} 
+            onChangeMode={handleChangeMode}
+            isAuthenticated={isAuthenticated}
+            error={error}
+            onLogin={handleLogin}
+            onLogout={logout}
+          />
         </TooltipProvider>
       </ThemeProvider>
     </ErrorBoundary>

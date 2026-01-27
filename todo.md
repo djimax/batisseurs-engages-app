@@ -364,3 +364,47 @@
 - [x] Améliorer le H1 avec mots-clés
 - [x] Améliorer la description du H1
 - [x] Ajouter des mots-clés pertinents : "gestion association", "gestion documentaire", "gestion financière", "gestion membres", "plateforme association", "collecte de fonds"
+
+
+## Phase 12 - Authentification par Mot de Passe
+
+### Page de Connexion
+- [ ] Créer une page Login.tsx avec formulaire de mot de passe
+- [ ] Design moderne et responsive
+- [ ] Validation du mot de passe
+- [ ] Messages d'erreur clairs
+
+### Gestion de Session
+- [ ] Créer un hook usePasswordAuth pour gérer l'authentification
+- [ ] Stocker le token dans sessionStorage
+- [ ] Fonction de connexion et déconnexion
+- [ ] Vérification de l'authentification au chargement
+
+### Intégration au Routage
+- [ ] Créer un ProtectedRoute pour vérifier l'authentification
+- [ ] Redirection vers login si non authentifié
+- [ ] Intégration dans App.tsx
+- [ ] Bouton de déconnexion dans le menu
+
+### Configuration
+- [x] Définir le mot de passe par défaut (configurable)
+- [x] Ajouter le mot de passe dans les variables d'environnement
+- [x] Documentation sur comment changer le mot de passe
+
+### Pages de Connexion
+- [x] Créer une page Login.tsx avec formulaire de mot de passe
+- [x] Design moderne et responsive
+- [x] Validation du mot de passe
+- [x] Messages d'erreur clairs
+
+### Gestion de Session
+- [x] Créer un hook usePasswordAuth pour gérer l'authentification
+- [x] Stocker le token dans sessionStorage
+- [x] Fonction de connexion et déconnexion
+- [x] Vérification de l'authentification au chargement
+
+### Intégration au Routage
+- [x] Créer un ProtectedRoute pour vérifier l'authentification
+- [x] Redirection vers login si non authentifié
+- [x] Intégration dans App.tsx
+- [x] Bouton de déconnexion dans le menu

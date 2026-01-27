@@ -61,8 +61,10 @@ const MAX_WIDTH = 400;
 
 export default function DashboardLayout({
   children,
+  onLogout,
 }: {
   children: React.ReactNode;
+  onLogout?: () => void;
 }) {
   const [sidebarWidth, setSidebarWidth] = useState(() => {
     const saved = localStorage.getItem(SIDEBAR_WIDTH_KEY);
@@ -115,7 +117,7 @@ export default function DashboardLayout({
         } as CSSProperties
       }
     >
-      <DashboardLayoutContent setSidebarWidth={setSidebarWidth}>
+      <DashboardLayoutContent setSidebarWidth={setSidebarWidth} onLogout={onLogout}>
         {children}
       </DashboardLayoutContent>
     </SidebarProvider>
@@ -125,13 +127,16 @@ export default function DashboardLayout({
 type DashboardLayoutContentProps = {
   children: React.ReactNode;
   setSidebarWidth: (width: number) => void;
+  onLogout?: () => void;
 };
 
 function DashboardLayoutContent({
   children,
   setSidebarWidth,
+  onLogout,
 }: DashboardLayoutContentProps) {
   const { user, logout } = useAuth();
+  const handleLogout = onLogout || logout;
   const [location, setLocation] = useLocation();
   const { state, toggleSidebar } = useSidebar();
   const isCollapsed = state === "collapsed";
@@ -256,7 +261,7 @@ function DashboardLayoutContent({
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem
-                  onClick={logout}
+                  onClick={handleLogout}
                   className="cursor-pointer text-destructive focus:text-destructive"
                 >
                   <LogOut className="mr-2 h-4 w-4" />
