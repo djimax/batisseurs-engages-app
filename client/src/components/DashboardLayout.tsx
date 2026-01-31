@@ -54,6 +54,7 @@ const menuItems = [
   { icon: Calendar, label: "Événements", path: "/events" },
   { icon: Activity, label: "Activité", path: "/activity" },
   { icon: Archive, label: "Archives", path: "/archives" },
+  { icon: Users, label: "Utilisateurs", path: "/users" },
 ];
 
 const SIDEBAR_WIDTH_KEY = "sidebar-width";

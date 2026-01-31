@@ -469,3 +469,37 @@
 - [x] Afficher le rôle actuel dans le menu utilisateur
 - [x] Ajouter des indicateurs visuels pour les actions restreintes
 - [x] Implémenter des toasts pour les accès refusés
+
+
+## Phase 17 - Gestion des Utilisateurs (Identifiants et Mots de Passe)
+
+### Base de Données
+- [x] Créer une table app_users avec username, password (hashé), role, email
+- [x] Ajouter des champs : createdAt, updatedAt, isActive
+- [x] Créer des index sur username pour les recherches rapides
+
+### Page de Gestion
+- [x] Créer une page UserManagement.tsx
+- [x] Afficher la liste des utilisateurs (Admin, Membre)
+- [x] Ajouter un formulaire de création d'utilisateur
+- [x] Ajouter un formulaire de modification du mot de passe
+- [x] Ajouter la suppression d'utilisateurs
+- [x] Afficher les détails de chaque utilisateur
+
+### Fonctionnalités
+- [x] Générer des mots de passe sécurisés
+- [ ] Hasher les mots de passe (bcrypt)
+- [x] Validation des identifiants (unicité)
+- [x] Confirmation avant suppression
+- [ ] Historique des modifications
+
+### Authentification
+- [ ] Modifier le hook usePasswordAuth pour utiliser la base de données
+- [ ] Vérifier les identifiants contre la table app_users
+- [ ] Implémenter le hashage/vérification des mots de passe
+- [ ] Gérer les sessions utilisateur
+
+### Permissions
+- [x] Seul l'Admin peut accéder à la page de gestion
+- [x] Seul l'Admin peut créer/modifier/supprimer des utilisateurs
+- [x] Les utilisateurs ne peuvent modifier que leur propre mot de passe

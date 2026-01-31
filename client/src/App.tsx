@@ -18,6 +18,7 @@ import Settings from "./pages/Settings";
 import Campaigns from "./pages/Campaigns";
 import Adhesions from "./pages/Adhesions";
 import Events from "./pages/Events";
+import ProtectedUserManagement from "./pages/ProtectedUserManagement";
 import ForgotPassword from "./pages/ForgotPassword";
 import Login from "./pages/Login";
 import { usePasswordAuth } from "./hooks/usePasswordAuth";
@@ -41,6 +42,7 @@ function OnlineRouter({ isAuthenticated, error, onLogin, onLogout }: any) {
         <Route path="/campaigns" component={Campaigns} />
         <Route path="/adhesions" component={Adhesions} />
         <Route path="/events" component={Events} />
+        <Route path="/users" component={ProtectedUserManagement} />
         <Route path="/settings" component={Settings} />
         <Route path="/404" component={NotFound} />
         <Route component={NotFound} />
