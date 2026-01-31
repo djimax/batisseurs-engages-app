@@ -25,9 +25,9 @@ import Login from "./pages/Login";
 import { usePasswordAuth } from "./hooks/usePasswordAuth";
 import { useState, useEffect } from "react";
 
-function OnlineRouter({ isAuthenticated, error, onLogin, onLogout }: any) {
+function OnlineRouter({ isAuthenticated, error, onLogin, onLogout, onForgotPassword }: any) {
   if (!isAuthenticated) {
-    return <Login onLogin={onLogin} error={error} />;
+    return <Login onLogin={onLogin} error={error} onForgotPassword={onForgotPassword} />;
   }
 
   return (
@@ -61,7 +61,7 @@ function OfflineRouter() {
   );
 }
 
-function Router({ mode, onChangeMode, isAuthenticated, error, onLogin, onLogout }: any) {
+function Router({ mode, onChangeMode, isAuthenticated, error, onLogin, onLogout, onForgotPassword }: any) {
   if (mode === null) {
     return (
       <ModeSelector
@@ -77,7 +77,7 @@ function Router({ mode, onChangeMode, isAuthenticated, error, onLogin, onLogout 
     return <OfflineRouter />;
   }
 
-  return <OnlineRouter isAuthenticated={isAuthenticated} error={error} onLogin={onLogin} onLogout={onLogout} />;
+  return <OnlineRouter isAuthenticated={isAuthenticated} error={error} onLogin={onLogin} onLogout={onLogout} onForgotPassword={onForgotPassword} />;
 }
 
 function App() {
@@ -97,6 +97,11 @@ function App() {
     login(username, password);
   };
 
+  const handleForgotPassword = () => {
+    // Naviguer vers la page de récupération de mot de passe
+    window.location.hash = '#/forgot-password';
+  };
+
   return (
     <ErrorBoundary>
       <ThemeProvider defaultTheme="light">
@@ -109,6 +114,7 @@ function App() {
             error={error}
             onLogin={handleLogin}
             onLogout={logout}
+            onForgotPassword={handleForgotPassword}
           />
         </TooltipProvider>
       </ThemeProvider>

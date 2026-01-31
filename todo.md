@@ -522,3 +522,16 @@
 - [x] Ajouter la route /admin-portal dans App.tsx
 - [x] Créer un bouton caché sur le site public (optionnel)
 - [x] Ajouter la page au menu de navigation
+
+## Phase 19 - Corrections et Améliorations
+
+### Sauvegarde des Utilisateurs
+- [x] Implémenter la sauvegarde des utilisateurs en base de données (localStorage)
+- [x] Créer des procédures tRPC pour créer/modifier/supprimer les utilisateurs
+- [x] Ajouter la validation et les messages d'erreur
+- [x] Tester la persistance des données
+
+### Liens "Mot de Passe Oublié"
+- [x] Ajouter un lien fonctionnel sur la page de connexion
+- [x] Créer une route vers la page ForgotPassword
+- [x] Tester la navigation

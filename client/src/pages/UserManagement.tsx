@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -28,8 +28,9 @@ interface User {
   fullName?: string;
   role: "admin" | "membre";
   isActive: boolean;
-  lastLogin?: Date;
-  createdAt: Date;
+  password?: string;
+  lastLogin?: string;
+  createdAt: string;
 }
 
 // Données d'exemple
@@ -41,8 +42,9 @@ const SAMPLE_USERS: User[] = [
     fullName: "Administrateur",
     role: "admin",
     isActive: true,
-    lastLogin: new Date(),
-    createdAt: new Date("2025-01-01"),
+    password: "Admin123!",
+    lastLogin: new Date().toISOString(),
+    createdAt: new Date("2025-01-01").toISOString(),
   },
   {
     id: 2,
@@ -51,8 +53,9 @@ const SAMPLE_USERS: User[] = [
     fullName: "Marie Dupont",
     role: "membre",
     isActive: true,
-    lastLogin: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000),
-    createdAt: new Date("2025-01-15"),
+    password: "Marie123!",
+    lastLogin: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
+    createdAt: new Date("2025-01-15").toISOString(),
   },
   {
     id: 3,
@@ -61,10 +64,13 @@ const SAMPLE_USERS: User[] = [
     fullName: "Jean Martin",
     role: "membre",
     isActive: true,
-    lastLogin: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000),
-    createdAt: new Date("2025-01-20"),
+    password: "Jean123!",
+    lastLogin: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString(),
+    createdAt: new Date("2025-01-20").toISOString(),
   },
 ];
+
+const STORAGE_KEY = "batisseurs_users";
 
 export default function UserManagement() {
   const [users, setUsers] = useState<User[]>(SAMPLE_USERS);
@@ -77,6 +83,23 @@ export default function UserManagement() {
     fullName: "",
     role: "membre" as const,
   });
+
+  // Charger les utilisateurs depuis localStorage au montage
+  useEffect(() => {
+    const savedUsers = localStorage.getItem(STORAGE_KEY);
+    if (savedUsers) {
+      try {
+        setUsers(JSON.parse(savedUsers));
+      } catch (error) {
+        console.error("Erreur lors du chargement des utilisateurs:", error);
+      }
+    }
+  }, []);
+
+  // Sauvegarder les utilisateurs dans localStorage à chaque changement
+  useEffect(() => {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(users));
+  }, [users]);
 
   const filteredUsers = users.filter(
     (user) =>
@@ -105,16 +128,18 @@ export default function UserManagement() {
       return;
     }
 
+    const password = generatePassword();
     const user: User = {
-      id: Math.max(...users.map((u) => u.id)) + 1,
+      id: Math.max(...users.map((u) => u.id), 0) + 1,
       ...newUser,
+      password,
       isActive: true,
-      createdAt: new Date(),
+      createdAt: new Date().toISOString(),
     };
 
     setUsers([...users, user]);
     setNewUser({ username: "", email: "", fullName: "", role: "membre" });
-    toast.success("Utilisateur créé avec succès");
+    toast.success(`Utilisateur créé avec succès. Mot de passe: ${password}`);
   };
 
   const handleDeleteUser = (id: number) => {
@@ -133,6 +158,17 @@ export default function UserManagement() {
         u.id === id ? { ...u, isActive: !u.isActive } : u
       )
     );
+    toast.success("Statut mis à jour");
+  };
+
+  const handleResetPassword = (id: number) => {
+    const newPassword = generatePassword();
+    setUsers(
+      users.map((u) =>
+        u.id === id ? { ...u, password: newPassword } : u
+      )
+    );
+    toast.success(`Nouveau mot de passe: ${newPassword}`);
   };
 
   const copyToClipboard = (text: string, id: number) => {
@@ -146,8 +182,8 @@ export default function UserManagement() {
     return role === "admin" ? "destructive" : "secondary";
   };
 
-  const formatDate = (date: Date) => {
-    return date.toLocaleDateString("fr-FR", {
+  const formatDate = (dateString: string) => {
+    return new Date(dateString).toLocaleDateString("fr-FR", {
       year: "numeric",
       month: "short",
       day: "numeric",
@@ -251,7 +287,6 @@ export default function UserManagement() {
                   <th className="px-4 py-3 text-left text-sm font-medium">Email</th>
                   <th className="px-4 py-3 text-left text-sm font-medium">Rôle</th>
                   <th className="px-4 py-3 text-left text-sm font-medium">Statut</th>
-                  <th className="px-4 py-3 text-left text-sm font-medium">Dernière connexion</th>
                   <th className="px-4 py-3 text-left text-sm font-medium">Actions</th>
                 </tr>
               </thead>
@@ -271,31 +306,28 @@ export default function UserManagement() {
                         {user.isActive ? "Actif" : "Inactif"}
                       </Badge>
                     </td>
-                    <td className="px-4 py-3 text-sm text-muted-foreground">
-                      {user.lastLogin ? formatDate(user.lastLogin) : "Jamais"}
-                    </td>
                     <td className="px-4 py-3 text-sm">
                       <div className="flex gap-2">
                         <Dialog>
                           <DialogTrigger asChild>
-                            <Button variant="ghost" size="sm">
-                              <Edit2 className="h-4 w-4" />
+                            <Button variant="ghost" size="sm" title="Voir le mot de passe">
+                              <Eye className="h-4 w-4" />
                             </Button>
                           </DialogTrigger>
                           <DialogContent>
                             <DialogHeader>
-                              <DialogTitle>Modifier l'utilisateur</DialogTitle>
+                              <DialogTitle>Détails de {user.username}</DialogTitle>
                               <DialogDescription>
-                                Gérez les paramètres de {user.username}
+                                Informations et mot de passe de l'utilisateur
                               </DialogDescription>
                             </DialogHeader>
                             <div className="space-y-4">
                               <div>
-                                <label className="text-sm font-medium">Mot de passe généré</label>
+                                <label className="text-sm font-medium">Mot de passe actuel</label>
                                 <div className="flex gap-2">
                                   <Input
                                     type={showPassword[user.id] ? "text" : "password"}
-                                    value={generatePassword()}
+                                    value={user.password || ""}
                                     readOnly
                                   />
                                   <Button
@@ -308,29 +340,35 @@ export default function UserManagement() {
                                   <Button
                                     variant="outline"
                                     size="sm"
-                                    onClick={() => copyToClipboard(generatePassword(), user.id)}
+                                    onClick={() => copyToClipboard(user.password || "", user.id)}
                                   >
                                     {copiedId === user.id ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
                                   </Button>
                                 </div>
                               </div>
-                              <Button
-                                variant={user.isActive ? "outline" : "default"}
-                                onClick={() => handleToggleActive(user.id)}
-                                className="w-full"
-                              >
-                                {user.isActive ? "Désactiver" : "Activer"}
+                              <Button onClick={() => handleResetPassword(user.id)} className="w-full">
+                                Générer un nouveau mot de passe
                               </Button>
                             </div>
                           </DialogContent>
                         </Dialog>
+
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => handleToggleActive(user.id)}
+                          title={user.isActive ? "Désactiver" : "Activer"}
+                        >
+                          {user.isActive ? "✓" : "✗"}
+                        </Button>
+
                         <Button
                           variant="ghost"
                           size="sm"
                           onClick={() => handleDeleteUser(user.id)}
-                          className="text-red-600 hover:text-red-700 hover:bg-red-50 dark:hover:bg-red-900/20"
+                          title="Supprimer"
                         >
-                          <Trash2 className="h-4 w-4" />
+                          <Trash2 className="h-4 w-4 text-red-600" />
                         </Button>
                       </div>
                     </td>
@@ -342,41 +380,16 @@ export default function UserManagement() {
         </div>
       )}
 
-      {/* Stats */}
-      <div className="grid gap-4 md:grid-cols-3">
-        <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground">
-              Total utilisateurs
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{users.length}</div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground">
-              Administrateurs
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{users.filter((u) => u.role === "admin").length}</div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground">
-              Utilisateurs actifs
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{users.filter((u) => u.isActive).length}</div>
-          </CardContent>
-        </Card>
-      </div>
+      {/* Info Card */}
+      <Card className="bg-blue-50 dark:bg-blue-950 border-blue-200 dark:border-blue-900">
+        <CardHeader>
+          <CardTitle className="text-base">💾 Sauvegarde Automatique</CardTitle>
+        </CardHeader>
+        <CardContent className="text-sm text-muted-foreground">
+          Tous les utilisateurs sont automatiquement sauvegardés dans votre navigateur. 
+          Les données persisteront même après fermeture de la page.
+        </CardContent>
+      </Card>
     </div>
   );
 }
