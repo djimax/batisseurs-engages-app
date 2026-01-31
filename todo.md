@@ -441,3 +441,31 @@
 ### Intégration
 - [x] Ajouter le menu dans DashboardLayout
 - [x] Intégrer les routes dans App.tsx
+
+
+## Phase 16 - Système de Rôles et Permissions
+
+### Architecture
+- [x] Créer un fichier permissions.ts avec définition des rôles et permissions
+- [x] Ajouter les rôles : Admin, Membre
+- [x] Définir les permissions par fonctionnalité
+
+### Hooks et Contexte
+- [x] Créer un hook useRole pour vérifier le rôle de l'utilisateur
+- [x] Créer un hook usePermission pour vérifier les permissions
+- [x] Créer un contexte RoleContext pour partager les rôles
+
+### Composants
+- [x] Créer un composant ProtectedFeature pour afficher/masquer les fonctionnalités
+- [x] Créer un composant RoleSelector pour changer de rôle (dev)
+- [x] Ajouter des badges de rôle dans le profil utilisateur
+
+### Implémentation par Page
+- [x] Restreindre l'accès aux pages sensibles (Settings, Finance, etc)
+- [x] Ajouter des boutons d'action conditionnels (Ajouter, Modifier, Supprimer)
+- [x] Afficher des messages d'accès refusé appropriés
+
+### UI/UX
+- [x] Afficher le rôle actuel dans le menu utilisateur
+- [x] Ajouter des indicateurs visuels pour les actions restreintes
+- [x] Implémenter des toasts pour les accès refusés

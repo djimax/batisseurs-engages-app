@@ -15,9 +15,12 @@ import {
   Plus
 } from "lucide-react";
 import { useLocation } from "wouter";
+import { RoleSelector } from "@/components/RoleSelector";
+import { useRole } from "@/hooks/useRole";
 
 export default function Home() {
   const [, setLocation] = useLocation();
+  const { isAdmin } = useRole();
   const { data: stats, isLoading: statsLoading } = trpc.documents.stats.useQuery();
   const { data: categories, isLoading: categoriesLoading } = trpc.categories.list.useQuery();
   const { data: documents, isLoading: documentsLoading } = trpc.documents.list.useQuery({});
@@ -94,6 +97,11 @@ export default function Home() {
           <Plus className="h-4 w-4" />
           Nouveau document
         </Button>
+      </div>
+
+      {/* Role Selector (Dev) */}
+      <div className="grid gap-4 md:grid-cols-3 lg:grid-cols-4">
+        <RoleSelector />
       </div>
 
       {/* Stats Grid */}
