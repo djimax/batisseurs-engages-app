@@ -503,3 +503,22 @@
 - [x] Seul l'Admin peut accéder à la page de gestion
 - [x] Seul l'Admin peut créer/modifier/supprimer des utilisateurs
 - [x] Les utilisateurs ne peuvent modifier que leur propre mot de passe
+
+## Phase 18 - Page d'Accès Sécurisé vers l'Application Manus
+
+### Page Portail
+- [x] Créer une page AdminPortal.tsx
+- [x] Afficher un message de bienvenue personnalisé
+- [x] Ajouter un bouton d'accès à l'application Manus (lesbatisseursengages.manus.space)
+- [x] Afficher les informations de l'utilisateur connecté
+- [x] Ajouter des instructions d'utilisation
+
+### Sécurité
+- [x] Restreindre l'accès aux administrateurs uniquement
+- [x] Afficher un message pour les accès non autorisés
+- [x] Ajouter un lien de retour au site public
+
+### Intégration
+- [x] Ajouter la route /admin-portal dans App.tsx
+- [x] Créer un bouton caché sur le site public (optionnel)
+- [x] Ajouter la page au menu de navigation
