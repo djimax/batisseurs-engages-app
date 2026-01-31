@@ -283,3 +283,27 @@ export const associationInfo = mysqlTable("association_info", {
 
 export type AssociationInfo = typeof associationInfo.$inferSelect;
 export type InsertAssociationInfo = typeof associationInfo.$inferInsert;
+
+
+/**
+ * Events table - calendar events for the association
+ */
+export const events = mysqlTable("events", {
+  id: int("id").autoincrement().primaryKey(),
+  title: varchar("title", { length: 255 }).notNull(),
+  description: text("description"),
+  location: varchar("location", { length: 255 }),
+  eventType: mysqlEnum("eventType", ["reunion", "formation", "activite", "evenement", "autre"]).default("autre").notNull(),
+  startDate: timestamp("startDate").notNull(),
+  endDate: timestamp("endDate").notNull(),
+  color: varchar("color", { length: 7 }).default("#1a4d2e"),
+  organizer: varchar("organizer", { length: 255 }),
+  attendees: int("attendees").default(0),
+  image: text("image"),
+  createdBy: int("createdBy").notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type Event = typeof events.$inferSelect;
+export type InsertEvent = typeof events.$inferInsert;

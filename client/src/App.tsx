@@ -17,6 +17,8 @@ import ModeSelector from "./pages/ModeSelector";
 import Settings from "./pages/Settings";
 import Campaigns from "./pages/Campaigns";
 import Adhesions from "./pages/Adhesions";
+import Events from "./pages/Events";
+import ForgotPassword from "./pages/ForgotPassword";
 import Login from "./pages/Login";
 import { usePasswordAuth } from "./hooks/usePasswordAuth";
 import { useState, useEffect } from "react";
@@ -38,6 +40,7 @@ function OnlineRouter({ isAuthenticated, error, onLogin, onLogout }: any) {
         <Route path="/finance" component={Finance} />
         <Route path="/campaigns" component={Campaigns} />
         <Route path="/adhesions" component={Adhesions} />
+        <Route path="/events" component={Events} />
         <Route path="/settings" component={Settings} />
         <Route path="/404" component={NotFound} />
         <Route component={NotFound} />

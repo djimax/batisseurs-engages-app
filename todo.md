@@ -416,3 +416,28 @@
 - [x] Mettre à jour Login.tsx avec deux champs (identifiant et mot de passe)
 - [x] Ajouter validation des deux champs
 - [x] Tester la connexion avec les nouvelles identifiants
+
+
+## Phase 14 - Mot de Passe Oublié
+
+- [x] Créer une page ForgotPassword.tsx
+- [x] Ajouter un lien "Mot de passe oublié" sur la page Login
+- [x] Implémenter la récupération par email ou question de sécurité
+- [x] Afficher un message de confirmation
+
+## Phase 15 - Calendrier d'Événements
+
+### Base de Données
+- [x] Ajouter la table events dans le schéma Drizzle
+- [x] Inclure : titre, description, date début, date fin, lieu, type
+
+### Page Calendrier
+- [x] Créer une page Events.tsx
+- [x] Afficher les événements dans un calendrier
+- [x] Filtrer par passé/présent/futur
+- [x] Ajouter/modifier/supprimer des événements
+- [x] Afficher les détails des événements
+
+### Intégration
+- [x] Ajouter le menu dans DashboardLayout
+- [x] Intégrer les routes dans App.tsx

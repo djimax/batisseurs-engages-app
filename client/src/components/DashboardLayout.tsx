@@ -35,7 +35,8 @@ import {
   Archive,
   DollarSign,
   Megaphone,
-  UserCheck
+  UserCheck,
+  Calendar
 } from "lucide-react";
 import { CSSProperties, useEffect, useRef, useState } from "react";
 import { useLocation } from "wouter";
@@ -50,6 +51,7 @@ const menuItems = [
   { icon: DollarSign, label: "Finance", path: "/finance" },
   { icon: Megaphone, label: "Campagnes", path: "/campaigns" },
   { icon: UserCheck, label: "Adhésions", path: "/adhesions" },
+  { icon: Calendar, label: "Événements", path: "/events" },
   { icon: Activity, label: "Activité", path: "/activity" },
   { icon: Archive, label: "Archives", path: "/archives" },
 ];

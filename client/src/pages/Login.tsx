@@ -8,9 +8,10 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 interface LoginProps {
   onLogin: (username: string, password: string) => void;
   error?: string | null;
+  onForgotPassword?: () => void;
 }
 
-export default function Login({ onLogin, error }: LoginProps) {
+export default function Login({ onLogin, error, onForgotPassword }: LoginProps) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -88,9 +89,20 @@ export default function Login({ onLogin, error }: LoginProps) {
                   className="pl-10"
                 />
               </div>
-              <p className="text-xs text-muted-foreground">
-                Contactez l'administrateur si vous avez oublié vos identifiants
-              </p>
+              <div className="flex items-center justify-between">
+                <p className="text-xs text-muted-foreground">
+                  Avez-vous oublié vos identifiants ?
+                </p>
+                {onForgotPassword && (
+                  <button
+                    type="button"
+                    onClick={onForgotPassword}
+                    className="text-xs text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 font-medium"
+                  >
+                    Réinitialiser
+                  </button>
+                )}
+              </div>
             </div>
 
             <Button
