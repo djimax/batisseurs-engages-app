@@ -1,7 +1,12 @@
 import { useState, useEffect } from "react";
 
 const SESSION_KEY = "app_session_token";
-const DEFAULT_PASSWORD = "batisseurs2025"; // À changer en production
+
+// Identifiants par défaut (à modifier en production)
+const VALID_CREDENTIALS = {
+  username: "admin",
+  password: "batisseurs2025"
+};
 
 export function usePasswordAuth() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -16,21 +21,21 @@ export function usePasswordAuth() {
   }, []);
 
   // Fonction de connexion
-  const login = (password: string): boolean => {
+  const login = (username: string, password: string): boolean => {
     setError(null);
     
-    if (!password) {
-      setError("Veuillez entrer un mot de passe");
+    if (!username || !password) {
+      setError("Veuillez entrer l'identifiant et le mot de passe");
       return false;
     }
 
-    if (password === DEFAULT_PASSWORD) {
+    if (username === VALID_CREDENTIALS.username && password === VALID_CREDENTIALS.password) {
       const token = Math.random().toString(36).substring(2);
       sessionStorage.setItem(SESSION_KEY, token);
       setIsAuthenticated(true);
       return true;
     } else {
-      setError("Mot de passe incorrect");
+      setError("Identifiant ou mot de passe incorrect");
       return false;
     }
   };

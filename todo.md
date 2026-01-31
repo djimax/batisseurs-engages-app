@@ -408,3 +408,11 @@
 - [x] Redirection vers login si non authentifié
 - [x] Intégration dans App.tsx
 - [x] Bouton de déconnexion dans le menu
+
+
+## Phase 13 - Authentification Identifiant + Mot de Passe
+
+- [x] Modifier usePasswordAuth pour accepter identifiant + mot de passe
+- [x] Mettre à jour Login.tsx avec deux champs (identifiant et mot de passe)
+- [x] Ajouter validation des deux champs
+- [x] Tester la connexion avec les nouvelles identifiants

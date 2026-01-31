@@ -86,8 +86,8 @@ function App() {
     setMode(newMode);
   };
 
-  const handleLogin = (password: string) => {
-    login(password);
+  const handleLogin = (username: string, password: string) => {
+    login(username, password);
   };
 
   return (

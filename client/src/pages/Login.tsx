@@ -2,16 +2,16 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { AlertCircle, Lock } from "lucide-react";
+import { AlertCircle, Lock, User } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-// Logo est dans le dossier public
 
 interface LoginProps {
-  onLogin: (password: string) => void;
+  onLogin: (username: string, password: string) => void;
   error?: string | null;
 }
 
 export default function Login({ onLogin, error }: LoginProps) {
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
@@ -22,7 +22,7 @@ export default function Login({ onLogin, error }: LoginProps) {
     // Simuler un délai réseau
     await new Promise(resolve => setTimeout(resolve, 300));
     
-    onLogin(password);
+    onLogin(username, password);
     setIsLoading(false);
   };
 
@@ -49,6 +49,25 @@ export default function Login({ onLogin, error }: LoginProps) {
             )}
 
             <div className="space-y-2">
+              <label htmlFor="username" className="text-sm font-medium">
+                Identifiant
+              </label>
+              <div className="relative">
+                <User className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                <Input
+                  id="username"
+                  type="text"
+                  placeholder="Entrez votre identifiant"
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
+                  disabled={isLoading}
+                  className="pl-10"
+                  autoFocus
+                />
+              </div>
+            </div>
+
+            <div className="space-y-2">
               <label htmlFor="password" className="text-sm font-medium">
                 Mot de passe
               </label>
@@ -57,7 +76,7 @@ export default function Login({ onLogin, error }: LoginProps) {
                 <Input
                   id="password"
                   type="password"
-                  placeholder="Entrez le mot de passe"
+                  placeholder="Entrez votre mot de passe"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   onKeyPress={(e) => {
@@ -67,18 +86,17 @@ export default function Login({ onLogin, error }: LoginProps) {
                   }}
                   disabled={isLoading}
                   className="pl-10"
-                  autoFocus
                 />
               </div>
               <p className="text-xs text-muted-foreground">
-                Contactez l'administrateur si vous avez oublié le mot de passe
+                Contactez l'administrateur si vous avez oublié vos identifiants
               </p>
             </div>
 
             <Button
               type="submit"
               className="w-full"
-              disabled={isLoading || !password}
+              disabled={isLoading || !username || !password}
               size="lg"
             >
               {isLoading ? "Connexion en cours..." : "Se connecter"}
@@ -87,7 +105,7 @@ export default function Login({ onLogin, error }: LoginProps) {
 
           <div className="mt-6 pt-6 border-t">
             <p className="text-xs text-center text-muted-foreground">
-              Cette application est protégée par mot de passe.
+              Cette application est protégée par authentification.
               <br />
               Accès réservé aux membres de l'association.
             </p>
