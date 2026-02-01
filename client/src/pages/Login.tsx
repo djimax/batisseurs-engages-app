@@ -73,7 +73,7 @@ export default function Login({ onLogin, error, onForgotPassword }: LoginProps) 
                   <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-blue-500 group-focus-within:text-blue-600 transition-colors" />
                   <Input
                     id="email"
-                    type="email"
+                    type="text"
                     placeholder="votre.email@example.com"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
