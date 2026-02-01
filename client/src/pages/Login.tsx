@@ -2,17 +2,17 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { AlertCircle, Lock, User } from "lucide-react";
+import { AlertCircle, Lock, Mail } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 
 interface LoginProps {
-  onLogin: (username: string, password: string) => void;
+  onLogin: (email: string, password: string) => void;
   error?: string | null;
   onForgotPassword?: () => void;
 }
 
 export default function Login({ onLogin, error, onForgotPassword }: LoginProps) {
-  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
@@ -23,7 +23,7 @@ export default function Login({ onLogin, error, onForgotPassword }: LoginProps) 
     // Simuler un délai réseau
     await new Promise(resolve => setTimeout(resolve, 300));
     
-    onLogin(username, password);
+    onLogin(email, password);
     setIsLoading(false);
   };
 
@@ -50,17 +50,17 @@ export default function Login({ onLogin, error, onForgotPassword }: LoginProps) 
             )}
 
             <div className="space-y-2">
-              <label htmlFor="username" className="text-sm font-medium">
-                Identifiant
+              <label htmlFor="email" className="text-sm font-medium">
+                Adresse Email
               </label>
               <div className="relative">
-                <User className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                 <Input
-                  id="username"
-                  type="text"
-                  placeholder="Entrez votre identifiant"
-                  value={username}
-                  onChange={(e) => setUsername(e.target.value)}
+                  id="email"
+                  type="email"
+                  placeholder="Entrez votre adresse email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                   disabled={isLoading}
                   className="pl-10"
                   autoFocus
@@ -108,7 +108,7 @@ export default function Login({ onLogin, error, onForgotPassword }: LoginProps) 
             <Button
               type="submit"
               className="w-full"
-              disabled={isLoading || !username || !password}
+              disabled={isLoading || !email || !password}
               size="lg"
             >
               {isLoading ? "Connexion en cours..." : "Se connecter"}

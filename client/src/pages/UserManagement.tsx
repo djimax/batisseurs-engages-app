@@ -23,13 +23,11 @@ import { toast } from "sonner";
 
 interface User {
   id: number;
-  username: string;
-  email?: string;
+  email: string;
   fullName?: string;
   role: "admin" | "membre";
   isActive: boolean;
   password?: string;
-  lastLogin?: string;
   createdAt: string;
 }
 
@@ -37,35 +35,29 @@ interface User {
 const SAMPLE_USERS: User[] = [
   {
     id: 1,
-    username: "admin",
     email: "admin@batisseurs-engages.fr",
     fullName: "Administrateur",
     role: "admin",
     isActive: true,
     password: "Admin123!",
-    lastLogin: new Date().toISOString(),
     createdAt: new Date("2025-01-01").toISOString(),
   },
   {
     id: 2,
-    username: "marie.dupont",
-    email: "marie@batisseurs-engages.fr",
+    email: "marie.dupont@batisseurs-engages.fr",
     fullName: "Marie Dupont",
     role: "membre",
     isActive: true,
     password: "Marie123!",
-    lastLogin: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
     createdAt: new Date("2025-01-15").toISOString(),
   },
   {
     id: 3,
-    username: "jean.martin",
-    email: "jean@batisseurs-engages.fr",
+    email: "jean.martin@batisseurs-engages.fr",
     fullName: "Jean Martin",
     role: "membre",
     isActive: true,
     password: "Jean123!",
-    lastLogin: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString(),
     createdAt: new Date("2025-01-20").toISOString(),
   },
 ];
@@ -78,7 +70,6 @@ export default function UserManagement() {
   const [showPassword, setShowPassword] = useState<Record<number, boolean>>({});
   const [copiedId, setCopiedId] = useState<number | null>(null);
   const [newUser, setNewUser] = useState({
-    username: "",
     email: "",
     fullName: "",
     role: "membre" as const,
@@ -103,9 +94,8 @@ export default function UserManagement() {
 
   const filteredUsers = users.filter(
     (user) =>
-      user.username.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      user.fullName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      user.email?.toLowerCase().includes(searchTerm.toLowerCase())
+      user.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      user.fullName?.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   const generatePassword = () => {
@@ -118,13 +108,20 @@ export default function UserManagement() {
   };
 
   const handleAddUser = () => {
-    if (!newUser.username || !newUser.email) {
+    if (!newUser.email || !newUser.fullName) {
       toast.error("Veuillez remplir tous les champs obligatoires");
       return;
     }
 
-    if (users.some((u) => u.username === newUser.username)) {
-      toast.error("Cet identifiant existe déjà");
+    // Valider le format de l'email
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(newUser.email)) {
+      toast.error("Veuillez entrer une adresse email valide");
+      return;
+    }
+
+    if (users.some((u) => u.email === newUser.email)) {
+      toast.error("Cet email existe déjà");
       return;
     }
 
@@ -138,7 +135,7 @@ export default function UserManagement() {
     };
 
     setUsers([...users, user]);
-    setNewUser({ username: "", email: "", fullName: "", role: "membre" });
+    setNewUser({ email: "", fullName: "", role: "membre" });
     toast.success(`Utilisateur créé avec succès. Mot de passe: ${password}`);
   };
 
@@ -199,7 +196,7 @@ export default function UserManagement() {
         <div>
           <h1 className="text-2xl font-bold tracking-tight">Gestion des Utilisateurs</h1>
           <p className="text-muted-foreground">
-            Gérez les identifiants et mots de passe des membres du bureau exécutif
+            Gérez les identifiants (emails) et mots de passe des membres du bureau exécutif
           </p>
         </div>
         <Dialog>
@@ -218,24 +215,16 @@ export default function UserManagement() {
             </DialogHeader>
             <div className="space-y-4">
               <div>
-                <label className="text-sm font-medium">Identifiant *</label>
-                <Input
-                  placeholder="Ex: marie.dupont"
-                  value={newUser.username}
-                  onChange={(e) => setNewUser({ ...newUser, username: e.target.value })}
-                />
-              </div>
-              <div>
-                <label className="text-sm font-medium">Email *</label>
+                <label className="text-sm font-medium">Email (Identifiant) *</label>
                 <Input
                   type="email"
-                  placeholder="Ex: marie@example.com"
+                  placeholder="Ex: marie@batisseurs-engages.fr"
                   value={newUser.email}
                   onChange={(e) => setNewUser({ ...newUser, email: e.target.value })}
                 />
               </div>
               <div>
-                <label className="text-sm font-medium">Nom complet</label>
+                <label className="text-sm font-medium">Nom complet *</label>
                 <Input
                   placeholder="Ex: Marie Dupont"
                   value={newUser.fullName}
@@ -264,7 +253,7 @@ export default function UserManagement() {
 
       {/* Search */}
       <Input
-        placeholder="Rechercher par identifiant, nom ou email..."
+        placeholder="Rechercher par email ou nom..."
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}
       />
@@ -282,9 +271,8 @@ export default function UserManagement() {
             <table className="w-full">
               <thead className="bg-muted">
                 <tr>
-                  <th className="px-4 py-3 text-left text-sm font-medium">Identifiant</th>
+                  <th className="px-4 py-3 text-left text-sm font-medium">Email (Identifiant)</th>
                   <th className="px-4 py-3 text-left text-sm font-medium">Nom</th>
-                  <th className="px-4 py-3 text-left text-sm font-medium">Email</th>
                   <th className="px-4 py-3 text-left text-sm font-medium">Rôle</th>
                   <th className="px-4 py-3 text-left text-sm font-medium">Statut</th>
                   <th className="px-4 py-3 text-left text-sm font-medium">Actions</th>
@@ -293,9 +281,8 @@ export default function UserManagement() {
               <tbody className="divide-y">
                 {filteredUsers.map((user) => (
                   <tr key={user.id} className="hover:bg-muted/50">
-                    <td className="px-4 py-3 text-sm font-medium">{user.username}</td>
+                    <td className="px-4 py-3 text-sm font-medium">{user.email}</td>
                     <td className="px-4 py-3 text-sm">{user.fullName || "-"}</td>
-                    <td className="px-4 py-3 text-sm">{user.email || "-"}</td>
                     <td className="px-4 py-3 text-sm">
                       <Badge variant={getRoleBadgeColor(user.role)}>
                         {user.role === "admin" ? "Admin" : "Membre"}
@@ -316,7 +303,7 @@ export default function UserManagement() {
                           </DialogTrigger>
                           <DialogContent>
                             <DialogHeader>
-                              <DialogTitle>Détails de {user.username}</DialogTitle>
+                              <DialogTitle>Détails de {user.email}</DialogTitle>
                               <DialogDescription>
                                 Informations et mot de passe de l'utilisateur
                               </DialogDescription>
@@ -388,6 +375,18 @@ export default function UserManagement() {
         <CardContent className="text-sm text-muted-foreground">
           Tous les utilisateurs sont automatiquement sauvegardés dans votre navigateur. 
           Les données persisteront même après fermeture de la page.
+        </CardContent>
+      </Card>
+
+      {/* Help Card */}
+      <Card className="bg-amber-50 dark:bg-amber-950 border-amber-200 dark:border-amber-900">
+        <CardHeader>
+          <CardTitle className="text-base">📧 Réinitialisation de Mot de Passe</CardTitle>
+        </CardHeader>
+        <CardContent className="text-sm text-amber-800 dark:text-amber-200">
+          Lorsqu'un utilisateur oublie son mot de passe, il peut cliquer sur "Réinitialiser" 
+          sur la page de connexion. Une demande sera envoyée à <strong>contact.lesbatisseursengages@gmail.com</strong> 
+          pour générer un nouveau mot de passe.
         </CardContent>
       </Card>
     </div>

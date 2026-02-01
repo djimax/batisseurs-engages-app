@@ -535,3 +535,18 @@
 - [x] Ajouter un lien fonctionnel sur la page de connexion
 - [x] Créer une route vers la page ForgotPassword
 - [x] Tester la navigation
+
+## Phase 20 - Authentification par Email et Réinitialisation
+
+### Modification de l'Authentification
+- [x] Changer l'identifiant de "username" à "email"
+- [x] Mettre à jour la page Login pour utiliser l'email
+- [x] Modifier usePasswordAuth pour vérifier l'email
+- [x] Mettre à jour UserManagement pour utiliser l'email
+
+### Envoi d'Email pour Réinitialisation
+- [x] Créer une fonction d'envoi d'email
+- [x] Modifier la page ForgotPassword pour envoyer un email
+- [x] Ajouter un bouton "Réinitialiser" qui envoie un email à contact.lesbatisseursengages@gmail.com
+- [x] Afficher un message de confirmation après envoi
+- [x] Intégrer un service d'email (Nodemailer, SendGrid, etc.)

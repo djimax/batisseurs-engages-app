@@ -2,12 +2,15 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { AlertCircle, ArrowLeft, CheckCircle } from "lucide-react";
+import { AlertCircle, ArrowLeft, CheckCircle, Mail } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
+import { toast } from "sonner";
 
 interface ForgotPasswordProps {
   onBack: () => void;
 }
+
+const SUPPORT_EMAIL = "contact.lesbatisseursengages@gmail.com";
 
 export default function ForgotPassword({ onBack }: ForgotPasswordProps) {
   const [email, setEmail] = useState("");
@@ -20,24 +23,46 @@ export default function ForgotPassword({ onBack }: ForgotPasswordProps) {
     setIsLoading(true);
     setError(null);
 
-    // Simuler un délai réseau
-    await new Promise(resolve => setTimeout(resolve, 500));
-
+    // Valider l'email
     if (!email) {
       setError("Veuillez entrer votre adresse email");
       setIsLoading(false);
       return;
     }
 
-    if (!email.includes("@")) {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
       setError("Veuillez entrer une adresse email valide");
       setIsLoading(false);
       return;
     }
 
-    // Simuler l'envoi d'un email
-    setIsSubmitted(true);
-    setIsLoading(false);
+    try {
+      // Envoyer un email à l'adresse de support
+      const subject = encodeURIComponent("Réinitialisation de mot de passe");
+      const body = encodeURIComponent(
+        `Demande de réinitialisation de mot de passe\n\n` +
+        `Email utilisateur: ${email}\n` +
+        `Date: ${new Date().toLocaleString("fr-FR")}\n\n` +
+        `Veuillez générer un nouveau mot de passe pour cet utilisateur et l'envoyer à l'adresse email fournie.`
+      );
+
+      // Créer un lien mailto
+      const mailtoLink = `mailto:${SUPPORT_EMAIL}?subject=${subject}&body=${body}`;
+      
+      // Ouvrir le client email par défaut
+      window.location.href = mailtoLink;
+
+      // Afficher le message de succès après un court délai
+      setTimeout(() => {
+        setIsSubmitted(true);
+        setIsLoading(false);
+        toast.success("Demande de réinitialisation envoyée");
+      }, 500);
+    } catch (err) {
+      setError("Une erreur s'est produite. Veuillez réessayer.");
+      setIsLoading(false);
+    }
   };
 
   if (isSubmitted) {
@@ -50,21 +75,29 @@ export default function ForgotPassword({ onBack }: ForgotPasswordProps) {
                 <CheckCircle className="h-8 w-8 text-green-600 dark:text-green-400" />
               </div>
             </div>
-            <CardTitle className="text-2xl">Email envoyé !</CardTitle>
+            <CardTitle className="text-2xl">Demande envoyée !</CardTitle>
             <CardDescription>
-              Vérifiez votre boîte mail pour les instructions de réinitialisation
+              Votre demande de réinitialisation a été transmise à l'administrateur
             </CardDescription>
           </CardHeader>
 
           <CardContent className="space-y-4">
             <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
               <p className="text-sm text-blue-800 dark:text-blue-200">
-                Un email a été envoyé à <strong>{email}</strong> avec les instructions pour réinitialiser votre mot de passe.
+                Une demande de réinitialisation de mot de passe a été envoyée à <strong>{SUPPORT_EMAIL}</strong>.
+              </p>
+            </div>
+
+            <div className="bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-lg p-4">
+              <p className="text-sm text-amber-800 dark:text-amber-200">
+                <strong>Prochaines étapes :</strong>
+                <br />
+                L'administrateur vous enverra un nouveau mot de passe à l'adresse <strong>{email}</strong>.
               </p>
             </div>
 
             <p className="text-sm text-muted-foreground text-center">
-              N'oubliez pas de vérifier votre dossier spam si vous ne recevez pas l'email.
+              Vérifiez votre boîte mail (et le dossier spam) pour recevoir votre nouveau mot de passe.
             </p>
 
             <Button
@@ -88,7 +121,7 @@ export default function ForgotPassword({ onBack }: ForgotPasswordProps) {
         <CardHeader className="space-y-4">
           <CardTitle className="text-2xl">Mot de passe oublié ?</CardTitle>
           <CardDescription>
-            Entrez votre adresse email pour recevoir les instructions de réinitialisation
+            Entrez votre adresse email pour demander une réinitialisation
           </CardDescription>
         </CardHeader>
 
@@ -105,17 +138,21 @@ export default function ForgotPassword({ onBack }: ForgotPasswordProps) {
               <label htmlFor="email" className="text-sm font-medium">
                 Adresse email
               </label>
-              <Input
-                id="email"
-                type="email"
-                placeholder="votre.email@example.com"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                disabled={isLoading}
-                autoFocus
-              />
+              <div className="relative">
+                <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                <Input
+                  id="email"
+                  type="email"
+                  placeholder="votre.email@example.com"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  disabled={isLoading}
+                  className="pl-10"
+                  autoFocus
+                />
+              </div>
               <p className="text-xs text-muted-foreground">
-                Nous vous enverrons un lien pour réinitialiser votre mot de passe
+                Nous enverrons votre demande à l'administrateur qui vous contactera
               </p>
             </div>
 
@@ -125,7 +162,7 @@ export default function ForgotPassword({ onBack }: ForgotPasswordProps) {
               disabled={isLoading || !email}
               size="lg"
             >
-              {isLoading ? "Envoi en cours..." : "Envoyer les instructions"}
+              {isLoading ? "Envoi en cours..." : "Demander une réinitialisation"}
             </Button>
 
             <Button
@@ -142,9 +179,9 @@ export default function ForgotPassword({ onBack }: ForgotPasswordProps) {
 
           <div className="mt-6 pt-6 border-t">
             <p className="text-xs text-center text-muted-foreground">
-              Vous n'avez pas reçu l'email ?
+              Besoin d'aide immédiate ?
               <br />
-              Contactez l'administrateur : admin@batisseurs-engages.fr
+              Contactez directement : <strong>{SUPPORT_EMAIL}</strong>
             </p>
           </div>
         </CardContent>
