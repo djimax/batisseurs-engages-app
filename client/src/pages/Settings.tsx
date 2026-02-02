@@ -22,7 +22,8 @@ export default function Settings() {
   const { exportData, importData, getBackupSize } = useBackup();
   const { preferences, updatePreference } = usePreferences();
   const { getLastSync, getStats: getSyncStats } = useSyncHistory();
-  const { currency, setCurrency } = useCurrency();
+  const { currency, setCurrency, exchangeRate, setExchangeRate, resetExchangeRate } = useCurrency();
+  const [newExchangeRate, setNewExchangeRate] = useState(exchangeRate.toString());
 
   useEffect(() => {
     const savedMode = localStorage.getItem('appMode') as 'online' | 'offline' | null;
@@ -96,6 +97,26 @@ export default function Settings() {
     updatePreference('emailNotifications', value);
     toast.success(`Notifications par email ${value ? 'activées' : 'désactivées'}`);
   };
+
+  const handleUpdateExchangeRate = () => {
+    const rate = parseFloat(newExchangeRate);
+    if (isNaN(rate) || rate <= 0) {
+      toast.error('Veuillez entrer un taux de change valide (nombre positif)');
+      return;
+    }
+    setExchangeRate(rate);
+    toast.success(`Taux de change mis a jour: 1 EUR = ${rate.toFixed(3)} CFA`);
+  };
+
+  const handleResetExchangeRate = () => {
+    resetExchangeRate();
+    setNewExchangeRate('655.957');
+    toast.success('Taux de change reinitialise au taux par defaut (1 EUR = 655.957 CFA)');
+  };
+
+  useEffect(() => {
+    setNewExchangeRate(exchangeRate.toString());
+  }, [exchangeRate]);
 
   const syncStats = getSyncStats();
   const lastSync = getLastSync();
@@ -342,6 +363,61 @@ export default function Settings() {
           <div className="bg-blue-50 dark:bg-blue-950 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
             <p className="text-sm text-blue-900 dark:text-blue-100">
               Devise sélectionnée: <strong>{currency === 'EUR' ? 'Euro (€)' : 'CFA (F)'}</strong>
+            </p>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Exchange Rate Card */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <DollarSign className="w-5 h-5" />
+            Taux de Change
+          </CardTitle>
+          <CardDescription>
+            Gerez le taux de change EUR/CFA pour les conversions automatiques
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="bg-blue-50 dark:bg-blue-950 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
+            <p className="text-sm text-blue-900 dark:text-blue-100">
+              Taux actuel: <strong>1 EUR = {exchangeRate.toFixed(3)} CFA</strong>
+            </p>
+          </div>
+          
+          <div className="space-y-3">
+            <label className="text-sm font-medium">Nouveau taux de change (1 EUR = ? CFA)</label>
+            <div className="flex gap-2">
+              <input
+                type="number"
+                step="0.001"
+                value={newExchangeRate}
+                onChange={(e) => setNewExchangeRate(e.target.value)}
+                placeholder="Ex: 655.957"
+                className="flex-1 px-3 py-2 border border-input rounded-md bg-background text-foreground"
+              />
+              <Button
+                onClick={handleUpdateExchangeRate}
+                className="gap-2"
+              >
+                <Save className="w-4 h-4" />
+                Mettre a jour
+              </Button>
+            </div>
+          </div>
+
+          <Button
+            onClick={handleResetExchangeRate}
+            variant="outline"
+            className="w-full"
+          >
+            Reinitialiser au taux par defaut (655.957)
+          </Button>
+
+          <div className="bg-amber-50 dark:bg-amber-950 border border-amber-200 dark:border-amber-800 rounded-lg p-4">
+            <p className="text-xs text-amber-900 dark:text-amber-100">
+              Le taux de change est utilise pour convertir automatiquement les montants entre EUR et CFA dans toute l'application.
             </p>
           </div>
         </CardContent>

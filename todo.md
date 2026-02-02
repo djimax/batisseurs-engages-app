@@ -616,3 +616,34 @@
 - [x] Tester le changement de devise
 - [x] Tester la persistance de la devise après rechargement
 - [x] Vérifier tous les affichages de montants
+
+
+## Phase 24 - Conversion Automatique de Devises
+
+### Contexte et Conversion
+- [x] Mettre à jour CurrencyContext avec taux de change modifiable
+- [x] Ajouter fonction de conversion EUR vers CFA
+- [x] Ajouter fonction de conversion CFA vers EUR
+- [x] Persister le taux de change en localStorage
+- [x] Taux de change par défaut : 1 EUR = 655.957 CFA
+
+### Interface de Gestion
+- [x] Ajouter une section dans Settings pour modifier le taux de change
+- [x] Afficher le taux actuel
+- [x] Permettre la modification du taux
+- [x] Ajouter un bouton "Réinitialiser au taux par défaut"
+- [x] Afficher un message de confirmation après modification
+
+### Composant de Conversion
+- [x] Créer un composant CurrencyConverter
+- [x] Afficher deux champs : EUR et CFA
+- [x] Conversion en temps réel lors de la saisie
+- [x] Afficher le taux de change utilisé
+- [x] Intégrer dans une page ou modal accessible
+
+### Tests
+- [x] Tester la conversion EUR vers CFA
+- [x] Tester la conversion CFA vers EUR
+- [x] Tester la modification du taux de change
+- [x] Tester la persistance du taux après rechargement
+- [x] Vérifier la réinitialisation au taux par défaut
