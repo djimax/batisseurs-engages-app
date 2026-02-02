@@ -328,3 +328,29 @@ export const appUsers = mysqlTable("app_users", {
 
 export type AppUser = typeof appUsers.$inferSelect;
 export type InsertAppUser = typeof appUsers.$inferInsert;
+
+
+/**
+ * Audit log table - tracks all modifications
+ */
+export const auditLogs = mysqlTable("auditLogs", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId"),
+  userEmail: varchar("userEmail", { length: 255 }),
+  action: varchar("action", { length: 50 }).notNull(), // CREATE, UPDATE, DELETE, LOGIN, EXPORT, IMPORT
+  entityType: varchar("entityType", { length: 50 }).notNull(), // documents, members, finances, users, events, campaigns, etc.
+  entityId: int("entityId"),
+  entityName: varchar("entityName", { length: 255 }), // Name/title of the modified entity
+  changes: text("changes"), // JSON with before/after values
+  oldValue: text("oldValue"), // JSON - previous value
+  newValue: text("newValue"), // JSON - new value
+  description: text("description"), // Human-readable description
+  ipAddress: varchar("ipAddress", { length: 45 }),
+  userAgent: text("userAgent"),
+  status: mysqlEnum("status", ["success", "failed"]).default("success").notNull(),
+  errorMessage: text("errorMessage"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type AuditLog = typeof auditLogs.$inferSelect;
+export type InsertAuditLog = typeof auditLogs.$inferInsert;

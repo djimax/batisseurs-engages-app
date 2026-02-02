@@ -22,6 +22,7 @@ import ProtectedUserManagement from "./pages/ProtectedUserManagement";
 import AdminPortal from "./pages/AdminPortal";
 import ForgotPassword from "./pages/ForgotPassword";
 import Login from "./pages/Login";
+import AuditHistory from "./pages/AuditHistory";
 import { usePasswordAuth } from "./hooks/usePasswordAuth";
 import { useState, useEffect } from "react";
 
@@ -45,6 +46,7 @@ function OnlineRouter({ isAuthenticated, error, onLogin, onLogout, onForgotPassw
         <Route path="/events" component={Events} />
         <Route path="/users" component={ProtectedUserManagement} />
         <Route path="/admin-portal" component={AdminPortal} />
+        <Route path="/audit-history" component={AuditHistory} />
         <Route path="/settings" component={Settings} />
         <Route path="/404" component={NotFound} />
         <Route component={NotFound} />

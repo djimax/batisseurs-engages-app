@@ -36,7 +36,8 @@ import {
   DollarSign,
   Megaphone,
   UserCheck,
-  Calendar
+  Calendar,
+  History
 } from "lucide-react";
 import { CSSProperties, useEffect, useRef, useState } from "react";
 import { useLocation } from "wouter";
@@ -55,6 +56,7 @@ const menuItems = [
   { icon: Activity, label: "Activité", path: "/activity" },
   { icon: Archive, label: "Archives", path: "/archives" },
   { icon: Users, label: "Utilisateurs", path: "/users" },
+  { icon: History, label: "Historique d'audit", path: "/audit-history" },
 ];
 
 const SIDEBAR_WIDTH_KEY = "sidebar-width";
