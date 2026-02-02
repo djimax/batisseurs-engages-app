@@ -19,6 +19,7 @@ import {
 import { useLocation } from "wouter";
 import { RoleSelector } from "@/components/RoleSelector";
 import { useRole } from "@/hooks/useRole";
+import { useCurrency } from "@/contexts/CurrencyContext";
 
 export default function Home() {
   const [, setLocation] = useLocation();

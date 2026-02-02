@@ -569,3 +569,50 @@
 - [x] Améliorer le design avec gradients
 - [x] Ajouter des animations
 - [x] Améliorer la typographie et l'espacement
+
+## Phase 22 - Système d'Audit Complet
+
+### Table et Fonctionnalités
+- [x] Créer la table auditLogs dans la base de données
+- [x] Ajouter les colonnes : userId, userEmail, action, entityType, entityId, entityName, changes, oldValue, newValue, description, ipAddress, userAgent, status, errorMessage
+- [x] Créer un fichier audit.ts avec fonctions d'enregistrement
+- [x] Intégrer l'audit dans les pages (documents, membres, finances, utilisateurs, connexions)
+
+### Page Historique
+- [x] Créer une page AuditHistory.tsx
+- [x] Afficher l'historique complet des modifications
+- [x] Ajouter des filtres par action, type d'entité
+- [x] Ajouter une recherche par utilisateur ou entité
+- [x] Afficher les modifications avant/après
+- [x] Ajouter un export CSV de l'historique
+
+### Intégration
+- [x] Ajouter la route /audit-history dans App.tsx
+- [x] Ajouter le menu dans DashboardLayout
+- [x] Tester la persistance de l'historique
+
+## Phase 23 - Système de Devises (CFA et Euro)
+
+### Contexte et Hook
+- [x] Créer un contexte CurrencyContext pour gérer la devise sélectionnée
+- [x] Créer un hook useCurrency pour accéder à la devise et aux fonctions de conversion
+- [x] Ajouter la persistance de la devise en localStorage
+
+### Page Paramètres
+- [x] Ajouter une option de devise dans les paramètres (Settings)
+- [x] Permettre le choix entre CFA (F) et Euro (€)
+- [x] Afficher la devise sélectionnée
+- [x] Sauvegarder la devise dans localStorage
+
+### Affichage des Montants
+- [x] Mettre à jour la page Home pour afficher la devise correcte
+- [x] Mettre à jour la page Finance pour afficher la devise correcte
+- [x] Mettre à jour la page Campaigns pour afficher la devise correcte
+- [x] Mettre à jour la page Adhesions pour afficher la devise correcte
+- [x] Mettre à jour les graphiques financiers pour afficher la devise correcte
+- [x] Mettre à jour les rapports PDF pour afficher la devise correcte
+
+### Tests
+- [x] Tester le changement de devise
+- [x] Tester la persistance de la devise après rechargement
+- [x] Vérifier tous les affichages de montants

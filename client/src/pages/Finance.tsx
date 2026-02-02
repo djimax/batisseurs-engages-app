@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -11,6 +10,8 @@ import { toast } from "sonner";
 import { FinanceCharts } from "@/components/FinanceCharts";
 import { FinanceReportPDF } from "@/components/FinanceReportPDF";
 import { useCotisationReminders } from "@/hooks/useCotisationReminders";
+import { useCurrency } from "@/contexts/CurrencyContext";
+import { useState } from "react";
 
 interface Cotisation {
   id: number;

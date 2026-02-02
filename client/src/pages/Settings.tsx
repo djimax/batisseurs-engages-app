@@ -2,13 +2,14 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
-import { SettingsIcon, LogOut, Moon, Sun, Globe, Wifi, Download, Upload, Save } from "lucide-react";
+import { SettingsIcon, LogOut, Moon, Sun, Globe, Wifi, Download, Upload, Save, DollarSign } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
 import { useLocation } from "wouter";
 import { toast } from "sonner";
 import { useBackup } from "@/hooks/useBackup";
 import { usePreferences } from "@/hooks/usePreferences";
 import { useSyncHistory } from "@/hooks/useSyncHistory";
+import { useCurrency } from "@/contexts/CurrencyContext";
 
 export default function Settings() {
   const [, setLocation] = useLocation();
@@ -21,6 +22,7 @@ export default function Settings() {
   const { exportData, importData, getBackupSize } = useBackup();
   const { preferences, updatePreference } = usePreferences();
   const { getLastSync, getStats: getSyncStats } = useSyncHistory();
+  const { currency, setCurrency } = useCurrency();
 
   useEffect(() => {
     const savedMode = localStorage.getItem('appMode') as 'online' | 'offline' | null;
@@ -297,6 +299,50 @@ export default function Settings() {
               checked={emailNotifications}
               onCheckedChange={handleEmailNotificationsChange}
             />
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Currency Card */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <DollarSign className="w-5 h-5" />
+            Devise Monétaire
+          </CardTitle>
+          <CardDescription>
+            Choisissez la devise pour l'affichage des montants
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="grid grid-cols-2 gap-3">
+            <Button
+              onClick={() => {
+                setCurrency('EUR');
+                toast.success('Devise changée en Euro (€)');
+              }}
+              variant={currency === 'EUR' ? 'default' : 'outline'}
+              size="lg"
+              className="w-full"
+            >
+              <span className="mr-2">€</span> Euro
+            </Button>
+            <Button
+              onClick={() => {
+                setCurrency('CFA');
+                toast.success('Devise changée en CFA (F)');
+              }}
+              variant={currency === 'CFA' ? 'default' : 'outline'}
+              size="lg"
+              className="w-full"
+            >
+              <span className="mr-2">F</span> CFA
+            </Button>
+          </div>
+          <div className="bg-blue-50 dark:bg-blue-950 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
+            <p className="text-sm text-blue-900 dark:text-blue-100">
+              Devise sélectionnée: <strong>{currency === 'EUR' ? 'Euro (€)' : 'CFA (F)'}</strong>
+            </p>
           </div>
         </CardContent>
       </Card>
