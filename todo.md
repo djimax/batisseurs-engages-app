@@ -647,3 +647,37 @@
 - [x] Tester la modification du taux de change
 - [x] Tester la persistance du taux après rechargement
 - [x] Vérifier la réinitialisation au taux par défaut
+
+
+## Phase 25 - Synchronisation des Montants par Devise
+
+### Utilitaire de Formatage
+- [x] Créer un hook useFormatAmount pour formater les montants avec conversion
+- [x] Gérer l'affichage en EUR ou CFA selon la sélection
+- [x] Afficher l'équivalence en devise alternative
+
+### Composants Réutilisables
+- [x] Créer un composant AmountDisplay pour afficher les montants formatés
+- [x] Créer un composant AmountWithEquivalent pour afficher EUR + CFA
+- [x] Créer un composant AmountTableCell pour les tableaux
+
+### Page Finance
+- [x] Afficher les cotisations dans la devise sélectionnée
+- [x] Afficher les dons dans la devise sélectionnée
+- [x] Afficher les dépenses dans la devise sélectionnée
+- [x] Mettre à jour les totaux et statistiques financières
+
+### Page Campaigns
+- [x] Afficher les montants collectés dans la devise sélectionnée
+- [x] Afficher les objectifs dans la devise sélectionnée
+- [x] Mettre à jour les statistiques de campagne
+
+### Page Adhesions
+- [x] Afficher les montants de cotisation dans la devise sélectionnée
+- [x] Afficher les montants totaux par membre
+
+### Tests
+- [x] Tester l'affichage des montants en EUR
+- [x] Tester l'affichage des montants en CFA
+- [x] Tester la conversion lors du changement de devise
+- [x] Vérifier que tous les montants sont synchronisés

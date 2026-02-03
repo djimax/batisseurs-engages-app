@@ -7,8 +7,11 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Badge } from "@/components/ui/badge";
 import { Plus, User, Calendar, AlertCircle, CheckCircle, Clock } from "lucide-react";
 import { toast } from "sonner";
+import { useFormatAmount } from "@/hooks/useFormatAmount";
+import { AmountDisplay } from "@/components/AmountDisplay";
 
 export default function Adhesions() {
+  const { formatAmountWithConversion } = useFormatAmount();
   const [isOpen, setIsOpen] = useState(false);
   const [selectedYear, setSelectedYear] = useState(new Date().getFullYear().toString());
   const [formData, setFormData] = useState({
@@ -167,7 +170,7 @@ export default function Adhesions() {
             <CardTitle className="text-sm font-medium text-muted-foreground">Total Collecté</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{stats.totalCollected} F</div>
+            <div className="text-2xl font-bold"><AmountDisplay amount={stats.totalCollected} sourceCurrency="EUR" /></div>
             <p className="text-xs text-muted-foreground mt-1">Adhésions</p>
           </CardContent>
         </Card>
@@ -207,7 +210,7 @@ export default function Adhesions() {
 
                 <div className="flex items-center gap-6">
                   <div className="text-right">
-                    <p className="font-semibold text-lg">{adhesion.montant} F</p>
+                    <p className="font-semibold text-lg"><AmountDisplay amount={parseFloat(adhesion.montant || "0")} sourceCurrency="EUR" /></p>
                     <p className="text-xs text-muted-foreground">Montant</p>
                   </div>
 

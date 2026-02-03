@@ -11,6 +11,8 @@ import { FinanceCharts } from "@/components/FinanceCharts";
 import { FinanceReportPDF } from "@/components/FinanceReportPDF";
 import { useCotisationReminders } from "@/hooks/useCotisationReminders";
 import { useCurrency } from "@/contexts/CurrencyContext";
+import { useFormatAmount } from "@/hooks/useFormatAmount";
+import { AmountDisplay } from "@/components/AmountDisplay";
 import { useState } from "react";
 
 interface Cotisation {
@@ -44,6 +46,7 @@ interface Depense {
 }
 
 export default function Finance() {
+  const { formatAmountWithConversion } = useFormatAmount();
   const [cotisations, setCotisations] = useState<Cotisation[]>([]);
   const [dons, setDons] = useState<Don[]>([]);
   const [depenses, setDepenses] = useState<Depense[]>([]);
@@ -170,7 +173,7 @@ export default function Finance() {
             <DollarSign className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{totalCotisations.toFixed(2)} F</div>
+            <div className="text-2xl font-bold"><AmountDisplay amount={totalCotisations} sourceCurrency="EUR" /></div>
             <p className="text-xs text-muted-foreground">{cotisations.length} cotisations</p>
           </CardContent>
         </Card>
@@ -181,7 +184,7 @@ export default function Finance() {
             <Gift className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{totalDons.toFixed(2)} F</div>
+            <div className="text-2xl font-bold"><AmountDisplay amount={totalDons} sourceCurrency="EUR" /></div>
             <p className="text-xs text-muted-foreground">{dons.length} dons reçus</p>
           </CardContent>
         </Card>
@@ -192,7 +195,7 @@ export default function Finance() {
             <TrendingUp className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{totalDepenses.toFixed(2)} F</div>
+            <div className="text-2xl font-bold"><AmountDisplay amount={totalDepenses} sourceCurrency="EUR" /></div>
             <p className="text-xs text-muted-foreground">{depenses.length} dépenses</p>
           </CardContent>
         </Card>
@@ -204,7 +207,7 @@ export default function Finance() {
           </CardHeader>
           <CardContent>
             <div className={`text-2xl font-bold ${solde >= 0 ? "text-green-600" : "text-red-600"}`}>
-              {solde.toFixed(2)} F
+              <AmountDisplay amount={solde} sourceCurrency="EUR" />
             </div>
             <p className="text-xs text-muted-foreground">Bilan financier</p>
           </CardContent>
@@ -308,7 +311,7 @@ export default function Finance() {
                         <p className="text-sm text-muted-foreground">{cot.notes}</p>
                       </div>
                       <div className="text-right">
-                        <p className="font-semibold">{cot.montant} F</p>
+                        <p className="font-semibold"><AmountDisplay amount={parseFloat(cot.montant || "0")} sourceCurrency="EUR" /></p>
                         <span className={`text-xs px-2 py-1 rounded ${getStatutColor(cot.statut)}`}>
                           {cot.statut}
                         </span>
@@ -408,7 +411,7 @@ export default function Finance() {
                         <p className="font-medium">{don.donateur}</p>
                         <p className="text-sm text-muted-foreground">{don.description}</p>
                       </div>
-                      <p className="font-semibold text-green-600">{don.montant} F</p>
+                      <p className="font-semibold text-green-600"><AmountDisplay amount={parseFloat(don.montant || "0")} sourceCurrency="EUR" /></p>
                     </div>
                   ))}
                 </div>
@@ -501,7 +504,7 @@ export default function Finance() {
                         <p className="font-medium">{dep.description}</p>
                         <p className="text-sm text-muted-foreground">{dep.categorie}</p>
                       </div>
-                      <p className="font-semibold text-red-600">{dep.montant} F</p>
+                      <p className="font-semibold text-red-600"><AmountDisplay amount={parseFloat(dep.montant || "0")} sourceCurrency="EUR" /></p>
                     </div>
                   ))}
                 </div>

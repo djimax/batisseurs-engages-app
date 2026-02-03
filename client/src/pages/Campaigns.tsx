@@ -9,8 +9,11 @@ import { Badge } from "@/components/ui/badge";
 import { Plus, Target, TrendingUp, Calendar, Edit2, Trash2 } from "lucide-react";
 import { trpc } from "@/lib/trpc";
 import { toast } from "sonner";
+import { useFormatAmount } from "@/hooks/useFormatAmount";
+import { AmountDisplay } from "@/components/AmountDisplay";
 
 export default function Campaigns() {
+  const { formatAmountWithConversion } = useFormatAmount();
   const [isOpen, setIsOpen] = useState(false);
   const [editingId, setEditingId] = useState<number | null>(null);
   const [formData, setFormData] = useState({
@@ -132,7 +135,7 @@ export default function Campaigns() {
             <CardTitle className="text-sm font-medium text-muted-foreground">Total Collecté</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">5 000 F</div>
+            <div className="text-2xl font-bold"><AmountDisplay amount={5000} sourceCurrency="EUR" /></div>
             <p className="text-xs text-muted-foreground mt-1">Toutes campagnes confondues</p>
           </CardContent>
         </Card>
@@ -142,7 +145,7 @@ export default function Campaigns() {
             <CardTitle className="text-sm font-medium text-muted-foreground">Objectif Total</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">7 000 F</div>
+            <div className="text-2xl font-bold"><AmountDisplay amount={7000} sourceCurrency="EUR" /></div>
             <p className="text-xs text-muted-foreground mt-1">71% atteint</p>
           </CardContent>
         </Card>
@@ -204,11 +207,11 @@ export default function Campaigns() {
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                 <div>
                   <p className="text-xs text-muted-foreground">Collecté</p>
-                  <p className="text-lg font-bold text-green-600">{campaign.montantCollecte} F</p>
+                  <p className="text-lg font-bold text-green-600"><AmountDisplay amount={parseFloat(campaign.montantCollecte || "0")} sourceCurrency="EUR" /></p>
                 </div>
                 <div>
                   <p className="text-xs text-muted-foreground">Objectif</p>
-                  <p className="text-lg font-bold">{campaign.objectif} F</p>
+                  <p className="text-lg font-bold"><AmountDisplay amount={parseFloat(campaign.objectif || "0")} sourceCurrency="EUR" /></p>
                 </div>
                 <div className="flex items-center gap-2">
                   <Calendar className="h-4 w-4 text-muted-foreground" />
