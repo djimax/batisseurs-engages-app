@@ -24,7 +24,7 @@ export default function AdminAuditLogs() {
   const { data: logs = [], isLoading } = trpc.admin.getAuditLogs.useQuery({
     limit,
     offset,
-    entityType: filters.entityType || undefined,
+    entityType: filters.entityType && filters.entityType !== "all" ? filters.entityType : undefined,
     userId: filters.userId ? parseInt(filters.userId) : undefined,
   });
 
@@ -91,15 +91,15 @@ export default function AdminAuditLogs() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label htmlFor="entityType">Type d'Entité</Label>
-              <Select value={filters.entityType} onValueChange={(value) => {
-                setFilters({ ...filters, entityType: value });
+              <Select value={filters.entityType || "all"} onValueChange={(value) => {
+                setFilters({ ...filters, entityType: value === "all" ? "" : value });
                 setPage(0);
               }}>
                 <SelectTrigger id="entityType">
                   <SelectValue placeholder="Tous les types" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="">Tous les types</SelectItem>
+                  <SelectItem value="all">Tous les types</SelectItem>
                   <SelectItem value="documents">Documents</SelectItem>
                   <SelectItem value="members">Membres</SelectItem>
                   <SelectItem value="finances">Finances</SelectItem>
