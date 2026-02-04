@@ -37,7 +37,9 @@ import {
   Megaphone,
   UserCheck,
   Calendar,
-  History
+  History,
+  Shield,
+  Eye
 } from "lucide-react";
 import { CSSProperties, useEffect, useRef, useState } from "react";
 import { useLocation } from "wouter";
@@ -57,6 +59,8 @@ const menuItems = [
   { icon: Archive, label: "Archives", path: "/archives" },
   { icon: Users, label: "Utilisateurs", path: "/users" },
   { icon: History, label: "Historique d'audit", path: "/audit-history" },
+  { icon: Shield, label: "Gestion des Rôles", path: "/admin/roles", adminOnly: true },
+  { icon: Eye, label: "Journaux d'Audit", path: "/admin/audit-logs", adminOnly: true },
 ];
 
 const SIDEBAR_WIDTH_KEY = "sidebar-width";
@@ -216,7 +220,12 @@ function DashboardLayoutContent({
 
           <SidebarContent className="gap-0 pt-2">
             <SidebarMenu className="px-2 py-1">
-              {menuItems.map(item => {
+              {menuItems.filter(item => {
+                if (item.adminOnly && user?.role !== "admin") {
+                  return false;
+                }
+                return true;
+              }).map(item => {
                 const isActive = location === item.path;
                 return (
                   <SidebarMenuItem key={item.path}>
@@ -234,8 +243,7 @@ function DashboardLayoutContent({
                   </SidebarMenuItem>
                 );
               })}
-            </SidebarMenu>
-          </SidebarContent>
+            </SidebarMenu>          </SidebarContent>
 
           <SidebarFooter className="p-3 border-t border-sidebar-border">
             <DropdownMenu>

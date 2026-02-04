@@ -681,3 +681,45 @@
 - [x] Tester l'affichage des montants en CFA
 - [x] Tester la conversion lors du changement de devise
 - [x] Vérifier que tous les montants sont synchronisés
+
+
+## Phase 26 - Gestion Administrative
+
+### Schéma de Base de Données
+- [x] Ajouter table memberStatuses pour tracker les changements de statut
+- [x] Ajouter table memberHistory pour l'historique des modifications
+- [x] Ajouter table roles pour définir les rôles
+- [x] Ajouter table permissions pour définir les permissions
+- [x] Ajouter table rolePermissions pour lier rôles et permissions
+- [x] Ajouter table userRoles pour assigner les rôles aux utilisateurs
+- [x] Ajouter table auditLogs pour tracker toutes les activités
+- [ ] Migrer la base de données avec pnpm db:push
+
+### Procédures tRPC - Rôles et Permissions
+- [x] Créer procedure admin.getRoles
+- [x] Créer procedure admin.getPermissions
+- [x] Créer procedure admin.createRole
+- [ ] Créer procedure admin.updateRole
+- [ ] Créer procedure admin.deleteRole
+- [ ] Créer procedure admin.assignRoleToUser
+- [ ] Créer procedure admin.removeRoleFromUser
+- [ ] Créer procedure admin.getRolePermissions
+
+### Procédures tRPC - Audit
+- [x] Créer procedure admin.getAuditLogs
+- [ ] Créer procedure admin.getAuditLogsByUser
+- [ ] Créer procedure admin.getAuditLogsByEntity
+- [ ] Créer procedure admin.getAuditLogsByAction
+
+### Pages d'Interface
+- [x] Créer page AdminRoles.tsx pour gérer les rôles
+- [ ] Créer page AdminPermissions.tsx pour gérer les permissions
+- [x] Créer page AdminAuditLogs.tsx pour consulter les logs
+- [x] Ajouter les routes dans App.tsx
+- [x] Ajouter les liens de navigation
+
+### Tests
+- [x] Tester la création de rôles
+- [ ] Tester l'assignation de rôles aux utilisateurs
+- [x] Tester l'enregistrement des logs d'audit
+- [x] Vérifier que les logs contiennent les bonnes informations

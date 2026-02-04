@@ -13,8 +13,12 @@ import {
   createDon, getDons,
   createDepense, getDepenses,
   createTransaction, getTransactions,
-  getFinancialStats
+  getFinancialStats,
+  getDb
 } from "./db";
+import { roles, permissions, auditLogs } from "../drizzle/schema";
+import { eq, desc } from "drizzle-orm";
+import { logAudit } from "./audit";
 import { storagePut } from "./storage";
 import { notifyOwner } from "./_core/notification";
 import { nanoid } from "nanoid";
@@ -454,6 +458,96 @@ export const appRouter = router({
   // ============ FINANCES ============
   finances: router({
     stats: protectedProcedure.query(async () => getFinancialStats()),
+  }),
+
+  // ============ ADMIN - ROLES & PERMISSIONS ============
+  admin: router({
+    // Roles management
+    getRoles: protectedProcedure.query(async () => {
+      const db = await getDb();
+      if (!db) return [];
+      try {
+        return await db.select().from(roles);
+      } catch (error) {
+        console.error("Failed to get roles:", error);
+        return [];
+      }
+    }),
+
+    getPermissions: protectedProcedure.query(async () => {
+      const db = await getDb();
+      if (!db) return [];
+      try {
+        return await db.select().from(permissions);
+      } catch (error) {
+        console.error("Failed to get permissions:", error);
+        return [];
+      }
+    }),
+
+    createRole: protectedProcedure
+      .input(z.object({
+        name: z.string().min(1),
+        description: z.string().optional(),
+      }))
+      .mutation(async ({ input, ctx }) => {
+        const db = await getDb();
+        if (!db) throw new Error("Database not available");
+        
+        try {
+          const result = await db.insert(roles).values({
+            name: input.name,
+            description: input.description,
+            isSystem: false,
+          });
+          
+          // Log audit
+          await logAudit({
+            userId: ctx.user?.id,
+            action: "CREATE",
+            entityType: "roles",
+            entityName: input.name,
+            description: `Created role: ${input.name}`,
+            status: "success",
+          });
+          
+          return result;
+        } catch (error) {
+          console.error("Failed to create role:", error);
+          throw error;
+        }
+      }),
+
+    getAuditLogs: protectedProcedure
+      .input(z.object({
+        limit: z.number().default(100),
+        offset: z.number().default(0),
+        entityType: z.string().optional(),
+        userId: z.number().optional(),
+      }))
+      .query(async ({ input }) => {
+        const db = await getDb();
+        if (!db) return [];
+        
+        try {
+          const result = await db.select().from(auditLogs);
+          let filtered = result;
+          
+          if (input.entityType) {
+            filtered = filtered.filter(log => log.entityType === input.entityType);
+          }
+          if (input.userId) {
+            filtered = filtered.filter(log => log.userId === input.userId);
+          }
+          
+          return filtered
+            .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+            .slice(input.offset, input.offset + input.limit);
+        } catch (error) {
+          console.error("Failed to get audit logs:", error);
+          return [];
+        }
+      }),
   }),
 });
 
