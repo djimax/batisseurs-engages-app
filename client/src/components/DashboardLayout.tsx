@@ -55,6 +55,7 @@ const menuItems = [
   { icon: Megaphone, label: "Campagnes", path: "/campaigns" },
   { icon: UserCheck, label: "Adhésions", path: "/adhesions" },
   { icon: Calendar, label: "Événements", path: "/events" },
+  { icon: Megaphone, label: "Annonces", path: "/announcements" },
   { icon: Activity, label: "Activité", path: "/activity" },
   { icon: Archive, label: "Archives", path: "/archives" },
   { icon: Users, label: "Utilisateurs", path: "/users" },

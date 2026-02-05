@@ -723,3 +723,36 @@
 - [ ] Tester l'assignation de rôles aux utilisateurs
 - [x] Tester l'enregistrement des logs d'audit
 - [x] Vérifier que les logs contiennent les bonnes informations
+
+
+## Phase 27 - Annonces et Actualités
+
+### Schéma de Base de Données
+- [ ] Ajouter table announcements pour les annonces
+- [ ] Ajouter table news pour les actualités
+- [ ] Ajouter table newsComments pour les commentaires
+- [ ] Migrer la base de données
+
+### Procédures tRPC
+- [ ] Créer procedure announcements.getAll
+- [ ] Créer procedure announcements.create
+- [ ] Créer procedure announcements.update
+- [ ] Créer procedure announcements.delete
+- [ ] Créer procedure news.getAll
+- [ ] Créer procedure news.create
+- [ ] Créer procedure news.update
+- [ ] Créer procedure news.delete
+- [ ] Créer procedure news.addComment
+- [ ] Créer procedure news.deleteComment
+
+### Page d'Interface
+- [x] Créer page Announcements.tsx
+- [ ] Créer page News.tsx
+- [x] Ajouter les routes dans App.tsx
+- [x] Ajouter les liens de navigation
+
+### Tests
+- [ ] Tester la création d'annonces
+- [ ] Tester la création de news
+- [ ] Tester les commentaires
+- [ ] Vérifier l'affichage des annonces et news

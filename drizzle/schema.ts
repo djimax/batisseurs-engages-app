@@ -444,3 +444,54 @@ export const userRoles = mysqlTable("user_roles", {
 
 export type UserRole = typeof userRoles.$inferSelect;
 export type InsertUserRole = typeof userRoles.$inferInsert;
+
+/**
+ * Announcements - important announcements for the association
+ */
+export const announcements = mysqlTable("announcements", {
+  id: int("id").autoincrement().primaryKey(),
+  title: varchar("title", { length: 255 }).notNull(),
+  content: text("content").notNull(),
+  authorId: int("authorId").notNull(),
+  priority: mysqlEnum("priority", ["low", "medium", "high", "urgent"]).default("medium").notNull(),
+  status: mysqlEnum("status", ["draft", "published", "archived"]).default("draft").notNull(),
+  publishedAt: timestamp("publishedAt"),
+  expiresAt: timestamp("expiresAt"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+export type Announcement = typeof announcements.$inferSelect;
+export type InsertAnnouncement = typeof announcements.$inferInsert;
+
+/**
+ * News - news articles for the association
+ */
+export const news = mysqlTable("news", {
+  id: int("id").autoincrement().primaryKey(),
+  title: varchar("title", { length: 255 }).notNull(),
+  content: text("content").notNull(),
+  excerpt: varchar("excerpt", { length: 500 }),
+  authorId: int("authorId").notNull(),
+  category: varchar("category", { length: 100 }).default("general"),
+  status: mysqlEnum("status", ["draft", "published", "archived"]).default("draft").notNull(),
+  publishedAt: timestamp("publishedAt"),
+  viewCount: int("viewCount").default(0),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+export type News = typeof news.$inferSelect;
+export type InsertNews = typeof news.$inferInsert;
+
+/**
+ * News comments - comments on news articles
+ */
+export const newsComments = mysqlTable("news_comments", {
+  id: int("id").autoincrement().primaryKey(),
+  newsId: int("newsId").notNull(),
+  authorId: int("authorId").notNull(),
+  content: text("content").notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+export type NewsComment = typeof newsComments.$inferSelect;
+export type InsertNewsComment = typeof newsComments.$inferInsert;
