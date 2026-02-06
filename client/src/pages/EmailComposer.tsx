@@ -17,7 +17,7 @@ import { Loader2, Send, CheckCircle2, AlertCircle } from "lucide-react";
 export function EmailComposer() {
   const [subject, setSubject] = useState("");
   const [content, setContent] = useState("");
-  const [templateId, setTemplateId] = useState<string>("");
+  const [templateId, setTemplateId] = useState<string>("new");
   const [isLoading, setIsLoading] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
@@ -26,11 +26,17 @@ export function EmailComposer() {
   const sendEmailMutation = trpc.email.sendMassEmail.useMutation();
 
   const handleLoadTemplate = (id: string) => {
-    const template = templates?.find((t) => t.id === parseInt(id));
-    if (template) {
-      setSubject(template.subject);
-      setContent(template.content);
-      setTemplateId(id);
+    if (id === "new") {
+      setSubject("");
+      setContent("");
+      setTemplateId("new");
+    } else {
+      const template = templates?.find((t) => t.id === parseInt(id));
+      if (template) {
+        setSubject(template.subject);
+        setContent(template.content);
+        setTemplateId(id);
+      }
     }
   };
 
@@ -57,7 +63,7 @@ export function EmailComposer() {
         );
         setSubject("");
         setContent("");
-        setTemplateId("");
+        setTemplateId("new");
       } else {
         setErrorMessage(result.error || "Erreur lors de l'envoi de l'email");
       }
@@ -94,7 +100,7 @@ export function EmailComposer() {
                 <SelectValue placeholder="Sélectionner un modèle..." />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">Créer un nouvel email</SelectItem>
+                <SelectItem value="new">Créer un nouvel email</SelectItem>
                 {templates?.map((template) => (
                   <SelectItem key={template.id} value={template.id.toString()}>
                     {template.name}
