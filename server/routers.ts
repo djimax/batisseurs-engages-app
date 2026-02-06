@@ -2,6 +2,7 @@ import { COOKIE_NAME } from "@shared/const";
 import { getSessionCookieOptions } from "./_core/cookies";
 import { systemRouter } from "./_core/systemRouter";
 import { publicProcedure, protectedProcedure, router } from "./_core/trpc";
+import { emailRouter } from "./email-router";
 import { z } from "zod";
 import { 
   getAllCategories, getCategoryById, createCategory, seedDefaultCategories,
@@ -16,15 +17,18 @@ import {
   getFinancialStats,
   getDb
 } from "./db";
-import { roles, permissions, auditLogs } from "../drizzle/schema";
+import { roles, permissions, auditLogs, emailTemplates, emailHistory, emailRecipients } from "../drizzle/schema";
 import { eq, desc } from "drizzle-orm";
 import { logAudit } from "./audit";
 import { storagePut } from "./storage";
 import { notifyOwner } from "./_core/notification";
 import { nanoid } from "nanoid";
 
+// Note: Email procedures are now in email-router.ts and imported above
+
 export const appRouter = router({
   system: systemRouter,
+  email: emailRouter,
   
   auth: router({
     me: publicProcedure.query(opts => opts.ctx.user),

@@ -756,3 +756,41 @@
 - [ ] Tester la création de news
 - [ ] Tester les commentaires
 - [ ] Vérifier l'affichage des annonces et news
+
+
+## Phase 28 - Système d'Envoi d'Emails en Masse
+
+### Schéma de Base de Données
+- [x] Ajouter table emailTemplates pour les templates d'emails
+- [x] Ajouter table emailHistory pour l'historique des emails envoyés
+- [x] Ajouter table emailRecipients pour tracker les destinataires
+- [x] Migrer la base de données
+
+### Procédures tRPC
+- [x] Créer procedure emails.getTemplates (templates.list)
+- [x] Créer procedure emails.createTemplate (templates.create)
+- [x] Créer procedure emails.updateTemplate (templates.update)
+- [x] Créer procedure emails.deleteTemplate (templates.delete)
+- [x] Créer procedure emails.sendBulk (sendMassEmail)
+- [x] Créer procedure emails.getHistory (history.list)
+- [x] Créer procedure emails.getHistoryDetails (history.getById)
+
+### Pages d'Interface
+- [x] Créer page EmailComposer.tsx pour composer les emails
+- [ ] Créer page EmailTemplates.tsx pour gérer les templates
+- [ ] Créer page EmailHistory.tsx pour voir l'historique
+- [x] Ajouter les routes dans App.tsx
+- [x] Ajouter les liens de navigation
+
+### Fonctionnalités
+- [x] Sélectionner les destinataires (tous les membres)
+- [x] Prévisualiser l'email avant envoi
+- [x] Envoyer l'email via le système de notifications Manus
+- [x] Tracker l'historique des emails envoyés
+- [x] Afficher le statut d'envoi (en attente, envoyé, échec)
+
+### Tests
+- [x] Tester la création de templates (19 tests passés)
+- [x] Tester l'envoi d'emails en masse
+- [x] Tester le filtrage des destinataires
+- [x] Vérifier l'historique des emails

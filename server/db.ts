@@ -11,7 +11,10 @@ import {
   cotisations, InsertCotisation,
   dons, InsertDon,
   depenses, InsertDepense,
-  transactions, InsertTransaction
+  transactions, InsertTransaction,
+  emailTemplates, InsertEmailTemplate, EmailTemplate,
+  emailHistory, InsertEmailHistory, EmailHistory,
+  emailRecipients, InsertEmailRecipient, EmailRecipient
 } from "../drizzle/schema";
 import { ENV } from './_core/env';
 
@@ -449,4 +452,92 @@ export async function getFinancialStats() {
     nombreDons: allDons.length,
     nombreDepenses: allDepenses.length,
   };
+}
+
+// ============ EMAIL TEMPLATES ============
+
+export async function getEmailTemplates() {
+  const db = await getDb();
+  if (!db) return [];
+  return await db.select().from(emailTemplates).orderBy(desc(emailTemplates.createdAt));
+}
+
+export async function getEmailTemplateById(id: number) {
+  const db = await getDb();
+  if (!db) return undefined;
+  const result = await db.select().from(emailTemplates).where(eq(emailTemplates.id, id)).limit(1);
+  return result[0];
+}
+
+export async function createEmailTemplate(data: InsertEmailTemplate) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  const result = await db.insert(emailTemplates).values(data);
+  return { id: result[0].insertId, ...data };
+}
+
+export async function updateEmailTemplate(id: number, data: Partial<InsertEmailTemplate>) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db.update(emailTemplates).set(data).where(eq(emailTemplates.id, id));
+  return getEmailTemplateById(id);
+}
+
+export async function deleteEmailTemplate(id: number) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db.delete(emailTemplates).where(eq(emailTemplates.id, id));
+}
+
+// ============ EMAIL HISTORY ============
+
+export async function getEmailHistory(limit: number = 50) {
+  const db = await getDb();
+  if (!db) return [];
+  return await db.select().from(emailHistory)
+    .orderBy(desc(emailHistory.createdAt))
+    .limit(limit);
+}
+
+export async function getEmailHistoryById(id: number) {
+  const db = await getDb();
+  if (!db) return undefined;
+  const result = await db.select().from(emailHistory).where(eq(emailHistory.id, id)).limit(1);
+  return result[0];
+}
+
+export async function createEmailHistory(data: InsertEmailHistory) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  const result = await db.insert(emailHistory).values(data);
+  return { id: result[0].insertId, ...data };
+}
+
+export async function updateEmailHistory(id: number, data: Partial<InsertEmailHistory>) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db.update(emailHistory).set(data).where(eq(emailHistory.id, id));
+  return getEmailHistoryById(id);
+}
+
+// ============ EMAIL RECIPIENTS ============
+
+export async function getEmailRecipients(emailHistoryId: number) {
+  const db = await getDb();
+  if (!db) return [];
+  return await db.select().from(emailRecipients)
+    .where(eq(emailRecipients.emailHistoryId, emailHistoryId));
+}
+
+export async function createEmailRecipient(data: InsertEmailRecipient) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  const result = await db.insert(emailRecipients).values(data);
+  return { id: result[0].insertId, ...data };
+}
+
+export async function updateEmailRecipient(id: number, data: Partial<InsertEmailRecipient>) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db.update(emailRecipients).set(data).where(eq(emailRecipients.id, id));
 }

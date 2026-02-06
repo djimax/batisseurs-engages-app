@@ -39,7 +39,8 @@ import {
   Calendar,
   History,
   Shield,
-  Eye
+  Eye,
+  Mail
 } from "lucide-react";
 import { CSSProperties, useEffect, useRef, useState } from "react";
 import { useLocation } from "wouter";
@@ -56,6 +57,7 @@ const menuItems = [
   { icon: UserCheck, label: "Adhésions", path: "/adhesions" },
   { icon: Calendar, label: "Événements", path: "/events" },
   { icon: Megaphone, label: "Annonces", path: "/announcements" },
+  { icon: Mail, label: "Emails", path: "/email-composer" },
   { icon: Activity, label: "Activité", path: "/activity" },
   { icon: Archive, label: "Archives", path: "/archives" },
   { icon: Users, label: "Utilisateurs", path: "/users" },
