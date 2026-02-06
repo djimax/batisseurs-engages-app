@@ -3,6 +3,7 @@ import { getSessionCookieOptions } from "./_core/cookies";
 import { systemRouter } from "./_core/systemRouter";
 import { publicProcedure, protectedProcedure, router } from "./_core/trpc";
 import { emailRouter } from "./email-router";
+import { adminSettingsRouter } from "./admin-settings-router";
 import { z } from "zod";
 import { 
   getAllCategories, getCategoryById, createCategory, seedDefaultCategories,
@@ -29,6 +30,7 @@ import { nanoid } from "nanoid";
 export const appRouter = router({
   system: systemRouter,
   email: emailRouter,
+  adminSettings: adminSettingsRouter,
   
   auth: router({
     me: publicProcedure.query(opts => opts.ctx.user),

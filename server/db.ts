@@ -14,7 +14,8 @@ import {
   transactions, InsertTransaction,
   emailTemplates, InsertEmailTemplate, EmailTemplate,
   emailHistory, InsertEmailHistory, EmailHistory,
-  emailRecipients, InsertEmailRecipient, EmailRecipient
+  emailRecipients, InsertEmailRecipient, EmailRecipient,
+  appSettings, InsertAppSetting, AppSetting
 } from "../drizzle/schema";
 import { ENV } from './_core/env';
 
@@ -540,4 +541,46 @@ export async function updateEmailRecipient(id: number, data: Partial<InsertEmail
   const db = await getDb();
   if (!db) throw new Error("Database not available");
   await db.update(emailRecipients).set(data).where(eq(emailRecipients.id, id));
+}
+
+
+// ============ APP SETTINGS ============
+
+export async function getAppSetting(key: string): Promise<AppSetting | undefined> {
+  const db = await getDb();
+  if (!db) return undefined;
+  const result = await db.select().from(appSettings).where(eq(appSettings.key, key)).limit(1);
+  return result[0];
+}
+
+export async function getAllAppSettings(): Promise<AppSetting[]> {
+  const db = await getDb();
+  if (!db) return [];
+  return await db.select().from(appSettings);
+}
+
+export async function updateAppSetting(key: string, value: string, updatedBy: number, description?: string) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  
+  const existing = await getAppSetting(key);
+  if (existing) {
+    await db.update(appSettings).set({ value, description, updatedBy, updatedAt: new Date() }).where(eq(appSettings.key, key));
+    return getAppSetting(key);
+  } else {
+    const result = await db.insert(appSettings).values({
+      key,
+      value,
+      description,
+      type: "string",
+      updatedBy,
+    });
+    return { id: result[0].insertId, key, value, description, type: "string", updatedBy, updatedAt: new Date(), createdAt: new Date() };
+  }
+}
+
+export async function deleteAppSetting(key: string) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db.delete(appSettings).where(eq(appSettings.key, key));
 }

@@ -27,6 +27,7 @@ import AdminRoles from "./pages/AdminRoles";
 import AdminAuditLogs from "./pages/AdminAuditLogs";
 import Announcements from "./pages/Announcements";
 import EmailComposer from "./pages/EmailComposer";
+import AdminSettings from "./pages/AdminSettings";
 import { usePasswordAuth } from "./hooks/usePasswordAuth";
 import { useState, useEffect } from "react";
 
@@ -55,6 +56,7 @@ function OnlineRouter({ isAuthenticated, error, onLogin, onLogout, onForgotPassw
         <Route path="/audit-history" component={AuditHistory} />
         <Route path="/admin/roles" component={AdminRoles} />
         <Route path="/admin/audit-logs" component={AdminAuditLogs} />
+        <Route path="/admin/settings" component={AdminSettings} />
         <Route path="/settings" component={Settings} />
         <Route path="/404" component={NotFound} />
         <Route component={NotFound} />

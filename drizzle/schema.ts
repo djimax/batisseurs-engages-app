@@ -550,3 +550,19 @@ export const emailRecipients = mysqlTable("email_recipients", {
 });
 export type EmailRecipient = typeof emailRecipients.$inferSelect;
 export type InsertEmailRecipient = typeof emailRecipients.$inferInsert;
+
+/**
+ * Application Settings - global configuration
+ */
+export const appSettings = mysqlTable("app_settings", {
+  id: int("id").autoincrement().primaryKey(),
+  key: varchar("key", { length: 100 }).notNull().unique(),
+  value: text("value").notNull(),
+  description: text("description"),
+  type: mysqlEnum("type", ["string", "number", "boolean", "json"]).default("string").notNull(),
+  updatedBy: int("updatedBy").notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+export type AppSetting = typeof appSettings.$inferSelect;
+export type InsertAppSetting = typeof appSettings.$inferInsert;

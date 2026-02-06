@@ -794,3 +794,41 @@
 - [x] Tester l'envoi d'emails en masse
 - [x] Tester le filtrage des destinataires
 - [x] Vérifier l'historique des emails
+
+
+## Phase 29 - Page d'Administration des Paramètres Globaux
+
+### Schéma de Base de Données
+- [x] Ajouter table appSettings pour les paramètres globaux
+- [x] Champs : id, key, value, description, type, updatedBy, updatedAt
+- [x] Migrer la base de données
+
+### Procédures tRPC
+- [x] Créer procedure admin.getSettings (adminSettings.get)
+- [x] Créer procedure admin.updateSetting (adminSettings.update)
+- [x] Créer procedure admin.getAllSettings (adminSettings.getAll)
+- [x] Ajouter vérification de rôle admin
+
+### Page d'Interface
+- [x] Créer page AdminSettings.tsx pour gérer les paramètres
+- [x] Formulaire pour modifier le titre de l'application
+- [x] Formulaire pour modifier le logo
+- [x] Formulaire pour modifier la description
+- [x] Formulaire pour modifier les paramètres de configuration
+- [x] Bouton "Sauvegarder" pour persister les modifications
+- [x] Afficher les messages de succès/erreur
+- [x] Ajouter la route dans App.tsx
+- [x] Ajouter le lien dans le menu de navigation
+
+### Fonctionnalités
+- [x] Restriction d'accès aux administrateurs uniquement
+- [x] Validation des paramètres avant sauvegarde
+- [x] Audit logging des modifications
+- [x] Affichage des paramètres actuels
+- [x] Historique des modifications
+
+### Tests
+- [x] Tester la récupération des paramètres (25 tests passés)
+- [x] Tester la modification des paramètres
+- [x] Tester la validation des paramètres
+- [x] Vérifier l'audit logging

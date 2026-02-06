@@ -64,6 +64,7 @@ const menuItems = [
   { icon: History, label: "Historique d'audit", path: "/audit-history" },
   { icon: Shield, label: "Gestion des Rôles", path: "/admin/roles", adminOnly: true },
   { icon: Eye, label: "Journaux d'Audit", path: "/admin/audit-logs", adminOnly: true },
+  { icon: Settings, label: "Paramètres Globaux", path: "/admin/settings", adminOnly: true },
 ];
 
 const SIDEBAR_WIDTH_KEY = "sidebar-width";
