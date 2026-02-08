@@ -832,3 +832,10 @@
 - [x] Tester la modification des paramètres
 - [x] Tester la validation des paramètres
 - [x] Vérifier l'audit logging
+
+
+## Phase 30 - Affichage des Modes à l'Accueil
+
+- [x] Modifier la page Home.tsx pour afficher toujours les deux options (Mode En Ligne et Mode Hors Ligne)
+- [x] Intégrer le composant ModeSelector dans Home.tsx
+- [x] Tester que les modes s'affichent correctement

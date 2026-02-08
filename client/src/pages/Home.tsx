@@ -14,16 +14,23 @@ import {
   ArrowRight,
   Plus,
   Sparkles,
-  Activity
+  Activity,
+  Cloud,
+  Zap,
+  Globe,
+  Wifi
 } from "lucide-react";
 import { useLocation } from "wouter";
 import { RoleSelector } from "@/components/RoleSelector";
 import { useRole } from "@/hooks/useRole";
 import { useCurrency } from "@/contexts/CurrencyContext";
+import React from "react";
+
 
 export default function Home() {
   const [, setLocation] = useLocation();
   const { isAdmin } = useRole();
+  const [mode, setMode] = React.useState<'online' | 'offline'>('online');
   const { data: stats, isLoading: statsLoading } = trpc.documents.stats.useQuery();
   const { data: categories, isLoading: categoriesLoading } = trpc.categories.list.useQuery();
   const { data: documents, isLoading: documentsLoading } = trpc.documents.list.useQuery({});
@@ -92,7 +99,7 @@ export default function Home() {
 
   return (
     <div className="space-y-8">
-      {/* 🎨 HERO SECTION avec gradient */}
+      {/* 🎨 HERO SECTION avec sélecteur de mode */}
       <div className="gradient-hero rounded-3xl p-8 text-white shadow-2xl animate-fade-in-up">
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
           <div className="space-y-3">
@@ -134,6 +141,121 @@ export default function Home() {
             Nouveau document
           </Button>
         </div>
+      </div>
+
+      {/* 🔄 MODE SELECTOR - Affichage toujours visible */}
+      <div className="space-y-4">
+        <h2 className="text-2xl font-bold tracking-tight flex items-center gap-2">
+          <Sparkles className="h-6 w-6 text-primary" />
+          Sélectionner votre Mode
+        </h2>
+        
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {/* Online Mode */}
+          <Card className={`hover:shadow-lg transition-all cursor-pointer border-2 ${mode === 'online' ? 'border-blue-500 bg-blue-50 dark:bg-blue-950/30' : 'hover:border-primary'}`}>
+            <CardHeader>
+              <div className="flex items-center gap-3 mb-2">
+                <div className="w-12 h-12 rounded-lg bg-blue-100 dark:bg-blue-900/50 flex items-center justify-center">
+                  <Cloud className="w-6 h-6 text-blue-600" />
+                </div>
+                <div>
+                  <CardTitle>Mode En Ligne</CardTitle>
+                  {mode === 'online' && <Badge className="mt-1 bg-blue-600">Actif</Badge>}
+                </div>
+              </div>
+              <CardDescription>
+                Accès depuis n'importe où avec synchronisation cloud
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="space-y-2">
+                <h4 className="font-semibold text-sm">✨ Avantages :</h4>
+                <ul className="text-sm text-muted-foreground space-y-1">
+                  <li>✅ Accès depuis n'importe quel ordinateur</li>
+                  <li>✅ Données synchronisées en temps réel</li>
+                  <li>✅ Stockage illimité dans le cloud</li>
+                  <li>✅ Partage facile entre membres</li>
+                  <li>✅ Sauvegarde automatique</li>
+                </ul>
+              </div>
+              <div className="space-y-2">
+                <h4 className="font-semibold text-sm">⚠️ Requis :</h4>
+                <ul className="text-sm text-muted-foreground space-y-1">
+                  <li>• Connexion Internet</li>
+                  <li>• Compte Manus</li>
+                </ul>
+              </div>
+              <Button
+                onClick={() => setMode('online')}
+                className={`w-full ${mode === 'online' ? 'bg-blue-600 hover:bg-blue-700' : 'bg-gray-300 hover:bg-gray-400'}`}
+                size="lg"
+              >
+                <Globe className="w-4 h-4 mr-2" />
+                {mode === 'online' ? 'Mode En Ligne Actif' : 'Utiliser Mode En Ligne'}
+              </Button>
+            </CardContent>
+          </Card>
+
+          {/* Offline Mode */}
+          <Card className={`hover:shadow-lg transition-all cursor-pointer border-2 ${mode === 'offline' ? 'border-green-500 bg-green-50 dark:bg-green-950/30' : 'hover:border-primary'}`}>
+            <CardHeader>
+              <div className="flex items-center gap-3 mb-2">
+                <div className="w-12 h-12 rounded-lg bg-green-100 dark:bg-green-900/50 flex items-center justify-center">
+                  <Zap className="w-6 h-6 text-green-600" />
+                </div>
+                <div>
+                  <CardTitle>Mode Hors Ligne</CardTitle>
+                  {mode === 'offline' && <Badge className="mt-1 bg-green-600">Actif</Badge>}
+                </div>
+              </div>
+              <CardDescription>
+                Utilisez l'application sans connexion Internet
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="space-y-2">
+                <h4 className="font-semibold text-sm">✨ Avantages :</h4>
+                <ul className="text-sm text-muted-foreground space-y-1">
+                  <li>✅ Aucune connexion Internet requise</li>
+                  <li>✅ Données stockées localement</li>
+                  <li>✅ Utilisation immédiate</li>
+                  <li>✅ Pas d'authentification</li>
+                  <li>✅ Parfait pour les réunions offline</li>
+                </ul>
+              </div>
+              <div className="space-y-2">
+                <h4 className="font-semibold text-sm">⚠️ Limitations :</h4>
+                <ul className="text-sm text-muted-foreground space-y-1">
+                  <li>• Données locales uniquement</li>
+                  <li>• Pas de synchronisation</li>
+                </ul>
+              </div>
+              <Button
+                onClick={() => setMode('offline')}
+                className={`w-full ${mode === 'offline' ? 'bg-green-600 hover:bg-green-700' : 'bg-gray-300 hover:bg-gray-400'}`}
+                size="lg"
+              >
+                <Wifi className="w-4 h-4 mr-2" />
+                {mode === 'offline' ? 'Mode Hors Ligne Actif' : 'Utiliser Mode Hors Ligne'}
+              </Button>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Info Box */}
+        <Card className="bg-blue-50 dark:bg-blue-950/30 border-blue-200 dark:border-blue-900">
+          <CardContent className="pt-6">
+            <div className="flex gap-3">
+              <div className="text-2xl">ℹ️</div>
+              <div>
+                <p className="font-semibold text-blue-900 dark:text-blue-300 mb-1">Vous pouvez changer de mode à tout moment</p>
+                <p className="text-sm text-blue-800 dark:text-blue-400">
+                  Vous pouvez passer du mode en ligne au mode hors ligne (et vice versa) en utilisant les boutons ci-dessus.
+                </p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
       </div>
 
       {/* Role Selector (Dev) */}
@@ -280,19 +402,19 @@ export default function Home() {
                 <p className="text-muted-foreground text-center py-8">Aucun document</p>
               ) : (
                 <div className="space-y-3">
-                  {recentDocs.map((doc) => (
-                    <div 
-                      key={doc.id} 
-                      className="flex items-center justify-between p-3 rounded-lg hover:bg-muted/50 transition-colors cursor-pointer"
+                  {recentDocs.map((doc, index) => (
+                    <div
+                      key={doc.id}
+                      className="flex items-center justify-between p-3 rounded-lg hover:bg-muted/50 transition-colors cursor-pointer group"
                       onClick={() => setLocation("/documents")}
                     >
-                      <div className="flex items-center gap-3">
-                        <div className="p-2 rounded-lg bg-primary/10">
+                      <div className="flex items-center gap-3 flex-1 min-w-0">
+                        <div className="p-2 rounded-lg bg-primary/10 group-hover:bg-primary/20 transition-colors flex-shrink-0">
                           <FileText className="h-4 w-4 text-primary" />
                         </div>
-                        <div>
-                          <p className="font-medium text-sm">{doc.title}</p>
-                          <p className="text-xs text-muted-foreground">ID: {doc.categoryId}</p>
+                        <div className="flex-1 min-w-0">
+                          <p className="font-medium truncate">{doc.title}</p>
+                          <p className="text-xs text-muted-foreground">Document</p>
                         </div>
                       </div>
                       {getPriorityBadge(doc.priority)}
@@ -308,45 +430,42 @@ export default function Home() {
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <TrendingUp className="h-5 w-5 text-primary" />
-                Accès Rapide
+                Résumé Rapide
               </CardTitle>
-              <CardDescription>Accédez rapidement aux sections principales</CardDescription>
+              <CardDescription>Aperçu de votre activité</CardDescription>
             </CardHeader>
-            <CardContent className="space-y-3">
-              <Button 
-                variant="outline" 
-                className="w-full justify-start gap-2 h-12"
-                onClick={() => setLocation("/documents")}
-              >
-                <FileText className="h-4 w-4" />
-                Documents
-              </Button>
-              <Button 
-                variant="outline" 
-                className="w-full justify-start gap-2 h-12"
-                onClick={() => setLocation("/members")}
-              >
-                <Users className="h-4 w-4" />
-                Membres
-              </Button>
-              <Button 
-                variant="outline" 
-                className="w-full justify-start gap-2 h-12"
-                onClick={() => setLocation("/finance")}
-              >
-                <TrendingUp className="h-4 w-4" />
-                Finance
-              </Button>
-              {isAdmin && (
+            <CardContent>
+              <div className="space-y-4">
+                <div className="flex items-center justify-between p-3 rounded-lg bg-muted/50">
+                  <div className="flex items-center gap-2">
+                    <CheckCircle2 className="h-4 w-4 text-emerald-600" />
+                    <span className="text-sm">Complétés</span>
+                  </div>
+                  <span className="font-bold text-lg">{stats?.completed || 0}</span>
+                </div>
+                <div className="flex items-center justify-between p-3 rounded-lg bg-muted/50">
+                  <div className="flex items-center gap-2">
+                    <TrendingUp className="h-4 w-4 text-orange-600" />
+                    <span className="text-sm">En cours</span>
+                  </div>
+                  <span className="font-bold text-lg">{stats?.inProgress || 0}</span>
+                </div>
+                <div className="flex items-center justify-between p-3 rounded-lg bg-muted/50">
+                  <div className="flex items-center gap-2">
+                    <Clock className="h-4 w-4 text-amber-600" />
+                    <span className="text-sm">En attente</span>
+                  </div>
+                  <span className="font-bold text-lg">{stats?.pending || 0}</span>
+                </div>
                 <Button 
                   variant="outline" 
-                  className="w-full justify-start gap-2 h-12"
-                  onClick={() => setLocation("/user-management")}
+                  className="w-full"
+                  onClick={() => setLocation("/documents")}
                 >
-                  <Users className="h-4 w-4" />
-                  Gestion Utilisateurs
+                  Voir tous les documents
+                  <ArrowRight className="ml-2 h-4 w-4" />
                 </Button>
-              )}
+              </div>
             </CardContent>
           </Card>
         </div>
