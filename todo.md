@@ -693,7 +693,7 @@
 - [x] Ajouter table rolePermissions pour lier rôles et permissions
 - [x] Ajouter table userRoles pour assigner les rôles aux utilisateurs
 - [x] Ajouter table auditLogs pour tracker toutes les activités
-- [ ] Migrer la base de données avec pnpm db:push
+- [x] Migrer la base de données avec pnpm db:push
 
 ### Procédures tRPC - Rôles et Permissions
 - [x] Créer procedure admin.getRoles
@@ -731,7 +731,7 @@
 - [ ] Ajouter table announcements pour les annonces
 - [ ] Ajouter table news pour les actualités
 - [ ] Ajouter table newsComments pour les commentaires
-- [ ] Migrer la base de données
+- [x] Migrer la base de données
 
 ### Procédures tRPC
 - [ ] Créer procedure announcements.getAll
@@ -839,3 +839,59 @@
 - [x] Modifier la page Home.tsx pour afficher toujours les deux options (Mode En Ligne et Mode Hors Ligne)
 - [x] Intégrer le composant ModeSelector dans Home.tsx
 - [x] Tester que les modes s'affichent correctement
+
+
+## Phase 31 - Système CRM Complet
+
+### Schéma de Base de Données
+- [ ] Ajouter table contacts pour les profils détaillés des membres
+- [x] Ajouter table activities pour le suivi des interactions
+- [x] Ajouter table adhesionPipeline pour le processus d'adhésion
+- [x] Ajouter table crmReports pour les rapports CRM
+- [x] Ajouter table emailIntegration pour l'historique des emails
+- [x] Migrer la base de données
+
+### Fonctions db.ts
+- [x] Fonctions pour CRUD contacts
+- [x] Fonctions pour CRUD activities
+- [x] Fonctions pour gestion du pipeline d'adhésion
+- [x] Fonctions pour génération de rapports
+- [x] Fonctions pour historique des emails
+
+### Procédures tRPC
+- [x] crm.contacts.list
+- [x] crm.contacts.create
+- [x] crm.contacts.update
+- [x] crm.contacts.delete
+- [x] crm.activities.list
+- [x] crm.activities.create
+- [x] crm.activities.update
+- [x] crm.pipeline.list
+- [x] crm.pipeline.updateStatus
+- [x] crm.reports.getMetrics
+- [x] crm.reports.getEngagement
+- [x] crm.email.getHistory
+
+### Pages d'Interface
+- [x] Créer page CRMDashboard.tsx (intègre tous les modules)
+- [x] Onglet Activités intégré
+- [x] Onglet Pipeline d'adhésion intégré
+- [x] Onglet Rapports intégré
+- [x] Ajouter les routes dans App.tsx
+- [x] Ajouter les liens dans la navigation
+
+### Fonctionnalités
+- [ ] Profils détaillés des contacts avec historique
+- [ ] Segmentation des contacts
+- [ ] Suivi des tâches, appels, réunions
+- [ ] Pipeline d'adhésion avec statuts
+- [ ] Processus d'onboarding automatisé
+- [ ] Tableaux de bord CRM
+- [ ] Métriques d'engagement
+- [ ] Historique des emails
+
+### Tests
+- [x] Tests pour la gestion des contacts
+- [x] Tests pour le suivi des activités
+- [x] Tests pour le pipeline d'adhésion
+- [x] Tests pour les rapports CRM

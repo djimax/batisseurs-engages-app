@@ -1,4 +1,4 @@
-import { int, mysqlEnum, mysqlTable, text, timestamp, varchar, boolean, decimal } from "drizzle-orm/mysql-core";
+import { int, mysqlEnum, mysqlTable, text, timestamp, varchar, boolean, decimal, date, json } from "drizzle-orm/mysql-core";
 
 /**
  * Core user table backing auth flow.
@@ -566,3 +566,111 @@ export const appSettings = mysqlTable("app_settings", {
 });
 export type AppSetting = typeof appSettings.$inferSelect;
 export type InsertAppSetting = typeof appSettings.$inferInsert;
+
+
+/**
+ * CRM Contacts - detailed member profiles
+ */
+export const crmContacts = mysqlTable("crm_contacts", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId"),
+  firstName: varchar("firstName", { length: 100 }).notNull(),
+  lastName: varchar("lastName", { length: 100 }).notNull(),
+  email: varchar("email", { length: 320 }).notNull(),
+  phone: varchar("phone", { length: 20 }),
+  company: varchar("company", { length: 255 }),
+  position: varchar("position", { length: 100 }),
+  address: text("address"),
+  city: varchar("city", { length: 100 }),
+  postalCode: varchar("postalCode", { length: 20 }),
+  country: varchar("country", { length: 100 }),
+  birthDate: date("birthDate"),
+  joinDate: date("joinDate"),
+  segment: varchar("segment", { length: 50 }).default("general"),
+  status: mysqlEnum("status", ["prospect", "active", "inactive", "archived"]).default("prospect").notNull(),
+  notes: text("notes"),
+  tags: varchar("tags", { length: 500 }),
+  lastInteraction: timestamp("lastInteraction"),
+  engagementScore: int("engagementScore").default(0),
+  createdBy: int("createdBy").notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+export type CrmContact = typeof crmContacts.$inferSelect;
+export type InsertCrmContact = typeof crmContacts.$inferInsert;
+
+/**
+ * CRM Activities - track interactions with contacts
+ */
+export const crmActivities = mysqlTable("crm_activities", {
+  id: int("id").autoincrement().primaryKey(),
+  contactId: int("contactId").notNull(),
+  type: mysqlEnum("type", ["call", "email", "meeting", "task", "note", "event"]).notNull(),
+  title: varchar("title", { length: 255 }).notNull(),
+  description: text("description"),
+  status: mysqlEnum("status", ["pending", "completed", "cancelled"]).default("pending").notNull(),
+  priority: mysqlEnum("priority", ["low", "medium", "high"]).default("medium").notNull(),
+  dueDate: timestamp("dueDate"),
+  completedDate: timestamp("completedDate"),
+  assignedTo: int("assignedTo"),
+  createdBy: int("createdBy").notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+export type CrmActivity = typeof crmActivities.$inferSelect;
+export type InsertCrmActivity = typeof crmActivities.$inferInsert;
+
+/**
+ * Adhesion Pipeline - track membership application process
+ */
+export const adhesionPipeline = mysqlTable("adhesion_pipeline", {
+  id: int("id").autoincrement().primaryKey(),
+  contactId: int("contactId").notNull(),
+  stage: mysqlEnum("stage", ["inquiry", "application", "review", "approved", "rejected", "member"]).default("inquiry").notNull(),
+  applicationDate: date("applicationDate"),
+  approvalDate: date("approvalDate"),
+  rejectionReason: text("rejectionReason"),
+  notes: text("notes"),
+  assignedTo: int("assignedTo"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+export type AdhesionPipeline = typeof adhesionPipeline.$inferSelect;
+export type InsertAdhesionPipeline = typeof adhesionPipeline.$inferInsert;
+
+/**
+ * CRM Reports - store generated reports and metrics
+ */
+export const crmReports = mysqlTable("crm_reports", {
+  id: int("id").autoincrement().primaryKey(),
+  name: varchar("name", { length: 255 }).notNull(),
+  type: mysqlEnum("type", ["engagement", "pipeline", "activity", "segment", "custom"]).notNull(),
+  description: text("description"),
+  data: json("data"),
+  filters: json("filters"),
+  generatedBy: int("generatedBy").notNull(),
+  generatedAt: timestamp("generatedAt").defaultNow().notNull(),
+  expiresAt: timestamp("expiresAt"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+export type CrmReport = typeof crmReports.$inferSelect;
+export type InsertCrmReport = typeof crmReports.$inferInsert;
+
+/**
+ * CRM Email Integration - track email interactions with contacts
+ */
+export const crmEmailIntegration = mysqlTable("crm_email_integration", {
+  id: int("id").autoincrement().primaryKey(),
+  contactId: int("contactId").notNull(),
+  emailHistoryId: int("emailHistoryId"),
+  subject: varchar("subject", { length: 255 }).notNull(),
+  content: text("content"),
+  direction: mysqlEnum("direction", ["sent", "received"]).notNull(),
+  status: mysqlEnum("status", ["sent", "failed", "bounced", "opened", "clicked"]).default("sent").notNull(),
+  sentBy: int("sentBy"),
+  sentAt: timestamp("sentAt"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+export type CrmEmailIntegration = typeof crmEmailIntegration.$inferSelect;
+export type InsertCrmEmailIntegration = typeof crmEmailIntegration.$inferInsert;

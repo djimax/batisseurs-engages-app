@@ -15,7 +15,12 @@ import {
   emailTemplates, InsertEmailTemplate, EmailTemplate,
   emailHistory, InsertEmailHistory, EmailHistory,
   emailRecipients, InsertEmailRecipient, EmailRecipient,
-  appSettings, InsertAppSetting, AppSetting
+  appSettings, InsertAppSetting, AppSetting,
+  crmContacts, InsertCrmContact, CrmContact,
+  crmActivities, InsertCrmActivity, CrmActivity,
+  adhesionPipeline, InsertAdhesionPipeline, AdhesionPipeline,
+  crmReports, InsertCrmReport, CrmReport,
+  crmEmailIntegration, InsertCrmEmailIntegration, CrmEmailIntegration
 } from "../drizzle/schema";
 import { ENV } from './_core/env';
 
@@ -24,7 +29,7 @@ let _db: ReturnType<typeof drizzle> | null = null;
 export async function getDb() {
   if (!_db && process.env.DATABASE_URL) {
     try {
-      _db = drizzle(process.env.DATABASE_URL);
+      _db = drizzle(process.env.DATABASE_URL) as any;
     } catch (error) {
       console.warn("[Database] Failed to connect:", error);
       _db = null;
@@ -583,4 +588,118 @@ export async function deleteAppSetting(key: string) {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
   await db.delete(appSettings).where(eq(appSettings.key, key));
+}
+
+// ============ CRM CONTACTS FUNCTIONS ============
+export async function createCrmContact(data: InsertCrmContact): Promise<CrmContact> {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  const result = await (db as any).insert(crmContacts).values(data);
+  const contact = await (db as any).query.crmContacts.findFirst({ where: eq(crmContacts.id, result[0].insertId) });
+  return contact as CrmContact;
+}
+
+export async function getCrmContact(id: number): Promise<CrmContact | undefined> {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  return (db as any).query.crmContacts.findFirst({ where: eq(crmContacts.id, id) });
+}
+
+export async function listCrmContacts(filters?: { segment?: string; status?: string; search?: string }): Promise<CrmContact[]> {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  let query = (db as any).query.crmContacts.findMany();
+  return query as Promise<CrmContact[]>;
+}
+
+export async function updateCrmContact(id: number, data: Partial<InsertCrmContact>): Promise<CrmContact> {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await (db as any).update(crmContacts).set({ ...data, updatedAt: new Date() }).where(eq(crmContacts.id, id));
+  const contact = await (db as any).query.crmContacts.findFirst({ where: eq(crmContacts.id, id) });
+  return contact as CrmContact;
+}
+
+export async function deleteCrmContact(id: number): Promise<void> {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await (db as any).delete(crmContacts).where(eq(crmContacts.id, id));
+}
+
+// ============ CRM ACTIVITIES FUNCTIONS ============
+export async function createCrmActivity(data: InsertCrmActivity): Promise<CrmActivity> {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  const result = await (db as any).insert(crmActivities).values(data);
+  const activity = await (db as any).query.crmActivities.findFirst({ where: eq(crmActivities.id, result[0].insertId) });
+  return activity as CrmActivity;
+}
+
+export async function listCrmActivities(contactId: number): Promise<CrmActivity[]> {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  return (db as any).query.crmActivities.findMany({ where: eq(crmActivities.contactId, contactId) });
+}
+
+export async function updateCrmActivity(id: number, data: Partial<InsertCrmActivity>): Promise<CrmActivity> {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await (db as any).update(crmActivities).set({ ...data, updatedAt: new Date() }).where(eq(crmActivities.id, id));
+  const activity = await (db as any).query.crmActivities.findFirst({ where: eq(crmActivities.id, id) });
+  return activity as CrmActivity;
+}
+
+// ============ ADHESION PIPELINE FUNCTIONS ============
+export async function createAdhesionPipeline(data: InsertAdhesionPipeline): Promise<AdhesionPipeline> {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  const result = await (db as any).insert(adhesionPipeline).values(data);
+  const pipeline = await (db as any).query.adhesionPipeline.findFirst({ where: eq(adhesionPipeline.id, result[0].insertId) });
+  return pipeline as AdhesionPipeline;
+}
+
+export async function updateAdhesionPipeline(id: number, data: Partial<InsertAdhesionPipeline>): Promise<AdhesionPipeline> {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await (db as any).update(adhesionPipeline).set({ ...data, updatedAt: new Date() }).where(eq(adhesionPipeline.id, id));
+  const pipeline = await (db as any).query.adhesionPipeline.findFirst({ where: eq(adhesionPipeline.id, id) });
+  return pipeline as AdhesionPipeline;
+}
+
+export async function listAdhesionPipeline(stage?: string): Promise<AdhesionPipeline[]> {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  return (db as any).query.adhesionPipeline.findMany();
+}
+
+// ============ CRM REPORTS FUNCTIONS ============
+export async function createCrmReport(data: InsertCrmReport): Promise<CrmReport> {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  const result = await (db as any).insert(crmReports).values(data);
+  const report = await (db as any).query.crmReports.findFirst({ where: eq(crmReports.id, result[0].insertId as any) });
+  return report as CrmReport;
+}
+
+export async function listCrmReports(type?: string): Promise<CrmReport[]> {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  const reports = await (db as any).query.crmReports.findMany() as any;
+  return reports;
+}
+
+// ============ CRM EMAIL INTEGRATION FUNCTIONS ============
+export async function createCrmEmailIntegration(data: InsertCrmEmailIntegration): Promise<CrmEmailIntegration> {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  const result = await (db as any).insert(crmEmailIntegration).values(data);
+  const email = await (db as any).query.crmEmailIntegration.findFirst({ where: eq(crmEmailIntegration.id, result[0].insertId as any) });
+  return email as CrmEmailIntegration;
+}
+
+export async function listCrmEmailIntegration(contactId: number): Promise<CrmEmailIntegration[]> {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  const emails = await (db as any).query.crmEmailIntegration.findMany({ where: eq(crmEmailIntegration.contactId, contactId) }) as any;
+  return emails;
 }

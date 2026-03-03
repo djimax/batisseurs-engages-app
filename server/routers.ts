@@ -4,6 +4,7 @@ import { systemRouter } from "./_core/systemRouter";
 import { publicProcedure, protectedProcedure, router } from "./_core/trpc";
 import { emailRouter } from "./email-router";
 import { adminSettingsRouter } from "./admin-settings-router";
+import { crmRouter } from "./crm-router";
 import { z } from "zod";
 import { 
   getAllCategories, getCategoryById, createCategory, seedDefaultCategories,
@@ -31,6 +32,7 @@ export const appRouter = router({
   system: systemRouter,
   email: emailRouter,
   adminSettings: adminSettingsRouter,
+  crm: crmRouter,
   
   auth: router({
     me: publicProcedure.query(opts => opts.ctx.user),
