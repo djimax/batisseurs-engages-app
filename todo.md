@@ -985,3 +985,33 @@
 - [ ] Tester sur tablette
 - [ ] Tester sur mobile
 - [ ] Vérifier la lisibilité et le contraste
+
+## Phase 35 - Amélioration du Système d'Envoi d'Emails
+
+### Sélection des Catégories de Membres
+- [ ] Ajouter un sélecteur de catégories dans EmailComposer
+- [ ] Permettre la sélection multiple des rôles (Admin, Président, Secrétaire, Trésorier, Membre)
+- [ ] Permettre la sélection par statut (Actif, Inactif, En attente)
+- [ ] Afficher le nombre de destinataires par catégorie
+
+### Filtres d'Exclusion
+- [ ] Ajouter la possibilité d'exclure des membres spécifiques
+- [ ] Ajouter un filtre pour exclure les membres sans email
+- [ ] Ajouter un filtre pour exclure les membres inactifs
+- [ ] Afficher la liste des membres exclus
+
+### Aperçu des Destinataires
+- [ ] Afficher la liste complète des destinataires avant envoi
+- [ ] Afficher le nombre total de destinataires
+- [ ] Permettre de modifier la sélection avant envoi
+- [ ] Afficher les emails des destinataires
+
+### Procédures tRPC
+- [ ] Mettre à jour emails.sendMassEmail pour supporter les filtres
+- [ ] Créer une procédure pour récupérer les destinataires filtrés
+- [ ] Ajouter la validation des filtres
+
+### Tests
+- [ ] Tester la sélection des catégories
+- [ ] Tester les filtres d'exclusion
+- [ ] Tester l'aperçu des destinataires
