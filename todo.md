@@ -952,3 +952,36 @@
 - [ ] Tester le design sur tablette
 - [ ] Tester le design sur mobile
 - [ ] Vérifier la lisibilité et le contraste
+
+
+## Phase 34 - Adaptation Complète au Design HelloAsso
+
+### Barre Latérale
+- [ ] Mettre à jour la couleur de fond en bleu foncé (#1a2a5c)
+- [ ] Mettre à jour les icônes en blanc
+- [ ] Mettre à jour le texte en blanc
+- [ ] Ajouter les bordures vertes pour les éléments actifs
+
+### Boutons et Cartes
+- [ ] Mettre à jour les boutons primaires en vert émeraude
+- [ ] Mettre à jour les cartes avec bordures vertes
+- [ ] Ajouter les ombres subtiles
+- [ ] Mettre à jour les formulaires
+
+### En-tête et Navigation
+- [ ] Mettre à jour l'en-tête en bleu foncé
+- [ ] Mettre à jour les onglets avec soulignement vert
+- [ ] Ajouter les badges et indicateurs
+
+### Pages Principales
+- [ ] Adapter la page Home
+- [ ] Adapter la page Documents
+- [ ] Adapter la page Finance
+- [ ] Adapter la page Membres
+- [ ] Adapter la page CRM
+
+### Tests
+- [ ] Tester sur desktop
+- [ ] Tester sur tablette
+- [ ] Tester sur mobile
+- [ ] Vérifier la lisibilité et le contraste
