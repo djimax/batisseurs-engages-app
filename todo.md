@@ -918,3 +918,37 @@
 - [ ] Valider les procédures tRPC
 - [ ] Corriger les erreurs TypeScript
 - [ ] Optimiser les performances
+
+
+## Phase 33 - Redesign Inspiré par HelloAsso
+
+### Palette de Couleurs
+- [ ] Définir les couleurs primaires (Bleu foncé #1a2a5c)
+- [ ] Définir les couleurs secondaires (Vert émeraude #2ecc71)
+- [ ] Définir les couleurs d'accent (Bleu turquoise #1abc9c)
+- [ ] Mettre à jour index.css avec les nouvelles variables CSS
+
+### Composants UI
+- [ ] Mettre à jour les boutons (coins arrondis, ombres subtiles)
+- [ ] Mettre à jour les cartes (ombres, espacement)
+- [ ] Mettre à jour les formulaires (design épuré)
+- [ ] Mettre à jour la navigation (design moderne)
+
+### Pages Principales
+- [ ] Redesigner la page Home
+- [ ] Redesigner le Dashboard
+- [ ] Redesigner la page Login
+- [ ] Redesigner la page Documents
+- [ ] Redesigner la page Finance
+
+### Illustrations et Formes
+- [ ] Ajouter des formes organiques au fond
+- [ ] Ajouter des dégradés subtils
+- [ ] Ajouter des illustrations abstraites
+- [ ] Ajouter des icônes colorées
+
+### Tests
+- [ ] Tester le design sur desktop
+- [ ] Tester le design sur tablette
+- [ ] Tester le design sur mobile
+- [ ] Vérifier la lisibilité et le contraste

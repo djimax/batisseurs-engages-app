@@ -52,43 +52,43 @@
 }
 
 :root {
-  /* 🔵 BLEU MODERNE & DYNAMIQUE THEME */
+  /* 🎨 THEME HELLOASSO - BLEU FONCÉ, VERT ÉMERAUDE, TURQUOISE */
   
-  /* Primary: Bleu vif moderne */
-  --primary: oklch(0.5 0.2 250);
+  /* Primary: Bleu foncé HelloAsso (#1a2a5c) */
+  --primary: oklch(0.35 0.15 260);
   --primary-foreground: oklch(0.98 0 0);
-  --sidebar-primary: oklch(0.55 0.2 250);
+  --sidebar-primary: oklch(0.35 0.15 260);
   --sidebar-primary-foreground: oklch(0.98 0 0);
   
-  /* Accent: Orange énergique */
-  --accent: oklch(0.7 0.18 40);
-  --accent-foreground: oklch(0.15 0.02 40);
+  /* Accent: Vert émeraude HelloAsso (#2ecc71) */
+  --accent: oklch(0.65 0.22 130);
+  --accent-foreground: oklch(0.98 0 0);
   
-  /* Charts: Palette dynamique et colorée */
-  --chart-1: oklch(0.6 0.22 250); /* Bleu */
-  --chart-2: oklch(0.65 0.2 40);  /* Orange */
-  --chart-3: oklch(0.6 0.18 170); /* Vert cyan */
-  --chart-4: oklch(0.55 0.2 280); /* Violet */
-  --chart-5: oklch(0.7 0.15 340); /* Rose */
+  /* Charts: Palette HelloAsso */
+  --chart-1: oklch(0.35 0.15 260); /* Bleu foncé */
+  --chart-2: oklch(0.65 0.22 130); /* Vert émeraude */
+  --chart-3: oklch(0.55 0.18 200); /* Bleu turquoise */
+  --chart-4: oklch(0.7 0.18 50);   /* Orange */
+  --chart-5: oklch(0.45 0.15 280); /* Violet */
   
   /* Radius: Coins plus arrondis pour un look moderne */
   --radius: 0.75rem;
   
-  /* Background: Gris bleuté très léger */
-  --background: oklch(0.97 0.005 250);
-  --foreground: oklch(0.2 0.02 250);
+  /* Background: Blanc avec légère teinte */
+  --background: oklch(0.98 0.002 260);
+  --foreground: oklch(0.25 0.02 260);
   
-  /* Cards: Blanc pur avec effet glassmorphism */
+  /* Cards: Blanc pur */
   --card: oklch(1 0 0);
-  --card-foreground: oklch(0.2 0.02 250);
+  --card-foreground: oklch(0.25 0.02 260);
   
   /* Popover */
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.2 0.02 250);
   
-  /* Secondary: Bleu très clair */
-  --secondary: oklch(0.95 0.02 250);
-  --secondary-foreground: oklch(0.35 0.12 250);
+  /* Secondary: Vert émeraude très clair */
+  --secondary: oklch(0.92 0.05 130);
+  --secondary-foreground: oklch(0.35 0.12 130);
   
   /* Muted: Gris bleuté doux */
   --muted: oklch(0.94 0.008 250);
@@ -98,10 +98,10 @@
   --destructive: oklch(0.577 0.245 27.325);
   --destructive-foreground: oklch(0.985 0 0);
   
-  /* Border: Gris bleuté subtil */
-  --border: oklch(0.88 0.012 250);
-  --input: oklch(0.88 0.012 250);
-  --ring: oklch(0.55 0.2 250);
+  /* Border: Gris subtil */
+  --border: oklch(0.88 0.01 260);
+  --input: oklch(0.88 0.01 260);
+  --ring: oklch(0.35 0.15 260);
   
   /* Sidebar: Blanc avec teinte bleue */
   --sidebar: oklch(0.99 0.005 250);
@@ -113,17 +113,17 @@
 }
 
 .dark {
-  /* 🌙 DARK MODE - Bleu moderne sombre */
+  /* 🌜 DARK MODE - HelloAsso sombre */
   
-  /* Primary: Bleu cyan lumineux */
-  --primary: oklch(0.65 0.2 250);
-  --primary-foreground: oklch(0.15 0.02 250);
-  --sidebar-primary: oklch(0.6 0.2 250);
-  --sidebar-primary-foreground: oklch(0.15 0.02 250);
+  /* Primary: Bleu foncé clair */
+  --primary: oklch(0.55 0.15 260);
+  --primary-foreground: oklch(0.98 0 0);
+  --sidebar-primary: oklch(0.5 0.15 260);
+  --sidebar-primary-foreground: oklch(0.98 0 0);
   
-  /* Accent: Orange vif */
-  --accent: oklch(0.7 0.18 40);
-  --accent-foreground: oklch(0.15 0.02 40);
+  /* Accent: Vert émeraude vif */
+  --accent: oklch(0.7 0.22 130);
+  --accent-foreground: oklch(0.15 0.02 130);
   
   /* Background: Noir bleuté profond */
   --background: oklch(0.15 0.015 250);
