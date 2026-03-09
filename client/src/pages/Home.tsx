@@ -186,12 +186,15 @@ export default function Home() {
                 </ul>
               </div>
               <Button
-                onClick={() => setMode('online')}
-                className={`w-full ${mode === 'online' ? 'bg-blue-600 hover:bg-blue-700' : 'bg-gray-300 hover:bg-gray-400'}`}
+                onClick={() => {
+                  setMode('online');
+                  setLocation('/documents');
+                }}
+                className="w-full bg-blue-600 hover:bg-blue-700"
                 size="lg"
               >
                 <Globe className="w-4 h-4 mr-2" />
-                {mode === 'online' ? 'Mode En Ligne Actif' : 'Utiliser Mode En Ligne'}
+                Utiliser Mode En Ligne
               </Button>
             </CardContent>
           </Card>
@@ -231,12 +234,15 @@ export default function Home() {
                 </ul>
               </div>
               <Button
-                onClick={() => setMode('offline')}
-                className={`w-full ${mode === 'offline' ? 'bg-green-600 hover:bg-green-700' : 'bg-gray-300 hover:bg-gray-400'}`}
+                onClick={() => {
+                  setMode('offline');
+                  setLocation('/offline');
+                }}
+                className="w-full bg-green-600 hover:bg-green-700"
                 size="lg"
               >
                 <Wifi className="w-4 h-4 mr-2" />
-                {mode === 'offline' ? 'Mode Hors Ligne Actif' : 'Utiliser Mode Hors Ligne'}
+                Utiliser Mode Hors Ligne
               </Button>
             </CardContent>
           </Card>

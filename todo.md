@@ -895,3 +895,26 @@
 - [x] Tests pour le suivi des activités
 - [x] Tests pour le pipeline d'adhésion
 - [x] Tests pour les rapports CRM
+
+
+## Phase 32 - Vérification et Correction des Bugs
+
+### Problèmes Détectés
+- [x] Page d'accueil affiche le login au lieu des modes (En Ligne/Hors Ligne) - OK (accessible après login)
+- [ ] Vérifier les liens de navigation après authentification
+- [ ] Vérifier les fonctionnalités principales (Documents, Membres, Finance, etc.)
+- [ ] Vérifier les formulaires et entrées utilisateur
+- [ ] Vérifier les erreurs dans la console du navigateur
+- [ ] Tester le système d'email (EmailComposer)
+- [ ] Tester le CRM Dashboard
+- [ ] Tester les paramètres globaux (AdminSettings)
+- [ ] Vérifier les permissions d'accès par rôle
+- [ ] Vérifier la synchronisation des données
+
+### Corrections à Apporter
+- [x] Corriger la redirection après login - Boutons de mode redirigent maintenant vers /documents et /offline
+- [x] Vérifier la logique de routage (Home.tsx) - Corrigée
+- [ ] Corriger les liens cassés dans la navigation
+- [ ] Valider les procédures tRPC
+- [ ] Corriger les erreurs TypeScript
+- [ ] Optimiser les performances
