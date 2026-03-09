@@ -385,3 +385,109 @@
     @apply w-full;
   }
 }
+
+
+/* 🎨 HERO SECTIONS - Dégradés bleu-turquoise HelloAsso */
+.hero-gradient-primary {
+  @apply bg-gradient-to-br from-primary via-primary/90 to-accent/40;
+}
+
+.hero-gradient-secondary {
+  @apply bg-gradient-to-br from-accent via-primary/80 to-accent/60;
+}
+
+.hero-gradient-accent {
+  @apply bg-gradient-to-br from-primary via-accent to-primary/60;
+}
+
+/* Formes organiques fluides */
+.organic-shape-top {
+  clip-path: polygon(0 0, 100% 0, 100% 85%, 0 100%);
+}
+
+.organic-shape-bottom {
+  clip-path: polygon(0 15%, 100% 0, 100% 100%, 0 100%);
+}
+
+.organic-shape-wave {
+  clip-path: polygon(
+    0% 0%,
+    2% 1%,
+    4% 1%,
+    6% 0%,
+    8% 0%,
+    10% 1%,
+    12% 1%,
+    14% 0%,
+    16% 0%,
+    18% 1%,
+    20% 1%,
+    22% 0%,
+    24% 0%,
+    26% 1%,
+    28% 1%,
+    30% 0%,
+    32% 0%,
+    34% 1%,
+    36% 1%,
+    38% 0%,
+    40% 0%,
+    42% 1%,
+    44% 1%,
+    46% 0%,
+    48% 0%,
+    50% 1%,
+    52% 1%,
+    54% 0%,
+    56% 0%,
+    58% 1%,
+    60% 1%,
+    62% 0%,
+    64% 0%,
+    66% 1%,
+    68% 1%,
+    70% 0%,
+    72% 0%,
+    74% 1%,
+    76% 1%,
+    78% 0%,
+    80% 0%,
+    82% 1%,
+    84% 1%,
+    86% 0%,
+    88% 0%,
+    90% 1%,
+    92% 1%,
+    94% 0%,
+    96% 0%,
+    98% 1%,
+    100% 1%,
+    100% 100%,
+    0% 100%
+  );
+}
+
+/* Animations de fade-in pour les sections hero */
+@keyframes heroFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.hero-section-animate {
+  animation: heroFadeIn 0.6s ease-out;
+}
+
+/* Effets de blur sur les formes de fond */
+.blur-effect-lg {
+  filter: blur(120px);
+}
+
+.blur-effect-xl {
+  filter: blur(150px);
+}

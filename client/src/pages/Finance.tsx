@@ -8,6 +8,7 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, Di
 import { Plus, DollarSign, Gift, TrendingUp, AlertCircle } from "lucide-react";
 import { toast } from "sonner";
 import { FinanceCharts } from "@/components/FinanceCharts";
+import { HeroSection } from "@/components/HeroSection";
 import { FinanceReportPDF } from "@/components/FinanceReportPDF";
 import { useCotisationReminders } from "@/hooks/useCotisationReminders";
 import { useCurrency } from "@/contexts/CurrencyContext";
@@ -158,11 +159,17 @@ export default function Finance() {
 
   return (
     <div className="space-y-6">
+      {/* Hero Section */}
+      <HeroSection
+        title="Gestion Financière"
+        subtitle="Suivez les cotisations, dons et dépenses de votre association avec précision"
+        icon="💰"
+        variant="secondary"
+      />
+
+      {/* Vue d'ensemble */}
       <div>
-        <h1 className="text-3xl font-bold tracking-tight">Gestion Financière</h1>
-        <p className="text-muted-foreground mt-2">
-          Gérez les cotisations, dons et dépenses de l'association
-        </p>
+        <h2 className="text-2xl font-bold tracking-tight mb-4">Vue d'ensemble</h2>
       </div>
 
       {/* Statistiques */}

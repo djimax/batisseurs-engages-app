@@ -1,5 +1,6 @@
 import { useState, useRef, useMemo } from "react";
 import { ExportPDF } from "@/components/ExportPDF";
+import { HeroSection } from "@/components/HeroSection";
 import { trpc } from "@/lib/trpc";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -313,12 +314,23 @@ export default function Documents() {
 
   return (
     <div className="space-y-6">
+      {/* Hero Section */}
+      <HeroSection
+        title="Gestion des Documents"
+        subtitle="Organisez, partagez et gérez tous les documents importants de votre association en un seul endroit"
+        icon="📄"
+        action={{
+          label: "Créer un nouveau document",
+          onClick: () => setIsCreateDialogOpen(true),
+        }}
+      />
+
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight">Documents</h1>
+          <h1 className="text-2xl font-bold tracking-tight">Mes Documents</h1>
           <p className="text-muted-foreground">
-            Gérez tous les documents de votre association
+            {documents?.length || 0} document(s) total
           </p>
         </div>
         <div className="flex gap-2">

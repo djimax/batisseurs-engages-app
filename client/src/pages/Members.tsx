@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { ExportPDF } from "@/components/ExportPDF";
+import { HeroSection } from "@/components/HeroSection";
 import { trpc } from "@/lib/trpc";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -195,14 +196,25 @@ export default function Members() {
     pending: members?.filter(m => m.status === "pending").length || 0,
   };
 
-  return (
+    return (
     <div className="space-y-6">
-      {/* Header */}
+      {/* Hero Section */}
+      <HeroSection
+        title="Gestion des Membres"
+        subtitle="Organisez et gérez tous les membres de votre association"
+        icon="👥"
+        variant="accent"
+        action={{
+          label: "Ajouter un nouveau membre",
+          onClick: () => setIsCreateDialogOpen(true),
+        }}
+      />
+
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight">Membres</h1>
+          <h1 className="text-2xl font-bold tracking-tight">Liste des Membres</h1>
           <p className="text-muted-foreground">
-            Gérez les membres de votre association
+            {stats.total} membre(s) au total
           </p>
         </div>
         <div className="flex gap-2">
