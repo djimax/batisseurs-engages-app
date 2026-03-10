@@ -423,12 +423,12 @@ export default function CRMContacts() {
 
               <div>
                 <label className="text-sm font-medium mb-2 block">Segment</label>
-                <Select value={selectedSegment} onValueChange={setSelectedSegment}>
+                <Select value={selectedSegment || "all"} onValueChange={(value) => setSelectedSegment(value === "all" ? "" : value)}>
                   <SelectTrigger>
                     <SelectValue placeholder="Tous les segments" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="">Tous les segments</SelectItem>
+                    <SelectItem value="all">Tous les segments</SelectItem>
                     {SEGMENT_OPTIONS.map((option) => (
                       <SelectItem key={option.value} value={option.value}>
                         {option.label}
@@ -440,12 +440,12 @@ export default function CRMContacts() {
 
               <div>
                 <label className="text-sm font-medium mb-2 block">Statut</label>
-                <Select value={selectedStatus} onValueChange={setSelectedStatus}>
+                <Select value={selectedStatus || "all"} onValueChange={(value) => setSelectedStatus(value === "all" ? "" : value)}>
                   <SelectTrigger>
                     <SelectValue placeholder="Tous les statuts" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="">Tous les statuts</SelectItem>
+                    <SelectItem value="all">Tous les statuts</SelectItem>
                     {STATUS_OPTIONS.map((option) => (
                       <SelectItem key={option.value} value={option.value}>
                         {option.label}
