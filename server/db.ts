@@ -26,10 +26,33 @@ import { ENV } from './_core/env';
 
 let _db: ReturnType<typeof drizzle> | null = null;
 
+const schema = {
+  users,
+  categories,
+  documents,
+  documentNotes,
+  members,
+  documentPermissions,
+  activityLogs,
+  cotisations,
+  dons,
+  depenses,
+  transactions,
+  emailTemplates,
+  emailHistory,
+  emailRecipients,
+  appSettings,
+  crmContacts,
+  crmActivities,
+  adhesionPipeline,
+  crmReports,
+  crmEmailIntegration
+};
+
 export async function getDb() {
   if (!_db && process.env.DATABASE_URL) {
     try {
-      _db = drizzle(process.env.DATABASE_URL) as any;
+      _db = drizzle(process.env.DATABASE_URL, { schema, mode: 'default' }) as any;
     } catch (error) {
       console.warn("[Database] Failed to connect:", error);
       _db = null;
