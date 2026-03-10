@@ -1,4 +1,3 @@
-import { useAuth } from "@/_core/hooks/useAuth";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import {
   DropdownMenu,
@@ -40,12 +39,15 @@ import {
   History,
   Shield,
   Eye,
-  Mail
+  Mail,
+  BarChart3,
+  PhoneCall
 } from "lucide-react";
 import { CSSProperties, useEffect, useRef, useState } from "react";
 import { useLocation } from "wouter";
 import { DashboardLayoutSkeleton } from './DashboardLayoutSkeleton';
 import { Button } from "./ui/button";
+import { useAuth as useAuthHook } from "@/_core/hooks/useAuth";
 
 const menuItems = [
   { icon: LayoutDashboard, label: "Tableau de bord", path: "/" },
@@ -60,6 +62,8 @@ const menuItems = [
   { icon: Mail, label: "Emails", path: "/email-composer" },
   { icon: Users, label: "CRM", path: "/crm", adminOnly: true },
   { icon: Users, label: "Contacts CRM", path: "/crm/contacts", adminOnly: true },
+  { icon: PhoneCall, label: "Activités CRM", path: "/crm/activities", adminOnly: true },
+  { icon: BarChart3, label: "Rapports CRM", path: "/crm/reports", adminOnly: true },
   { icon: Activity, label: "Activité", path: "/activity" },
   { icon: Archive, label: "Archives", path: "/archives" },
   { icon: Users, label: "Utilisateurs", path: "/users" },
@@ -85,7 +89,7 @@ export default function DashboardLayout({
     const saved = localStorage.getItem(SIDEBAR_WIDTH_KEY);
     return saved ? parseInt(saved, 10) : DEFAULT_WIDTH;
   });
-  const { loading, user } = useAuth();
+  const { loading, user } = useAuthHook();
 
   useEffect(() => {
     localStorage.setItem(SIDEBAR_WIDTH_KEY, sidebarWidth.toString());
@@ -150,7 +154,7 @@ function DashboardLayoutContent({
   setSidebarWidth,
   onLogout,
 }: DashboardLayoutContentProps) {
-  const { user, logout } = useAuth();
+  const { user, logout } = useAuthHook() as any;
   const handleLogout = onLogout || logout;
   const [location, setLocation] = useLocation();
   const { state, toggleSidebar } = useSidebar();

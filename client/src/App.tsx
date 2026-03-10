@@ -30,6 +30,8 @@ import EmailComposer from "./pages/EmailComposer";
 import AdminSettings from "./pages/AdminSettings";
 import { CRMDashboard } from "./pages/CRMDashboard";
 import CRMContacts from "./pages/CRMContacts";
+import CRMActivities from "./pages/CRMActivities";
+import CRMReports from "./pages/CRMReports";
 import { usePasswordAuth } from "./hooks/usePasswordAuth";
 import { useState, useEffect } from "react";
 
@@ -61,6 +63,8 @@ function OnlineRouter({ isAuthenticated, error, onLogin, onLogout, onForgotPassw
         <Route path="/admin/settings" component={AdminSettings} />
         <Route path="/crm" component={CRMDashboard} />
         <Route path="/crm/contacts" component={CRMContacts} />
+        <Route path="/crm/activities" component={CRMActivities} />
+        <Route path="/crm/reports" component={CRMReports} />
         <Route path="/settings" component={Settings} />
         <Route path="/404" component={NotFound} />
         <Route component={NotFound} />

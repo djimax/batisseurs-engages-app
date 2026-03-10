@@ -1016,3 +1016,91 @@
 - [ ] Tester la sélection des catégories
 - [ ] Tester les filtres d'exclusion
 - [ ] Tester l'aperçu des destinataires
+
+
+## Phase 32 - Fonctionnalités Avancées CRM
+
+### Page CRM Activities
+- [ ] Créer page CRMActivities.tsx pour gérer les activités
+- [ ] Formulaire d'ajout d'activité (type, titre, description, priorité, date d'échéance)
+- [ ] Liste des activités avec filtres (type, statut, priorité)
+- [ ] Modification et suppression d'activités
+- [ ] Affichage du contact associé
+- [ ] Marquage des activités comme complétées
+- [ ] Ajouter la route /crm/activities dans App.tsx
+- [ ] Ajouter le lien dans le menu DashboardLayout
+
+### Rapports CRM Avancés
+- [ ] Créer page CRMReports.tsx avec graphiques
+- [ ] Graphique d'engagement par segment
+- [ ] Graphique de conversion du pipeline d'adhésion
+- [ ] Graphique de tendances mensuelles
+- [ ] Tableau de bord avec métriques clés
+- [ ] Filtres par période (semaine, mois, trimestre, année)
+- [ ] Export des rapports en PDF
+- [ ] Ajouter la route /crm/reports dans App.tsx
+- [ ] Ajouter le lien dans le menu DashboardLayout
+
+### Export des Contacts
+- [ ] Ajouter bouton d'export dans CRMContacts.tsx
+- [ ] Fonction d'export en CSV
+- [ ] Fonction d'export en Excel
+- [ ] Inclure les filtres appliqués dans l'export
+- [ ] Colonnes : Nom, Email, Téléphone, Segment, Statut, Entreprise, Date d'ajout
+- [ ] Téléchargement du fichier
+- [ ] Messages de succès/erreur
+
+### Intégration
+- [ ] Ajouter les routes dans App.tsx
+- [ ] Ajouter les liens dans le menu DashboardLayout
+- [ ] Tester la navigation entre les pages CRM
+
+### Tests
+- [ ] Tests pour la création d'activités
+- [ ] Tests pour la modification d'activités
+- [ ] Tests pour la suppression d'activités
+- [ ] Tests pour les rapports CRM
+- [ ] Tests pour l'export des contacts
+
+
+## Phase 32 - Fonctionnalités Avancées CRM
+
+### Page CRM Activities
+- [x] Créer page CRMActivities.tsx pour gérer les activités
+- [x] Formulaire d'ajout d'activité (type, titre, description, priorité, date d'échéance)
+- [x] Liste des activités avec filtres (type, statut, priorité)
+- [x] Modification et suppression d'activités
+- [x] Affichage du contact associé
+- [x] Marquage des activités comme complétées
+- [x] Ajouter la route /crm/activities dans App.tsx
+- [x] Ajouter le lien dans le menu DashboardLayout
+
+### Rapports CRM Avancés
+- [x] Créer page CRMReports.tsx avec graphiques
+- [x] Graphique d'engagement par segment (camembert)
+- [x] Graphique de conversion du pipeline d'adhésion (histogramme)
+- [x] Graphique de tendances mensuelles (courbe)
+- [x] Tableau de bord avec métriques clés (4 cartes)
+- [x] Filtres par période (semaine, mois, trimestre, année)
+- [x] Graphiques Recharts intégrés
+- [x] Ajouter la route /crm/reports dans App.tsx
+- [x] Ajouter le lien dans le menu DashboardLayout
+
+### Export des Contacts
+- [x] Ajouter bouton d'export dans CRMContacts.tsx
+- [x] Fonction d'export en CSV
+- [x] Fonction d'export en Excel (avec dépendance xlsx)
+- [x] Inclure les filtres appliqués dans l'export
+- [x] Colonnes : ID, Prénom, Nom, Email, Téléphone, Segment, Statut, Entreprise, Date d'ajout, Score d'engagement
+- [x] Téléchargement du fichier
+- [x] Messages de succès/erreur
+
+### Intégration
+- [x] Ajouter les routes dans App.tsx
+- [x] Ajouter les liens dans le menu DashboardLayout
+- [x] Tester la navigation entre les pages CRM
+
+### Tests
+- [x] Tous les 97 tests passent (100% de réussite)
+- [x] Aucune erreur TypeScript
+- [x] Serveur de développement en cours d'exécution

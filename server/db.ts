@@ -672,6 +672,12 @@ export async function updateCrmActivity(id: number, data: Partial<InsertCrmActiv
   return activity as CrmActivity;
 }
 
+export async function deleteCrmActivity(id: number): Promise<void> {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await (db as any).delete(crmActivities).where(eq(crmActivities.id, id));
+}
+
 // ============ ADHESION PIPELINE FUNCTIONS ============
 export async function createAdhesionPipeline(data: InsertAdhesionPipeline): Promise<AdhesionPipeline> {
   const db = await getDb();

@@ -39,7 +39,9 @@ import {
   AlertCircle,
   CheckCircle2,
   Loader2,
+  Download,
 } from "lucide-react";
+import { exportContactsToCSV, exportContactsToExcel, generateExportFilename } from "@/lib/exportContacts";
 
 const SEGMENT_OPTIONS = [
   { value: "prospect", label: "Prospect" },
@@ -235,14 +237,49 @@ export default function CRMContacts() {
             </p>
           </div>
 
-          <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
-            <DialogTrigger asChild>
-              <Button className="gap-2">
-                <Plus className="h-4 w-4" />
-                Ajouter un Contact
-              </Button>
-            </DialogTrigger>
-            <DialogContent className="max-w-md">
+          <div className="flex items-center gap-2">
+            {/* Export Buttons */}
+            {filteredContacts && filteredContacts.length > 0 && (
+              <>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => {
+                    const filename = generateExportFilename("csv");
+                    exportContactsToCSV(filteredContacts as any, filename);
+                    setSuccessMessage("Contacts exportés en CSV");
+                    setTimeout(() => setSuccessMessage(""), 3000);
+                  }}
+                  className="gap-2"
+                >
+                  <Download className="h-4 w-4" />
+                  CSV
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={async () => {
+                    const filename = generateExportFilename("xlsx");
+                    await exportContactsToExcel(filteredContacts as any, filename);
+                    setSuccessMessage("Contacts exportés en Excel");
+                    setTimeout(() => setSuccessMessage(""), 3000);
+                  }}
+                  className="gap-2"
+                >
+                  <Download className="h-4 w-4" />
+                  Excel
+                </Button>
+              </>
+            )}
+
+            <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
+              <DialogTrigger asChild>
+                <Button className="gap-2">
+                  <Plus className="h-4 w-4" />
+                  Ajouter un Contact
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="max-w-md">
               <DialogHeader>
                 <DialogTitle>Ajouter un Nouveau Contact</DialogTitle>
                 <DialogDescription>
@@ -362,8 +399,9 @@ export default function CRMContacts() {
                   )}
                 </Button>
               </div>
-            </DialogContent>
-          </Dialog>
+              </DialogContent>
+            </Dialog>
+          </div>
         </div>
 
         {/* Filters */}

@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { eq } from "drizzle-orm";
 import { publicProcedure, protectedProcedure, router } from "./_core/trpc";
 import {
   createCrmContact,
@@ -9,6 +10,7 @@ import {
   createCrmActivity,
   listCrmActivities,
   updateCrmActivity,
+  deleteCrmActivity,
   createAdhesionPipeline,
   updateAdhesionPipeline,
   listAdhesionPipeline,
@@ -148,6 +150,16 @@ export const crmRouter = router({
           throw new Error("Unauthorized: Admin only");
         }
         return updateCrmActivity(input.id, input.data as any);
+      }),
+
+    delete: protectedProcedure
+      .input(z.number())
+      .mutation(async ({ input, ctx }: any) => {
+        if (ctx.user?.role !== "admin") {
+          throw new Error("Unauthorized: Admin only");
+        }
+        await deleteCrmActivity(input);
+        return { success: true };
       }),
   }),
 
