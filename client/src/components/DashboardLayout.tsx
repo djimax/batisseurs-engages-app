@@ -59,6 +59,7 @@ const menuItems = [
   { icon: Megaphone, label: "Annonces", path: "/announcements" },
   { icon: Mail, label: "Emails", path: "/email-composer" },
   { icon: Users, label: "CRM", path: "/crm", adminOnly: true },
+  { icon: Users, label: "Contacts CRM", path: "/crm/contacts", adminOnly: true },
   { icon: Activity, label: "Activité", path: "/activity" },
   { icon: Archive, label: "Archives", path: "/archives" },
   { icon: Users, label: "Utilisateurs", path: "/users" },

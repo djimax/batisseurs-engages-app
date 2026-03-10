@@ -874,6 +874,7 @@
 
 ### Pages d'Interface
 - [x] Créer page CRMDashboard.tsx (intègre tous les modules)
+- [x] Créer page CRMContacts.tsx pour gérer les contacts
 - [x] Onglet Activités intégré
 - [x] Onglet Pipeline d'adhésion intégré
 - [x] Onglet Rapports intégré
