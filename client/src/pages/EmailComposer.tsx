@@ -132,7 +132,7 @@ export default function EmailComposer() {
       const result = await sendEmailMutation.mutateAsync({
         subject,
         content,
-        templateId: templateId ? parseInt(templateId) : undefined,
+        templateId: templateId && templateId !== "new" ? parseInt(templateId) : undefined,
       });
 
       if (result.success) {
