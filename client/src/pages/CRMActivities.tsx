@@ -387,12 +387,12 @@ export default function CRMActivities() {
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
               <div>
                 <label className="text-sm font-medium mb-2 block">Contact</label>
-                <Select value={selectedContactId} onValueChange={setSelectedContactId}>
+                <Select value={selectedContactId || "all"} onValueChange={(value) => setSelectedContactId(value === "all" ? "" : value)}>
                   <SelectTrigger>
                     <SelectValue placeholder="Tous les contacts" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="">Tous les contacts</SelectItem>
+                    <SelectItem value="all">Tous les contacts</SelectItem>
                     {contacts?.map((contact) => (
                       <SelectItem key={contact.id} value={contact.id.toString()}>
                         {contact.firstName} {contact.lastName}
@@ -404,12 +404,12 @@ export default function CRMActivities() {
 
               <div>
                 <label className="text-sm font-medium mb-2 block">Type</label>
-                <Select value={selectedType} onValueChange={setSelectedType}>
+                <Select value={selectedType || "all"} onValueChange={(value) => setSelectedType(value === "all" ? "" : value)}>
                   <SelectTrigger>
                     <SelectValue placeholder="Tous les types" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="">Tous les types</SelectItem>
+                    <SelectItem value="all">Tous les types</SelectItem>
                     {ACTIVITY_TYPES.map((option) => (
                       <SelectItem key={option.value} value={option.value}>
                         {option.label}
@@ -421,12 +421,12 @@ export default function CRMActivities() {
 
               <div>
                 <label className="text-sm font-medium mb-2 block">Statut</label>
-                <Select value={selectedStatus} onValueChange={setSelectedStatus}>
+                <Select value={selectedStatus || "all"} onValueChange={(value) => setSelectedStatus(value === "all" ? "" : value)}>
                   <SelectTrigger>
                     <SelectValue placeholder="Tous les statuts" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="">Tous les statuts</SelectItem>
+                    <SelectItem value="all">Tous les statuts</SelectItem>
                     {STATUS_OPTIONS.map((option) => (
                       <SelectItem key={option.value} value={option.value}>
                         {option.label}
@@ -438,12 +438,12 @@ export default function CRMActivities() {
 
               <div>
                 <label className="text-sm font-medium mb-2 block">Priorité</label>
-                <Select value={selectedPriority} onValueChange={setSelectedPriority}>
+                <Select value={selectedPriority || "all"} onValueChange={(value) => setSelectedPriority(value === "all" ? "" : value)}>
                   <SelectTrigger>
                     <SelectValue placeholder="Toutes les priorités" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="">Toutes les priorités</SelectItem>
+                    <SelectItem value="all">Toutes les priorités</SelectItem>
                     {PRIORITY_OPTIONS.map((option) => (
                       <SelectItem key={option.value} value={option.value}>
                         {option.label}
