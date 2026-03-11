@@ -58,10 +58,20 @@ const STATUS_OPTIONS = [
   { value: "archived", label: "Archivé" },
 ];
 
+const SORT_OPTIONS = [
+  { value: "name-asc", label: "Nom (A-Z)" },
+  { value: "name-desc", label: "Nom (Z-A)" },
+  { value: "date-newest", label: "Plus recents" },
+  { value: "date-oldest", label: "Plus anciens" },
+  { value: "engagement-high", label: "Engagement (Eleve)" },
+  { value: "engagement-low", label: "Engagement (Bas)" },
+];
+
 export default function CRMContacts() {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedSegment, setSelectedSegment] = useState<string>("");
   const [selectedStatus, setSelectedStatus] = useState<string>("");
+  const [sortBy, setSortBy] = useState<string>("name-asc");
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [editingContact, setEditingContact] = useState<any>(null);
@@ -85,8 +95,8 @@ export default function CRMContacts() {
   const updateContactMutation = trpc.crm.contacts.update.useMutation();
   const deleteContactMutation = trpc.crm.contacts.delete.useMutation();
 
-  // Filter contacts
-  const filteredContacts = contacts?.filter((contact) => {
+  // Filter and sort contacts
+  const filteredContacts = (contacts?.filter((contact) => {
     const matchesSearch =
       contact.firstName.toLowerCase().includes(searchTerm.toLowerCase()) ||
       contact.lastName.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -96,11 +106,28 @@ export default function CRMContacts() {
     const matchesStatus = !selectedStatus || contact.status === selectedStatus;
 
     return matchesSearch && matchesSegment && matchesStatus;
+  }) || []).sort((a, b) => {
+    switch (sortBy) {
+      case "name-asc":
+        return `${a.firstName} ${a.lastName}`.localeCompare(`${b.firstName} ${b.lastName}`);
+      case "name-desc":
+        return `${b.firstName} ${b.lastName}`.localeCompare(`${a.firstName} ${a.lastName}`);
+      case "date-newest":
+        return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+      case "date-oldest":
+        return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
+      case "engagement-high":
+        return (b.engagementScore || 0) - (a.engagementScore || 0);
+      case "engagement-low":
+        return (a.engagementScore || 0) - (b.engagementScore || 0);
+      default:
+        return 0;
+    }
   });
 
   const handleAddContact = async () => {
-    if (!formData.firstName.trim() || !formData.lastName.trim() || !formData.email?.trim()) {
-      setErrorMessage("Veuillez remplir les champs obligatoires (Prénom, Nom, Email)");
+    if (!formData.firstName || !formData.lastName || !formData.email) {
+      setErrorMessage("Veuillez remplir les champs obligatoires");
       return;
     }
 
@@ -109,11 +136,11 @@ export default function CRMContacts() {
         firstName: formData.firstName,
         lastName: formData.lastName,
         email: formData.email,
-        phone: formData.phone || undefined,
-        company: formData.company || undefined,
+        phone: formData.phone,
+        company: formData.company,
         segment: formData.segment,
         status: formData.status,
-        notes: formData.notes || undefined,
+        notes: formData.notes,
         createdBy: 1,
       });
 
@@ -133,14 +160,13 @@ export default function CRMContacts() {
 
       setTimeout(() => setSuccessMessage(""), 3000);
     } catch (error) {
-      setErrorMessage(
-        error instanceof Error ? error.message : "Erreur lors de l'ajout du contact"
-      );
+      setErrorMessage("Erreur lors de l'ajout du contact");
+      setTimeout(() => setErrorMessage(""), 3000);
     }
   };
 
-  const handleEditContact = async () => {
-    if (!formData.firstName.trim() || !formData.lastName.trim() || !formData.email?.trim()) {
+  const handleUpdateContact = async () => {
+    if (!editingContact.firstName || !editingContact.lastName || !editingContact.email) {
       setErrorMessage("Veuillez remplir les champs obligatoires");
       return;
     }
@@ -149,58 +175,45 @@ export default function CRMContacts() {
       await updateContactMutation.mutateAsync({
         id: editingContact.id,
         data: {
-          firstName: formData.firstName,
-          lastName: formData.lastName,
-          email: formData.email,
-          phone: formData.phone || undefined,
-          company: formData.company || undefined,
-          segment: formData.segment,
-          status: formData.status,
-          notes: formData.notes || undefined,
+          firstName: editingContact.firstName,
+          lastName: editingContact.lastName,
+          email: editingContact.email,
+          phone: editingContact.phone,
+          company: editingContact.company,
+          segment: editingContact.segment,
+          status: editingContact.status,
+          notes: editingContact.notes,
         },
       });
 
       setSuccessMessage("Contact modifié avec succès");
       setIsEditDialogOpen(false);
-      setEditingContact(null);
       refetch();
 
       setTimeout(() => setSuccessMessage(""), 3000);
     } catch (error) {
-      setErrorMessage(
-        error instanceof Error ? error.message : "Erreur lors de la modification du contact"
-      );
+      setErrorMessage("Erreur lors de la modification du contact");
+      setTimeout(() => setErrorMessage(""), 3000);
     }
   };
 
-  const handleDeleteContact = async (contactId: number) => {
+  const handleDeleteContact = async (id: number) => {
     if (!confirm("Êtes-vous sûr de vouloir supprimer ce contact ?")) return;
 
     try {
-      await deleteContactMutation.mutateAsync(contactId);
+      await deleteContactMutation.mutateAsync(id);
       setSuccessMessage("Contact supprimé avec succès");
       refetch();
 
       setTimeout(() => setSuccessMessage(""), 3000);
     } catch (error) {
-      setErrorMessage(
-        error instanceof Error ? error.message : "Erreur lors de la suppression du contact"
-      );
+      setErrorMessage("Erreur lors de la suppression du contact");
+      setTimeout(() => setErrorMessage(""), 3000);
     }
   };
 
-  const openEditDialog = (contact: any) => {
+  const handleEditContact = (contact: any) => {
     setEditingContact(contact);
-    setFormData({
-      firstName: contact.firstName,
-      lastName: contact.lastName,
-      email: contact.email || "",
-      phone: contact.phone || "",
-      company: contact.company || "",
-      segment: contact.segment,
-      status: contact.status,
-      notes: contact.notes || "",
-    });
     setIsEditDialogOpen(true);
   };
 
@@ -208,8 +221,8 @@ export default function CRMContacts() {
     <div className="space-y-8">
       <HeroSection
         title="Gestion des Contacts CRM"
-        subtitle="Gérez vos contacts, prospects et partenaires"
-        variant="secondary"
+        subtitle="Gérez vos prospects, membres et partenaires"
+        variant="accent"
       />
 
       <div className="container mx-auto px-4 max-w-7xl space-y-6">
@@ -228,7 +241,7 @@ export default function CRMContacts() {
           </Alert>
         )}
 
-        {/* Header with Add Button */}
+        {/* Header */}
         <div className="flex items-center justify-between gap-4">
           <div>
             <h1 className="text-3xl font-bold">Contacts</h1>
@@ -237,53 +250,18 @@ export default function CRMContacts() {
             </p>
           </div>
 
-          <div className="flex items-center gap-2">
-            {/* Export Buttons */}
-            {filteredContacts && filteredContacts.length > 0 && (
-              <>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => {
-                    const filename = generateExportFilename("csv");
-                    exportContactsToCSV(filteredContacts as any, filename);
-                    setSuccessMessage("Contacts exportés en CSV");
-                    setTimeout(() => setSuccessMessage(""), 3000);
-                  }}
-                  className="gap-2"
-                >
-                  <Download className="h-4 w-4" />
-                  CSV
-                </Button>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={async () => {
-                    const filename = generateExportFilename("xlsx");
-                    await exportContactsToExcel(filteredContacts as any, filename);
-                    setSuccessMessage("Contacts exportés en Excel");
-                    setTimeout(() => setSuccessMessage(""), 3000);
-                  }}
-                  className="gap-2"
-                >
-                  <Download className="h-4 w-4" />
-                  Excel
-                </Button>
-              </>
-            )}
-
-            <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
-              <DialogTrigger asChild>
-                <Button className="gap-2">
-                  <Plus className="h-4 w-4" />
-                  Ajouter un Contact
-                </Button>
-              </DialogTrigger>
-              <DialogContent className="max-w-md">
+          <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
+            <DialogTrigger asChild>
+              <Button className="gap-2">
+                <Plus className="h-4 w-4" />
+                Ajouter un Contact
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="max-w-md">
               <DialogHeader>
                 <DialogTitle>Ajouter un Nouveau Contact</DialogTitle>
                 <DialogDescription>
-                  Remplissez les informations du contact
+                  Créez un nouveau contact dans votre CRM
                 </DialogDescription>
               </DialogHeader>
 
@@ -294,9 +272,7 @@ export default function CRMContacts() {
                     <Input
                       placeholder="Jean"
                       value={formData.firstName}
-                      onChange={(e) =>
-                        setFormData({ ...formData, firstName: e.target.value })
-                      }
+                      onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
                     />
                   </div>
                   <div>
@@ -399,15 +375,14 @@ export default function CRMContacts() {
                   )}
                 </Button>
               </div>
-              </DialogContent>
-            </Dialog>
-          </div>
+            </DialogContent>
+          </Dialog>
         </div>
 
         {/* Filters */}
         <Card>
           <CardContent className="pt-6">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
               <div>
                 <label className="text-sm font-medium mb-2 block">Rechercher</label>
                 <div className="relative">
@@ -454,9 +429,51 @@ export default function CRMContacts() {
                   </SelectContent>
                 </Select>
               </div>
+
+              <div>
+                <label className="text-sm font-medium mb-2 block">Trier par</label>
+                <Select value={sortBy} onValueChange={setSortBy}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Trier par..." />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {SORT_OPTIONS.map((option) => (
+                      <SelectItem key={option.value} value={option.value}>
+                        {option.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
             </div>
           </CardContent>
         </Card>
+
+        {/* Export Buttons */}
+        <div className="flex gap-2">
+          <Button
+            variant="outline"
+            className="gap-2"
+            onClick={() => {
+              const filename = generateExportFilename("csv");
+              exportContactsToCSV(filteredContacts || [], filename);
+            }}
+          >
+            <Download className="h-4 w-4" />
+            Exporter en CSV
+          </Button>
+          <Button
+            variant="outline"
+            className="gap-2"
+            onClick={() => {
+              const filename = generateExportFilename("xlsx");
+              exportContactsToExcel(filteredContacts || [], filename);
+            }}
+          >
+            <Download className="h-4 w-4" />
+            Exporter en Excel
+          </Button>
+        </div>
 
         {/* Contacts Table */}
         <Card>
@@ -500,7 +517,7 @@ export default function CRMContacts() {
                               {contact.email}
                             </a>
                           ) : (
-                            <span className="text-muted-foreground">-</span>
+                            "-"
                           )}
                         </TableCell>
                         <TableCell>
@@ -513,13 +530,11 @@ export default function CRMContacts() {
                               {contact.phone}
                             </a>
                           ) : (
-                            <span className="text-muted-foreground">-</span>
+                            "-"
                           )}
                         </TableCell>
                         <TableCell>
-                          <Badge variant="outline">
-                            {SEGMENT_OPTIONS.find((s) => s.value === contact.segment)?.label || contact.segment}
-                          </Badge>
+                          <Badge variant="outline">{contact.segment}</Badge>
                         </TableCell>
                         <TableCell>
                           <Badge
@@ -531,24 +546,24 @@ export default function CRMContacts() {
                                   : "outline"
                             }
                           >
-                            {STATUS_OPTIONS.find((s) => s.value === contact.status)?.label || contact.status}
+                            {contact.status}
                           </Badge>
                         </TableCell>
                         <TableCell className="text-right">
                           <div className="flex items-center justify-end gap-2">
                             <Button
-                              variant="ghost"
                               size="sm"
-                              onClick={() => openEditDialog(contact)}
+                              variant="ghost"
+                              onClick={() => handleEditContact(contact)}
                             >
                               <Edit className="h-4 w-4" />
                             </Button>
                             <Button
-                              variant="ghost"
                               size="sm"
+                              variant="ghost"
                               onClick={() => handleDeleteContact(contact.id)}
                             >
-                              <Trash2 className="h-4 w-4 text-red-600" />
+                              <Trash2 className="h-4 w-4" />
                             </Button>
                           </div>
                         </TableCell>
@@ -564,124 +579,150 @@ export default function CRMContacts() {
             )}
           </CardContent>
         </Card>
+
+        {/* Edit Dialog */}
+        <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
+          <DialogContent className="max-w-md">
+            <DialogHeader>
+              <DialogTitle>Modifier le Contact</DialogTitle>
+              <DialogDescription>
+                Modifiez les informations du contact
+              </DialogDescription>
+            </DialogHeader>
+
+            {editingContact && (
+              <div className="space-y-4">
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="text-sm font-medium">Prénom *</label>
+                    <Input
+                      placeholder="Jean"
+                      value={editingContact.firstName}
+                      onChange={(e) =>
+                        setEditingContact({ ...editingContact, firstName: e.target.value })
+                      }
+                    />
+                  </div>
+                  <div>
+                    <label className="text-sm font-medium">Nom *</label>
+                    <Input
+                      placeholder="Dupont"
+                      value={editingContact.lastName}
+                      onChange={(e) =>
+                        setEditingContact({ ...editingContact, lastName: e.target.value })
+                      }
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label className="text-sm font-medium">Email *</label>
+                  <Input
+                    type="email"
+                    placeholder="jean@example.com"
+                    value={editingContact.email}
+                    onChange={(e) =>
+                      setEditingContact({ ...editingContact, email: e.target.value })
+                    }
+                  />
+                </div>
+
+                <div>
+                  <label className="text-sm font-medium">Téléphone</label>
+                  <Input
+                    placeholder="+33 6 12 34 56 78"
+                    value={editingContact.phone}
+                    onChange={(e) =>
+                      setEditingContact({ ...editingContact, phone: e.target.value })
+                    }
+                  />
+                </div>
+
+                <div>
+                  <label className="text-sm font-medium">Entreprise</label>
+                  <Input
+                    placeholder="Acme Corp"
+                    value={editingContact.company}
+                    onChange={(e) =>
+                      setEditingContact({ ...editingContact, company: e.target.value })
+                    }
+                  />
+                </div>
+
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="text-sm font-medium">Segment</label>
+                    <Select
+                      value={editingContact.segment}
+                      onValueChange={(value) =>
+                        setEditingContact({ ...editingContact, segment: value })
+                      }
+                    >
+                      <SelectTrigger>
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {SEGMENT_OPTIONS.map((option) => (
+                          <SelectItem key={option.value} value={option.value}>
+                            {option.label}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  <div>
+                    <label className="text-sm font-medium">Statut</label>
+                    <Select
+                      value={editingContact.status}
+                      onValueChange={(value) =>
+                        setEditingContact({ ...editingContact, status: value })
+                      }
+                    >
+                      <SelectTrigger>
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {STATUS_OPTIONS.map((option) => (
+                          <SelectItem key={option.value} value={option.value}>
+                            {option.label}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
+
+                <div>
+                  <label className="text-sm font-medium">Notes</label>
+                  <Input
+                    placeholder="Notes supplémentaires..."
+                    value={editingContact.notes}
+                    onChange={(e) =>
+                      setEditingContact({ ...editingContact, notes: e.target.value })
+                    }
+                  />
+                </div>
+
+                <Button
+                  onClick={handleUpdateContact}
+                  disabled={updateContactMutation.isPending}
+                  className="w-full"
+                >
+                  {updateContactMutation.isPending ? (
+                    <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      Modification en cours...
+                    </>
+                  ) : (
+                    "Modifier le Contact"
+                  )}
+                </Button>
+              </div>
+            )}
+          </DialogContent>
+        </Dialog>
       </div>
-
-      {/* Edit Dialog */}
-      <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
-        <DialogContent className="max-w-md">
-          <DialogHeader>
-            <DialogTitle>Modifier le Contact</DialogTitle>
-            <DialogDescription>
-              Mettez à jour les informations du contact
-            </DialogDescription>
-          </DialogHeader>
-
-          <div className="space-y-4">
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label className="text-sm font-medium">Prénom</label>
-                <Input
-                  value={formData.firstName}
-                  onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
-                />
-              </div>
-              <div>
-                <label className="text-sm font-medium">Nom</label>
-                <Input
-                  value={formData.lastName}
-                  onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
-                />
-              </div>
-            </div>
-
-            <div>
-              <label className="text-sm font-medium">Email</label>
-              <Input
-                type="email"
-                value={formData.email}
-                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-              />
-            </div>
-
-            <div>
-              <label className="text-sm font-medium">Téléphone</label>
-              <Input
-                value={formData.phone}
-                onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-              />
-            </div>
-
-            <div>
-              <label className="text-sm font-medium">Entreprise</label>
-              <Input
-                value={formData.company}
-                onChange={(e) => setFormData({ ...formData, company: e.target.value })}
-              />
-            </div>
-
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label className="text-sm font-medium">Segment</label>
-                <Select value={formData.segment} onValueChange={(value) =>
-                  setFormData({ ...formData, segment: value })
-                }>
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {SEGMENT_OPTIONS.map((option) => (
-                      <SelectItem key={option.value} value={option.value}>
-                        {option.label}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-
-              <div>
-                <label className="text-sm font-medium">Statut</label>
-                <Select value={formData.status} onValueChange={(value) =>
-                  setFormData({ ...formData, status: value as "prospect" | "active" | "inactive" | "archived" })
-                }>
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {STATUS_OPTIONS.map((option) => (
-                      <SelectItem key={option.value} value={option.value}>
-                        {option.label}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-            </div>
-
-            <div>
-              <label className="text-sm font-medium">Notes</label>
-              <Input
-                value={formData.notes}
-                onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
-              />
-            </div>
-
-            <Button
-              onClick={handleEditContact}
-              disabled={updateContactMutation.isPending}
-              className="w-full"
-            >
-              {updateContactMutation.isPending ? (
-                <>
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Modification en cours...
-                </>
-              ) : (
-                "Modifier le Contact"
-              )}
-            </Button>
-          </div>
-        </DialogContent>
-      </Dialog>
     </div>
   );
 }
