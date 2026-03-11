@@ -57,12 +57,22 @@ import {
   Archive
 } from "lucide-react";
 
+const SORT_OPTIONS = [
+  { value: "title-asc", label: "Titre (A-Z)" },
+  { value: "title-desc", label: "Titre (Z-A)" },
+  { value: "date-newest", label: "Plus recents" },
+  { value: "date-oldest", label: "Plus anciens" },
+  { value: "priority-high", label: "Priorite (Elevee)" },
+  { value: "priority-low", label: "Priorite (Basse)" },
+];
+
 export default function Documents() {
   const utils = trpc.useUtils();
   const [searchTerm, setSearchTerm] = useState("");
   const [categoryFilter, setCategoryFilter] = useState<string>("all");
   const [statusFilter, setStatusFilter] = useState<string>("all");
   const [priorityFilter, setPriorityFilter] = useState<string>("all");
+  const [sortBy, setSortBy] = useState<string>("date-newest");
   const [selectedDocument, setSelectedDocument] = useState<any>(null);
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
   const [isDetailDialogOpen, setIsDetailDialogOpen] = useState(false);
@@ -309,8 +319,28 @@ export default function Documents() {
   };
 
   const filteredDocuments = useMemo(() => {
-    return documents || [];
-  }, [documents]);
+    const sorted = (documents || []).sort((a, b) => {
+      switch (sortBy) {
+        case "title-asc":
+          return a.title.localeCompare(b.title);
+        case "title-desc":
+          return b.title.localeCompare(a.title);
+        case "date-newest":
+          return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+        case "date-oldest":
+          return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
+        case "priority-high":
+          const priorityOrder = { urgent: 0, high: 1, medium: 2, low: 3 };
+          return (priorityOrder[a.priority as keyof typeof priorityOrder] || 4) - (priorityOrder[b.priority as keyof typeof priorityOrder] || 4);
+        case "priority-low":
+          const priorityOrderLow = { low: 0, medium: 1, high: 2, urgent: 3 };
+          return (priorityOrderLow[a.priority as keyof typeof priorityOrderLow] || 4) - (priorityOrderLow[b.priority as keyof typeof priorityOrderLow] || 4);
+        default:
+          return 0;
+      }
+    });
+    return sorted;
+  }, [documents, sortBy]);
 
   return (
     <div className="space-y-6">
@@ -367,10 +397,10 @@ export default function Documents() {
               <Select value={categoryFilter} onValueChange={setCategoryFilter}>
                 <SelectTrigger className="w-[180px]">
                   <FolderOpen className="h-4 w-4 mr-2" />
-                  <SelectValue placeholder="Catégorie" />
+                  <SelectValue placeholder="Categorie" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="all">Toutes les catégories</SelectItem>
+                  <SelectItem value="all">Toutes les categories</SelectItem>
                   {categories?.map((cat) => (
                     <SelectItem key={cat.id} value={cat.id.toString()}>
                       {cat.name}
@@ -388,20 +418,33 @@ export default function Documents() {
                   <SelectItem value="all">Tous les statuts</SelectItem>
                   <SelectItem value="pending">En attente</SelectItem>
                   <SelectItem value="in-progress">En cours</SelectItem>
-                  <SelectItem value="completed">Complété</SelectItem>
+                  <SelectItem value="completed">Complete</SelectItem>
                 </SelectContent>
               </Select>
 
               <Select value={priorityFilter} onValueChange={setPriorityFilter}>
                 <SelectTrigger className="w-[150px]">
-                  <SelectValue placeholder="Priorité" />
+                  <SelectValue placeholder="Priorite" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="all">Toutes priorités</SelectItem>
+                  <SelectItem value="all">Toutes priorites</SelectItem>
                   <SelectItem value="urgent">Urgent</SelectItem>
                   <SelectItem value="high">Haute</SelectItem>
                   <SelectItem value="medium">Moyenne</SelectItem>
                   <SelectItem value="low">Basse</SelectItem>
+                </SelectContent>
+              </Select>
+
+              <Select value={sortBy} onValueChange={setSortBy}>
+                <SelectTrigger className="w-[180px]">
+                  <SelectValue placeholder="Trier par" />
+                </SelectTrigger>
+                <SelectContent>
+                  {SORT_OPTIONS.map((option) => (
+                    <SelectItem key={option.value} value={option.value}>
+                      {option.label}
+                    </SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
             </div>

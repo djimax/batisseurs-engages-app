@@ -46,12 +46,20 @@ interface Depense {
   notes?: string;
 }
 
+const SORT_OPTIONS = [
+  { value: "date-newest", label: "Plus recents" },
+  { value: "date-oldest", label: "Plus anciens" },
+  { value: "amount-high", label: "Montant (Eleve)" },
+  { value: "amount-low", label: "Montant (Bas)" },
+];
+
 export default function Finance() {
   const { formatAmountWithConversion } = useFormatAmount();
   const [cotisations, setCotisations] = useState<Cotisation[]>([]);
   const [dons, setDons] = useState<Don[]>([]);
   const [depenses, setDepenses] = useState<Depense[]>([]);
   const [activeTab, setActiveTab] = useState("cotisations");
+  const [sortBy, setSortBy] = useState<string>("date-newest");
 
   // Form states
   const [newCotisation, setNewCotisation] = useState({
@@ -232,8 +240,20 @@ export default function Finance() {
 
         {/* Cotisations Tab */}
         <TabsContent value="cotisations" className="space-y-4">
-          <div className="flex justify-between items-center">
+          <div className="flex justify-between items-center gap-4">
             <h2 className="text-xl font-semibold">Gestion des Cotisations</h2>
+            <Select value={sortBy} onValueChange={setSortBy}>
+              <SelectTrigger className="w-[180px]">
+                <SelectValue placeholder="Trier par" />
+              </SelectTrigger>
+              <SelectContent>
+                {SORT_OPTIONS.map((option) => (
+                  <SelectItem key={option.value} value={option.value}>
+                    {option.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
             <Dialog>
               <DialogTrigger asChild>
                 <Button className="gap-2">
@@ -311,7 +331,22 @@ export default function Finance() {
                 <p className="text-center text-muted-foreground py-8">Aucune cotisation enregistrée</p>
               ) : (
                 <div className="space-y-2">
-                  {cotisations.map((cot) => (
+                  {cotisations
+                    .sort((a, b) => {
+                      switch (sortBy) {
+                        case "date-newest":
+                          return new Date(b.dateDebut).getTime() - new Date(a.dateDebut).getTime();
+                        case "date-oldest":
+                          return new Date(a.dateDebut).getTime() - new Date(b.dateDebut).getTime();
+                        case "amount-high":
+                          return parseFloat(b.montant || "0") - parseFloat(a.montant || "0");
+                        case "amount-low":
+                          return parseFloat(a.montant || "0") - parseFloat(b.montant || "0");
+                        default:
+                          return 0;
+                      }
+                    })
+                    .map((cot) => (
                     <div key={cot.id} className="flex items-center justify-between p-4 border rounded-lg">
                       <div>
                         <p className="font-medium">Membre #{cot.memberId}</p>

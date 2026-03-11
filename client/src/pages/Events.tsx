@@ -60,15 +60,25 @@ const SAMPLE_EVENTS: Event[] = [
 
 type FilterType = "all" | "past" | "present" | "future";
 
+const SORT_OPTIONS = [
+  { value: "date-asc", label: "Date (Plus anciens)" },
+  { value: "date-desc", label: "Date (Plus recents)" },
+  { value: "title-asc", label: "Titre (A-Z)" },
+  { value: "title-desc", label: "Titre (Z-A)" },
+  { value: "attendees-high", label: "Participants (Eleves)" },
+  { value: "attendees-low", label: "Participants (Bas)" },
+];
+
 export default function Events() {
   const [events, setEvents] = useState<Event[]>(SAMPLE_EVENTS);
   const [filter, setFilter] = useState<FilterType>("all");
   const [searchTerm, setSearchTerm] = useState("");
+  const [sortBy, setSortBy] = useState<string>("date-asc");
 
   const now = new Date();
 
   const filteredEvents = useMemo(() => {
-    return events.filter(event => {
+    const filtered = events.filter(event => {
       // Filtrer par type de date
       const isPast = event.endDate < now;
       const isFuture = event.startDate > now;
@@ -87,7 +97,27 @@ export default function Events() {
 
       return dateMatch && searchMatch;
     });
-  }, [events, filter, searchTerm, now]);
+
+    // Tri
+    return filtered.sort((a, b) => {
+      switch (sortBy) {
+        case "date-asc":
+          return a.startDate.getTime() - b.startDate.getTime();
+        case "date-desc":
+          return b.startDate.getTime() - a.startDate.getTime();
+        case "title-asc":
+          return a.title.localeCompare(b.title);
+        case "title-desc":
+          return b.title.localeCompare(a.title);
+        case "attendees-high":
+          return (b.attendees || 0) - (a.attendees || 0);
+        case "attendees-low":
+          return (a.attendees || 0) - (b.attendees || 0);
+        default:
+          return 0;
+      }
+    });
+  }, [events, filter, searchTerm, now, sortBy]);
 
   const handleDelete = (id: number) => {
     setEvents(events.filter(e => e.id !== id));
@@ -134,27 +164,44 @@ export default function Events() {
       </div>
 
       {/* Filters */}
-      <div className="flex flex-col sm:flex-row gap-4">
-        <Input
-          placeholder="Rechercher un événement..."
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          className="flex-1"
-        />
-        <div className="flex gap-2">
-          {(["all", "past", "present", "future"] as FilterType[]).map((f) => (
-            <Button
-              key={f}
-              variant={filter === f ? "default" : "outline"}
-              onClick={() => setFilter(f)}
-              size="sm"
-            >
-              {f === "all" && "Tous"}
-              {f === "past" && "Passés"}
-              {f === "present" && "En cours"}
-              {f === "future" && "À venir"}
-            </Button>
-          ))}
+      <div className="flex flex-col gap-4">
+        <div className="flex flex-col sm:flex-row gap-4">
+          <Input
+            placeholder="Rechercher un evenement..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="flex-1"
+          />
+          <div className="flex gap-2">
+            {(["all", "past", "present", "future"] as FilterType[]).map((f) => (
+              <Button
+                key={f}
+                variant={filter === f ? "default" : "outline"}
+                onClick={() => setFilter(f)}
+                size="sm"
+              >
+                {f === "all" && "Tous"}
+                {f === "past" && "Passes"}
+                {f === "present" && "En cours"}
+                {f === "future" && "A venir"}
+              </Button>
+            ))}
+          </div>
+        </div>
+        <div>
+          <label className="text-sm font-medium mb-2 block">Trier par</label>
+          <div className="flex gap-2 flex-wrap">
+            {SORT_OPTIONS.map((option) => (
+              <Button
+                key={option.value}
+                variant={sortBy === option.value ? "default" : "outline"}
+                onClick={() => setSortBy(option.value)}
+                size="sm"
+              >
+                {option.label}
+              </Button>
+            ))}
+          </div>
         </div>
       </div>
 

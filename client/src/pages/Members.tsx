@@ -66,9 +66,18 @@ const MEMBER_ROLES = [
   { value: "member", label: "Membre", description: "Accès en lecture seule" },
 ];
 
+const SORT_OPTIONS = [
+  { value: "name-asc", label: "Nom (A-Z)" },
+  { value: "name-desc", label: "Nom (Z-A)" },
+  { value: "date-newest", label: "Plus recents" },
+  { value: "date-oldest", label: "Plus anciens" },
+  { value: "status-active", label: "Statut (Actifs d'abord)" },
+];
+
 export default function Members() {
   const utils = trpc.useUtils();
   const [searchTerm, setSearchTerm] = useState("");
+  const [sortBy, setSortBy] = useState<string>("name-asc");
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [selectedMember, setSelectedMember] = useState<any>(null);
@@ -179,7 +188,7 @@ export default function Members() {
     }
   };
 
-  const filteredMembers = members?.filter(member => {
+  const filteredMembers = (members?.filter(member => {
     const searchLower = searchTerm.toLowerCase();
     return (
       member.firstName.toLowerCase().includes(searchLower) ||
@@ -187,7 +196,22 @@ export default function Members() {
       (member.email && member.email.toLowerCase().includes(searchLower)) ||
       (member.role && member.role.toLowerCase().includes(searchLower))
     );
-  }) || [];
+  }) || []).sort((a, b) => {
+    switch (sortBy) {
+      case "name-asc":
+        return `${a.firstName} ${a.lastName}`.localeCompare(`${b.firstName} ${b.lastName}`);
+      case "name-desc":
+        return `${b.firstName} ${b.lastName}`.localeCompare(`${a.firstName} ${a.lastName}`);
+      case "date-newest":
+        return new Date(b.joinedAt).getTime() - new Date(a.joinedAt).getTime();
+      case "date-oldest":
+        return new Date(a.joinedAt).getTime() - new Date(b.joinedAt).getTime();
+      case "status-active":
+        return (a.status === "active" ? -1 : 1) - (b.status === "active" ? -1 : 1);
+      default:
+        return 0;
+    }
+  });
 
   const stats = {
     total: members?.length || 0,
@@ -268,17 +292,34 @@ export default function Members() {
         </Card>
       </div>
 
-      {/* Search */}
+      {/* Search and Sort */}
       <Card>
         <CardContent className="pt-6">
-          <div className="relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-            <Input
-              placeholder="Rechercher un membre..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-10"
-            />
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <Input
+                placeholder="Rechercher un membre..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="pl-10"
+              />
+            </div>
+            <div>
+              <label className="text-sm font-medium mb-2 block">Trier par</label>
+              <Select value={sortBy} onValueChange={setSortBy}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Trier par..." />
+                </SelectTrigger>
+                <SelectContent>
+                  {SORT_OPTIONS.map((option) => (
+                    <SelectItem key={option.value} value={option.value}>
+                      {option.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
           </div>
         </CardContent>
       </Card>
