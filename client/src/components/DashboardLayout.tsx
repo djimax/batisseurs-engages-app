@@ -41,7 +41,8 @@ import {
   Eye,
   Mail,
   BarChart3,
-  PhoneCall
+  PhoneCall,
+  Globe
 } from "lucide-react";
 import { CSSProperties, useEffect, useRef, useState } from "react";
 import { useLocation } from "wouter";
@@ -282,7 +283,15 @@ function DashboardLayoutContent({
                   className="cursor-pointer"
                 >
                   <Settings className="mr-2 h-4 w-4" />
-                  <span>Paramètres</span>
+                  <span>Parametres</span>
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem
+                  onClick={() => window.open("https://www.lesbatisseursengages.com/", "_blank")}
+                  className="cursor-pointer"
+                >
+                  <Globe className="mr-2 h-4 w-4" />
+                  <span>Site Officiel</span>
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem
@@ -290,7 +299,7 @@ function DashboardLayoutContent({
                   className="cursor-pointer text-destructive focus:text-destructive"
                 >
                   <LogOut className="mr-2 h-4 w-4" />
-                  <span>Se déconnecter</span>
+                  <span>Se deconnecter</span>
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>

@@ -1104,3 +1104,12 @@
 - [x] Tous les 97 tests passent (100% de réussite)
 - [x] Aucune erreur TypeScript
 - [x] Serveur de développement en cours d'exécution
+
+
+## Phase 33 - Intégration du Site Officiel
+
+- [x] Ajouter le lien du site officiel dans la navigation (DashboardLayout)
+- [x] Ajouter le lien dans le menu profil (dropdown)
+- [x] Ajouter un CTA sur la page d'accueil (Home.tsx)
+- [x] Tester les liens et la cohérence
+- [x] Tous les 97 tests passent sans régression

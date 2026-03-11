@@ -132,14 +132,25 @@ export default function Home() {
             </div>
           </div>
           
-          <Button 
-            onClick={() => setLocation("/documents")} 
-            className="bg-white text-blue-600 hover:bg-blue-50 gap-2 shadow-lg btn-glow h-12 px-6"
-            size="lg"
-          >
-            <Plus className="h-5 w-5" />
-            Nouveau document
-          </Button>
+          <div className="flex flex-col sm:flex-row gap-3">
+            <Button 
+              onClick={() => setLocation("/documents")} 
+              className="bg-white text-blue-600 hover:bg-blue-50 gap-2 shadow-lg btn-glow h-12 px-6"
+              size="lg"
+            >
+              <Plus className="h-5 w-5" />
+              Nouveau document
+            </Button>
+            <Button 
+              onClick={() => window.open("https://www.lesbatisseursengages.com/", "_blank")} 
+              className="bg-blue-100 text-blue-700 hover:bg-blue-200 gap-2 shadow-lg h-12 px-6"
+              size="lg"
+              variant="outline"
+            >
+              <Globe className="h-5 w-5" />
+              Visiter le site
+            </Button>
+          </div>
         </div>
       </div>
 
