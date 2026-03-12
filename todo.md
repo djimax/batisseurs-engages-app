@@ -1123,3 +1123,17 @@
 - [x] Implémenter la pagination dans Members.tsx et Documents.tsx
 - [x] Tester la pagination et vérifier les performances
 - [x] Tous les 97 tests passent sans régression
+
+
+## Phase 35 - Paramètres Globaux et Amélioration Pagination
+
+- [ ] Créer une page de paramètres globaux pour gérer les informations de l'association
+- [ ] Ajouter les options 20 et 100 à la pagination (10, 20, 50, 100)
+- [ ] Intégrer les paramètres globaux dans Home.tsx
+- [ ] Tester les modifications
+
+- [x] Ajouter les options 20 et 100 à la pagination (10, 20, 50, 100)
+- [x] Créer une page de paramètres globaux avec localStorage (GlobalSettings.tsx)
+- [x] Ajouter la fonctionnalité de téléchargement de logo (upload, preview, suppression)
+- [x] Intégrer les paramètres dans App.tsx et DashboardLayout
+- [x] Ajouter les options 20 et 100 à la pagination (10, 20, 50, 100)

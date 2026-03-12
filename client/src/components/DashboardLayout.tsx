@@ -21,7 +21,7 @@ import {
 } from "@/components/ui/sidebar";
 import { getLoginUrl } from "@/const";
 import { useIsMobile } from "@/hooks/useMobile";
-import { 
+import {
   LayoutDashboard, 
   LogOut, 
   PanelLeft, 
@@ -42,7 +42,8 @@ import {
   Mail,
   BarChart3,
   PhoneCall,
-  Globe
+  Globe,
+  Cog
 } from "lucide-react";
 import { CSSProperties, useEffect, useRef, useState } from "react";
 import { useLocation } from "wouter";
@@ -71,7 +72,7 @@ const menuItems = [
   { icon: History, label: "Historique d'audit", path: "/audit-history" },
   { icon: Shield, label: "Gestion des Rôles", path: "/admin/roles", adminOnly: true },
   { icon: Eye, label: "Journaux d'Audit", path: "/admin/audit-logs", adminOnly: true },
-  { icon: Settings, label: "Paramètres Globaux", path: "/admin/settings", adminOnly: true },
+  { icon: Settings, label: "Paramètres Globaux", path: "/global-settings", adminOnly: true },
 ];
 
 const SIDEBAR_WIDTH_KEY = "sidebar-width";
