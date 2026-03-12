@@ -20,7 +20,8 @@ import {
   crmActivities, InsertCrmActivity, CrmActivity,
   adhesionPipeline, InsertAdhesionPipeline, AdhesionPipeline,
   crmReports, InsertCrmReport, CrmReport,
-  crmEmailIntegration, InsertCrmEmailIntegration, CrmEmailIntegration
+  crmEmailIntegration, InsertCrmEmailIntegration, CrmEmailIntegration,
+  globalSettings, InsertGlobalSettings, GlobalSettings
 } from "../drizzle/schema";
 import { ENV } from './_core/env';
 
@@ -46,7 +47,8 @@ const schema = {
   crmActivities,
   adhesionPipeline,
   crmReports,
-  crmEmailIntegration
+  crmEmailIntegration,
+  globalSettings
 };
 
 export async function getDb() {
@@ -731,4 +733,51 @@ export async function listCrmEmailIntegration(contactId: number): Promise<CrmEma
   if (!db) throw new Error("Database not available");
   const emails = await (db as any).query.crmEmailIntegration.findMany({ where: eq(crmEmailIntegration.contactId, contactId) }) as any;
   return emails;
+}
+
+
+// Global Settings Management
+export async function getGlobalSettings() {
+  const db = await getDb();
+  if (!db) return undefined;
+  const result = await db.select().from(globalSettings).limit(1);
+  return result[0];
+}
+
+export async function updateGlobalSettings(data: Partial<InsertGlobalSettings>) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  
+  // Check if settings exist
+  const existing = await getGlobalSettings();
+  
+  if (existing) {
+    // Update existing
+    await db.update(globalSettings).set(data).where(eq(globalSettings.id, existing.id));
+    return getGlobalSettings();
+  } else {
+    // Create new
+    const result = await db.insert(globalSettings).values(data as InsertGlobalSettings);
+    return getGlobalSettings();
+  }
+}
+
+export async function initializeGlobalSettings() {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  
+  const existing = await getGlobalSettings();
+  if (!existing) {
+    await db.insert(globalSettings).values({
+      associationName: "Les Bâtisseurs Engagés",
+      seatCity: "N'djaména-tchad",
+      folio: "10512",
+      email: "contact.lesbatisseursengages@gmail.com",
+      website: "www.lesbatisseursengage.com",
+      phone: "",
+      logo: null,
+      description: "",
+    });
+  }
+  return getGlobalSettings();
 }

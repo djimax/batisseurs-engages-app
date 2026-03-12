@@ -6,54 +6,49 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
-import { Settings, Upload, Save, RotateCcw, Mail, Globe, MapPin, FileText } from "lucide-react";
-
-interface GlobalSettings {
-  associationName: string;
-  seatCity: string;
-  folio: string;
-  email: string;
-  website: string;
-  phone: string;
-  logo: string | null; // Base64 encoded logo
-  description: string;
-}
-
-const DEFAULT_SETTINGS: GlobalSettings = {
-  associationName: "Les Bâtisseurs Engagés",
-  seatCity: "N'djaména-tchad",
-  folio: "10512",
-  email: "contact.lesbatisseursengages@gmail.com",
-  website: "www.lesbatisseursengage.com",
-  phone: "",
-  logo: null,
-  description: "",
-};
+import { Settings, Upload, Save, RotateCcw, Mail, Globe, MapPin, FileText, Loader2 } from "lucide-react";
+import { trpc } from "@/lib/trpc";
 
 export default function GlobalSettings() {
-  const [settings, setSettings] = useState<GlobalSettings>(DEFAULT_SETTINGS);
   const [isSaving, setIsSaving] = useState(false);
   const [logoPreview, setLogoPreview] = useState<string | null>(null);
+  
+  // Fetch global settings from database
+  const { data: settings, isLoading, refetch } = trpc.globalSettings.get.useQuery();
+  const updateMutation = trpc.globalSettings.update.useMutation();
 
-  // Load settings from localStorage on mount
+  // Local state for form
+  const [formData, setFormData] = useState({
+    associationName: "",
+    seatCity: "",
+    folio: "",
+    email: "",
+    website: "",
+    phone: "",
+    description: "",
+  });
+
+  // Initialize form with fetched data
   useEffect(() => {
-    const saved = localStorage.getItem("globalSettings");
-    if (saved) {
-      try {
-        const parsed = JSON.parse(saved);
-        setSettings(parsed);
-        if (parsed.logo) {
-          setLogoPreview(parsed.logo);
-        }
-      } catch (error) {
-        console.error("Failed to load settings:", error);
+    if (settings) {
+      setFormData({
+        associationName: settings.associationName || "",
+        seatCity: settings.seatCity || "",
+        folio: settings.folio || "",
+        email: settings.email || "",
+        website: settings.website || "",
+        phone: settings.phone || "",
+        description: settings.description || "",
+      });
+      if (settings.logo) {
+        setLogoPreview(settings.logo);
       }
     }
-  }, []);
+  }, [settings]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
-    setSettings(prev => ({
+    setFormData(prev => ({
       ...prev,
       [name]: value,
     }));
@@ -78,21 +73,21 @@ export default function GlobalSettings() {
     const reader = new FileReader();
     reader.onload = (event) => {
       const base64 = event.target?.result as string;
-      setSettings(prev => ({
-        ...prev,
-        logo: base64,
-      }));
       setLogoPreview(base64);
       toast.success("Logo chargé avec succès");
     };
     reader.readAsDataURL(file);
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
     setIsSaving(true);
     try {
-      localStorage.setItem("globalSettings", JSON.stringify(settings));
+      await updateMutation.mutateAsync({
+        ...formData,
+        logo: logoPreview,
+      });
       toast.success("Paramètres sauvegardés avec succès");
+      refetch();
     } catch (error) {
       toast.error("Erreur lors de la sauvegarde");
       console.error(error);
@@ -103,21 +98,32 @@ export default function GlobalSettings() {
 
   const handleReset = () => {
     if (confirm("Êtes-vous sûr de vouloir réinitialiser les paramètres par défaut ?")) {
-      setSettings(DEFAULT_SETTINGS);
+      setFormData({
+        associationName: "Les Bâtisseurs Engagés",
+        seatCity: "N'djaména-tchad",
+        folio: "10512",
+        email: "contact.lesbatisseursengages@gmail.com",
+        website: "www.lesbatisseursengage.com",
+        phone: "",
+        description: "",
+      });
       setLogoPreview(null);
-      localStorage.removeItem("globalSettings");
       toast.success("Paramètres réinitialisés");
     }
   };
 
   const handleRemoveLogo = () => {
-    setSettings(prev => ({
-      ...prev,
-      logo: null,
-    }));
     setLogoPreview(null);
     toast.success("Logo supprimé");
   };
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">
@@ -199,7 +205,7 @@ export default function GlobalSettings() {
               <Input
                 id="associationName"
                 name="associationName"
-                value={settings.associationName}
+                value={formData.associationName}
                 onChange={handleInputChange}
                 placeholder="Nom de l'association"
               />
@@ -214,7 +220,7 @@ export default function GlobalSettings() {
               <Input
                 id="seatCity"
                 name="seatCity"
-                value={settings.seatCity}
+                value={formData.seatCity}
                 onChange={handleInputChange}
                 placeholder="Siège social"
               />
@@ -226,7 +232,7 @@ export default function GlobalSettings() {
               <Input
                 id="folio"
                 name="folio"
-                value={settings.folio}
+                value={formData.folio}
                 onChange={handleInputChange}
                 placeholder="Numéro de folio"
               />
@@ -242,7 +248,7 @@ export default function GlobalSettings() {
                 id="email"
                 name="email"
                 type="email"
-                value={settings.email}
+                value={formData.email}
                 onChange={handleInputChange}
                 placeholder="Email de contact"
               />
@@ -257,7 +263,7 @@ export default function GlobalSettings() {
               <Input
                 id="website"
                 name="website"
-                value={settings.website}
+                value={formData.website}
                 onChange={handleInputChange}
                 placeholder="Site web"
               />
@@ -269,7 +275,7 @@ export default function GlobalSettings() {
               <Input
                 id="phone"
                 name="phone"
-                value={settings.phone}
+                value={formData.phone}
                 onChange={handleInputChange}
                 placeholder="Numéro de téléphone"
               />
@@ -281,7 +287,7 @@ export default function GlobalSettings() {
               <Textarea
                 id="description"
                 name="description"
-                value={settings.description}
+                value={formData.description}
                 onChange={handleInputChange}
                 placeholder="Description de l'association"
                 rows={4}
@@ -292,11 +298,20 @@ export default function GlobalSettings() {
             <div className="flex gap-2 pt-4">
               <Button 
                 onClick={handleSave} 
-                disabled={isSaving}
+                disabled={isSaving || updateMutation.isPending}
                 className="flex-1 gap-2"
               >
-                <Save className="h-4 w-4" />
-                {isSaving ? "Sauvegarde..." : "Sauvegarder"}
+                {isSaving || updateMutation.isPending ? (
+                  <>
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                    Sauvegarde...
+                  </>
+                ) : (
+                  <>
+                    <Save className="h-4 w-4" />
+                    Sauvegarder
+                  </>
+                )}
               </Button>
               <Button 
                 variant="outline" 
@@ -315,7 +330,7 @@ export default function GlobalSettings() {
       <Card className="bg-blue-50 dark:bg-blue-950 border-blue-200 dark:border-blue-800">
         <CardContent className="pt-6">
           <p className="text-sm text-blue-900 dark:text-blue-100">
-            <strong>ℹ️ Note :</strong> Les paramètres sont sauvegardés localement dans votre navigateur. 
+            <strong>ℹ️ Note :</strong> Les paramètres sont synchronisés avec la base de données. 
             Ils seront utilisés pour afficher les informations de l'association sur la page d'accueil et dans le tableau de bord.
           </p>
         </CardContent>

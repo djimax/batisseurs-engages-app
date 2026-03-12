@@ -1137,3 +1137,12 @@
 - [x] Ajouter la fonctionnalité de téléchargement de logo (upload, preview, suppression)
 - [x] Intégrer les paramètres dans App.tsx et DashboardLayout
 - [x] Ajouter les options 20 et 100 à la pagination (10, 20, 50, 100)
+
+
+## Phase 36 - Synchronisation Base de Données
+
+- [x] Ajouter la table globalSettings au schéma Drizzle
+- [x] Créer les procédures tRPC pour gérer les paramètres globaux (get, update)
+- [x] Mettre à jour GlobalSettings.tsx pour utiliser tRPC
+- [x] Tester la synchronisation et les performances
+- [x] Tous les 97 tests passent sans régression

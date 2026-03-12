@@ -17,6 +17,7 @@ import {
   createDepense, getDepenses,
   createTransaction, getTransactions,
   getFinancialStats,
+  getGlobalSettings, updateGlobalSettings, initializeGlobalSettings,
   getDb
 } from "./db";
 import { roles, permissions, auditLogs, emailTemplates, emailHistory, emailRecipients } from "../drizzle/schema";
@@ -555,8 +556,48 @@ export const appRouter = router({
           console.error("Failed to get audit logs:", error);
           return [];
         }
+       }),
+  }),
+
+  // ============ GLOBAL SETTINGS ============
+  globalSettings: router({
+    get: publicProcedure.query(async () => {
+      await initializeGlobalSettings();
+      return getGlobalSettings();
+    }),
+
+    update: protectedProcedure
+      .input(z.object({
+        associationName: z.string().optional(),
+        seatCity: z.string().optional(),
+        folio: z.string().optional(),
+        email: z.string().email().optional(),
+        website: z.string().optional(),
+        phone: z.string().optional(),
+        logo: z.string().nullable().optional(),
+        description: z.string().optional(),
+      }))
+      .mutation(async ({ input, ctx }) => {
+        if (ctx.user?.role !== "admin") {
+          throw new Error("Only admins can update global settings");
+        }
+        
+        const result = await updateGlobalSettings({
+          ...input,
+          updatedBy: ctx.user?.id,
+        });
+        
+        await logAudit({
+          userId: ctx.user?.id,
+          action: "UPDATE",
+          entityType: "globalSettings",
+          entityName: "Global Settings",
+          description: "Updated global settings",
+          status: "success",
+        });
+        
+        return result;
       }),
   }),
 });
-
 export type AppRouter = typeof appRouter;

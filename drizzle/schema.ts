@@ -674,3 +674,25 @@ export const crmEmailIntegration = mysqlTable("crm_email_integration", {
 });
 export type CrmEmailIntegration = typeof crmEmailIntegration.$inferSelect;
 export type InsertCrmEmailIntegration = typeof crmEmailIntegration.$inferInsert;
+
+
+/**
+ * Global Settings - store association information
+ */
+export const globalSettings = mysqlTable("global_settings", {
+  id: int("id").autoincrement().primaryKey(),
+  associationName: varchar("associationName", { length: 255 }).default("Les Bâtisseurs Engagés").notNull(),
+  seatCity: varchar("seatCity", { length: 255 }).default("N'djaména-tchad").notNull(),
+  folio: varchar("folio", { length: 100 }).default("10512").notNull(),
+  email: varchar("email", { length: 320 }).default("contact.lesbatisseursengages@gmail.com").notNull(),
+  website: varchar("website", { length: 500 }).default("www.lesbatisseursengage.com").notNull(),
+  phone: varchar("phone", { length: 20 }),
+  logo: text("logo"), // Base64 encoded logo
+  description: text("description"),
+  updatedBy: int("updatedBy"),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type GlobalSettings = typeof globalSettings.$inferSelect;
+export type InsertGlobalSettings = typeof globalSettings.$inferInsert;
