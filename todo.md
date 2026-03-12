@@ -1113,3 +1113,13 @@
 - [x] Ajouter un CTA sur la page d'accueil (Home.tsx)
 - [x] Tester les liens et la cohérence
 - [x] Tous les 97 tests passent sans régression
+
+
+## Phase 34 - Améliorations du Tableau de Bord et Pagination
+
+- [x] Ajouter les informations de contact au tableau de bord (Home.tsx)
+- [x] Déplacer le sélecteur de rôle (Dev) dans un collapsible pour le rendre moins visible
+- [x] Créer un composant de pagination réutilisable (Pagination.tsx)
+- [x] Implémenter la pagination dans Members.tsx et Documents.tsx
+- [x] Tester la pagination et vérifier les performances
+- [x] Tous les 97 tests passent sans régression

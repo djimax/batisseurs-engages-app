@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { ExportPDF } from "@/components/ExportPDF";
 import { HeroSection } from "@/components/HeroSection";
+import { Pagination } from "@/components/Pagination";
 import { trpc } from "@/lib/trpc";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -81,6 +82,8 @@ export default function Members() {
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [selectedMember, setSelectedMember] = useState<any>(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(10);
 
   const [formData, setFormData] = useState({
     firstName: "",
@@ -424,6 +427,14 @@ export default function Members() {
                   ))}
                 </TableBody>
               </Table>
+              <Pagination
+                currentPage={currentPage}
+                totalPages={Math.ceil(filteredMembers.length / itemsPerPage)}
+                itemsPerPage={itemsPerPage}
+                totalItems={filteredMembers.length}
+                onPageChange={setCurrentPage}
+                onItemsPerPageChange={setItemsPerPage}
+              />
             </div>
           ) : (
             <div className="text-center py-12">

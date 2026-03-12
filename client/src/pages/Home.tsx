@@ -18,7 +18,11 @@ import {
   Cloud,
   Zap,
   Globe,
-  Wifi
+  Wifi,
+  Mail,
+  MapPin,
+  FileCheck,
+  Building2
 } from "lucide-react";
 import { useLocation } from "wouter";
 import { RoleSelector } from "@/components/RoleSelector";
@@ -26,6 +30,13 @@ import { useRole } from "@/hooks/useRole";
 import { useCurrency } from "@/contexts/CurrencyContext";
 import React from "react";
 
+const ORGANIZATION_INFO = {
+  name: "Les Batisseurs Engages",
+  location: "N'djaména, Tchad",
+  folio: "10512",
+  email: "contact.lesbatisseursengages@gmail.com",
+  website: "www.lesbatisseursengage.com",
+};
 
 export default function Home() {
   const [, setLocation] = useLocation();
@@ -275,9 +286,51 @@ export default function Home() {
         </Card>
       </div>
 
-      {/* Role Selector (Dev) */}
-      <div className="grid gap-4 md:grid-cols-3 lg:grid-cols-4 animate-fade-in-up delay-1">
-        <RoleSelector />
+      {/* Organization Contact Info */}
+      <div className="space-y-4">
+        <h2 className="text-2xl font-bold tracking-tight flex items-center gap-2">
+          <Building2 className="h-6 w-6 text-primary" />
+          Informations de l'Association
+        </h2>
+        
+        <Card className="bg-gradient-to-br from-primary/5 to-accent/5 border-primary/20">
+          <CardContent className="pt-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="flex items-start gap-3">
+                <MapPin className="h-5 w-5 text-primary mt-1 flex-shrink-0" />
+                <div>
+                  <p className="text-sm font-medium text-muted-foreground">Siège Social</p>
+                  <p className="text-base font-semibold">{ORGANIZATION_INFO.location}</p>
+                </div>
+              </div>
+              <div className="flex items-start gap-3">
+                <FileCheck className="h-5 w-5 text-primary mt-1 flex-shrink-0" />
+                <div>
+                  <p className="text-sm font-medium text-muted-foreground">Folio</p>
+                  <p className="text-base font-semibold">{ORGANIZATION_INFO.folio}</p>
+                </div>
+              </div>
+              <div className="flex items-start gap-3">
+                <Mail className="h-5 w-5 text-primary mt-1 flex-shrink-0" />
+                <div>
+                  <p className="text-sm font-medium text-muted-foreground">Email</p>
+                  <a href={`mailto:${ORGANIZATION_INFO.email}`} className="text-base font-semibold text-blue-600 hover:underline">
+                    {ORGANIZATION_INFO.email}
+                  </a>
+                </div>
+              </div>
+              <div className="flex items-start gap-3">
+                <Globe className="h-5 w-5 text-primary mt-1 flex-shrink-0" />
+                <div>
+                  <p className="text-sm font-medium text-muted-foreground">Site Web</p>
+                  <a href={`https://${ORGANIZATION_INFO.website}`} target="_blank" rel="noopener noreferrer" className="text-base font-semibold text-blue-600 hover:underline">
+                    {ORGANIZATION_INFO.website}
+                  </a>
+                </div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
       </div>
 
       {/* 📊 STATS GRID - Cartes avec animations */}
@@ -487,6 +540,18 @@ export default function Home() {
           </Card>
         </div>
       </div>
+
+      {/* Role Selector (Dev) - Hidden by default */}
+      <details className="group">
+        <summary className="cursor-pointer text-xs text-muted-foreground hover:text-foreground transition-colors py-2 px-3 rounded-lg hover:bg-muted/50">
+          ⚙️ Outils de développement
+        </summary>
+        <div className="mt-4 p-4 bg-muted/30 rounded-lg border border-muted">
+          <div className="grid gap-4 md:grid-cols-3 lg:grid-cols-4">
+            <RoleSelector />
+          </div>
+        </div>
+      </details>
     </div>
   );
 }

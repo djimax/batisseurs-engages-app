@@ -1,6 +1,7 @@
 import { useState, useRef, useMemo } from "react";
 import { ExportPDF } from "@/components/ExportPDF";
 import { HeroSection } from "@/components/HeroSection";
+import { Pagination } from "@/components/Pagination";
 import { trpc } from "@/lib/trpc";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -78,6 +79,8 @@ export default function Documents() {
   const [isDetailDialogOpen, setIsDetailDialogOpen] = useState(false);
   const [isUploadingFile, setIsUploadingFile] = useState(false);
   const [newNote, setNewNote] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(10);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Form state for create/edit
@@ -469,8 +472,9 @@ export default function Documents() {
           ))}
         </div>
       ) : filteredDocuments.length > 0 ? (
+        <>
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-          {filteredDocuments.map((doc) => (
+          {filteredDocuments.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage).map((doc) => (
             <Card 
               key={doc.id} 
               className="hover:shadow-md transition-all cursor-pointer group"
@@ -566,6 +570,15 @@ export default function Documents() {
             </Card>
           ))}
         </div>
+        <Pagination
+          currentPage={currentPage}
+          totalPages={Math.ceil(filteredDocuments.length / itemsPerPage)}
+          itemsPerPage={itemsPerPage}
+          totalItems={filteredDocuments.length}
+          onPageChange={setCurrentPage}
+          onItemsPerPageChange={setItemsPerPage}
+        />
+        </>
       ) : (
         <Card>
           <CardContent className="py-16 text-center">
